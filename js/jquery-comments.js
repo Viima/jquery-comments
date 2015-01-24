@@ -1,12 +1,47 @@
 (function($) {
 
     var Comments = {
-        init: function(options, el) {
-            console.log('init ' + el)
+
+        $el: null,
+        options: {
+            getComments: function() {},
+            postComment: function() {},
         },
+
+        init: function(options, el) {
+            this.$el = $(el);
+
+            // Init options
+            var self = this;
+            $(Object.keys(options)).each(function(index, key) {
+                self.options[key] = options[key];
+            });
+
+            this.refresh();
+        },
+
+        refresh: function() {
+            this.$el.empty();
+            var commentArray = this.options.getComments()
+
+            var self = this;
+            $(commentArray).each(function(index, commentJSON) {
+                self.createCommentElement(commentJSON);
+            });
+        },
+
+        createCommentElement: function(commentJSON) {
+            var commentEl = $('<div/>');
+            commentEl.html(commentJSON.content);
+            this.$el.append(commentEl);
+        },
+
         postComment: function() {
-            console.log('post')
-        }
+            this.options.postComment();
+        },
+
+        editComment: function() {
+        },
     }
 
     $.fn.comments = function(options) {
@@ -17,8 +52,4 @@
         });
     };
 
-    $.fn.comments.defaults = {
-        color: "#000",
-        size: "36px"
-    };
 })(jQuery);

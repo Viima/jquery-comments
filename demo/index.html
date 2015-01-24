@@ -14,8 +14,53 @@
         <!-- Init jquery-comments -->
         <script type="text/javascript">
             $(function() {
+                var comments = [  
+                   {  
+                      "id":750,
+                      "created":"2014-11-14T09:40:23.779076+00:00",
+                      "creator":174844,
+                      "modified":"2014-11-14T09:40:23.779076+00:00",
+                      "item":1930,
+                      "content":"I totally agree with this, it's a great idea! We'll implement this right away.",
+                      "fullname":"Softakurssi",
+                      "profile_picture_url":"/static/media/user_profiles/admin-user-icon.png",
+                      "created_by_staff":true,
+                      "moderation_pending":false
+                   },
+                   {  
+                      "id":751,
+                      "created":"2014-11-14T09:40:23.779076+00:00",
+                      "creator":174844,
+                      "modified":"2014-11-14T09:40:23.779076+00:00",
+                      "item":1930,
+                      "content":"All your wishes have become true, this idea has now been implemented!",
+                      "fullname":"Softakurssi",
+                      "profile_picture_url":"/static/media/user_profiles/admin-user-icon.png",
+                      "created_by_staff":true,
+                      "moderation_pending":false
+                   },
+                   {  
+                      "id":752,
+                      "created":"2014-11-14T09:40:23.779076+00:00",
+                      "creator":174844,
+                      "modified":"2014-11-14T09:40:23.779076+00:00",
+                      "item":1931,
+                      "content":"Great idea but unfortunately this is impossible to do with current technology :(",
+                      "fullname":"Softakurssi",
+                      "profile_picture_url":"/static/media/user_profiles/admin-user-icon.png",
+                      "created_by_staff":true,
+                      "moderation_pending":false
+                   }
+                ]
+
                 $('#comments-container').comments({
-                    
+                    title: 'Comments',
+                    getComments: function() {
+                        return comments;
+                    },
+                    postComment: function(commentJSON) {
+
+                    }
                 });
             });
         </script>
