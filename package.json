@@ -27,7 +27,7 @@
         "karma-junit-reporter": "0.2.2"
     },
     "scripts": {
-        "prestart": "npm install && ./node_modules/uglify-js/bin/uglifyjs js/jquery.comments.js -o target/jquery.comments.min.js",
+        "prestart": "npm install && ./node_modules/uglify-js/bin/uglifyjs js/jquery-comments.js -o target/jquery-comments.min.js",
         "pretest": "npm install && ./node_modules/.bin/jshint js/",
         "test": "karma start test/karma.conf.js",
         "test-single-run": "karma start testd/karma.conf.js --single-run",
