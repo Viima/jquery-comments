@@ -13,11 +13,15 @@
 
         <!-- Init jquery-comments -->
         <script type="text/javascript">
-        
+            $(function() {
+                $('#comments-container').comments({
+                    
+                });
+            });
         </script>
 
     </head>
     <body>
-		<div class="comment-container"></div>
+		<div id="comments-container"></div>
     </body>
 </html>

@@ -1,17 +1,24 @@
-(function($, window, document, undefined) {
+(function($) {
+
+    var Comments = {
+        init: function(options, el) {
+            console.log('init ' + el)
+        },
+        postComment: function() {
+            console.log('post')
+        }
+    }
+
     $.fn.comments = function(options) {
-        var textToChange = $(this);
-        var opts = $.extend({}, $.fn.comments.defaults, options);
-
-        textToChange.text("Hello, World!");
-        textToChange.css("color", opts.color);
-        textToChange.css("font-size", opts.size);
-
-        return this;
+        return this.each(function() {
+            var comments = Object.create(Comments);
+            comments.init(options, this);
+            $.data(this, 'comments', comments);
+        });
     };
 
     $.fn.comments.defaults = {
         color: "#000",
         size: "36px"
     };
-})(jQuery, window, document);
+})(jQuery);
