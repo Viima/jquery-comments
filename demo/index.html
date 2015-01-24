@@ -11,6 +11,15 @@
         <script type="text/javascript" src="../js/jquery-comments.js"></script>
         <link rel="stylesheet" type="text/css" href="../css/jquery-comments.css">
 
+        <style type="text/css">
+            body {
+                padding: 20px;
+                margin: 0px;
+                font-size: 14px;
+                font-family: "Arial", Georgia, Serif;
+            }
+        </style>
+
         <!-- Init jquery-comments -->
         <script type="text/javascript">
             $(function() {
@@ -54,13 +63,10 @@
                 ]
 
                 $('#comments-container').comments({
-                    title: 'Comments',
+                    profilePictureURL: 'http://graph.facebook.com/100000219433295/picture',
                     getComments: function() {
                         return comments;
                     },
-                    postComment: function(commentJSON) {
-
-                    }
                 });
             });
         </script>

@@ -1,0 +1,62 @@
+.comments * {
+	box-sizing: border-box;
+	font-family: inherit;
+}
+
+.comments h3 {
+	color: #666;
+}
+
+.comments .profile-picture {
+	float: left;
+	width: 50px;
+	height: 50px;
+}
+
+.comments .textarea-wrapper {
+	overflow: hidden;
+	padding-left: 10px;
+}
+
+.comments .textarea-wrapper textarea {
+	width: 100%;
+	resize: none;
+	height: 50px;
+	outline: none;
+
+	border: 2px solid #A9A9A9;
+	font-size: 15px;
+	padding: 5px 10px;
+}
+
+.comments .textarea-wrapper textarea:focus {
+	height: 100px;
+}
+
+.comments ul.navigation {
+	list-style: none;
+	padding: 0;
+
+	color: #666;
+	border-bottom: 2px solid #DDD;
+	margin: 1em 0;
+	line-height: 2em;
+	font-size: 1.2em;
+}
+
+.comments ul.navigation li {
+	display: inline-block;
+	position: relative;
+	padding: 0 1em;
+}
+
+.comments ul.navigation li.active:after {
+	content: " ";
+	display: block;
+	right: 0;
+	height: 2px;
+	background: #2E9FFF;
+	position: absolute;
+	bottom: -2px;
+	left: 0;
+}
