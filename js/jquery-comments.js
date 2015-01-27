@@ -11,6 +11,9 @@
             myCommentsText: 'My comments',
             getComments: function() {},
             postComment: function() {},
+            timeFormatter: function(time) {
+                return time;
+            }
         },
 
         init: function(options, el) {
@@ -117,7 +120,7 @@
 
             // Time
             var time = $('<time/>', {
-                text: commentJSON.created
+                text: this.options.timeFormatter(commentJSON.created)
             });
 
             // Name
