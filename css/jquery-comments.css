@@ -15,19 +15,49 @@
 
 .comments .textarea-wrapper {
 	overflow: hidden;
-	padding-left: 10px;
+	padding-left: 15px;
+	position: relative;
+}
+
+
+.comments .textarea-wrapper:before {
+	content: " ";
+	position: absolute;
+	border: 5px solid #D5D5D5;
+	left: 5px;
+	top: 0;
+	width: 10px;
+	height: 10px;
+	box-sizing: border-box;
+	border-bottom-color: rgba(0, 0, 0, 0);
+	border-left-color: rgba(0, 0, 0, 0);
+}
+
+.comments .textarea-wrapper:after {
+	content: " ";
+	position: absolute;
+	border: 7px solid #FFF;
+	left: 7px;
+	top: 1px;
+	width: 10px;
+	height: 10px;
+	box-sizing: border-box;
+	border-bottom-color: rgba(0, 0, 0, 0);
+	border-left-color: rgba(0, 0, 0, 0);
 }
 
 .comments .textarea-wrapper textarea {
 	width: 100%;
 	resize: none;
+	margin: 0;
 	height: 50px;
-	outline: none;
 
-	border: 2px solid #A9A9A9;
+	border: 1px solid #CCC;
 	font-size: 15px;
 	padding: 5px 10px;
+	outline: 0;
 }
+
 
 .comments .textarea-wrapper textarea:focus {
 	height: 100px;
@@ -38,7 +68,7 @@
 	padding: 0;
 
 	color: #666;
-	border-bottom: 2px solid #DDD;
+	border-bottom: 2px solid #CCC;
 	margin: 1em 0;
 	line-height: 2em;
 	font-size: 1.2em;

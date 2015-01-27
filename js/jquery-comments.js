@@ -5,7 +5,6 @@
         $el: null,
         options: {
             commentCount: 0,
-            headerText: 'comments',
             profilePictureURL: '',
             textareaPlaceholder: 'Leave a message',
             sortPopularText: 'Popular',
@@ -50,10 +49,6 @@
         // =============
 
         createHTML: function() {
-
-            // Header
-            var header = $('<h3/>').html(this.options.commentCount + ' ' + this.options.headerText);
-            this.$el.append(header);
 
             // Profile picture
             var profilePicture = $('<img/>', {
