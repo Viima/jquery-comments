@@ -90,3 +90,49 @@
 	bottom: -2px;
 	left: 0;
 }
+
+.comments ul.comment-list {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.comments ul.comment-list li.comment {
+	width: 100%;
+	display: inline-block;
+}
+
+.comments ul.comment-list li .profile-picture {
+	width: 3.5em;
+	height: 3.5em;
+	max-width: 50px;
+	max-height: 50px;
+	margin-right: .5em;
+}
+
+.comments ul.comment-list li.comment {
+	padding: .5em 0;
+}
+
+.comments ul.comment-list li.comment:not(:first-child) {
+	border-top: 1px solid #CCC;
+}
+
+.comments ul.comment-list li.comment time {
+	float: right;
+	line-height: 1.4em;
+	margin-left: .5em;
+}
+
+.comments ul.comment-list li.comment .name {
+	line-height: 1.4em;
+	font-weight: bold;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.comments ul.comment-list li.comment .content {
+	line-height: 1.3em;
+	overflow: hidden;
+}

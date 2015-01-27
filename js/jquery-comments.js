@@ -33,7 +33,8 @@
             var self = this;
             var commentArray = this.options.getComments()
             $(commentArray).each(function(index, commentJSON) {
-                self.createCommentElement(commentJSON);
+                var commentEl = self.createCommentElement(commentJSON);
+                self.$el.find('ul.comment-list').append(commentEl);
             });
         },
 
@@ -68,6 +69,10 @@
             this.$el.append(this.createNavigationElement());
 
             // Comment list
+            var commentList = $('<ul/>', {
+                class: 'comment-list'
+            });
+            this.$el.append(commentList);
         },
 
         createTextareaElement: function() {
@@ -98,9 +103,36 @@
         },
 
         createCommentElement: function(commentJSON) {
-            var commentEl = $('<div/>');
-            commentEl.html(commentJSON.content);
-            this.$el.append(commentEl);
+            
+            // Comment container element
+            var commentEl = $('<li/>', {
+                class: 'comment'
+            });
+
+            // Profile picture
+            var profilePicture = $('<img/>', {
+                class: 'profile-picture',
+                src: commentJSON.profile_picture_url,
+            });
+
+            // Time
+            var time = $('<time/>', {
+                text: commentJSON.created
+            });
+
+            // Name
+            var name = $('<div/>', {
+                class: 'name',
+                text: commentJSON.fullname,
+            });
+
+            // Content
+            var content = $('<div/>', {
+                class: 'content',
+                text: commentJSON.content,
+            });
+
+            commentEl.append(profilePicture).append(time).append(name).append(content);
             return commentEl;
         },
     }
