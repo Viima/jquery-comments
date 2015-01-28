@@ -13,6 +13,14 @@
 	height: 50px;
 }
 
+.comments .profile-picture.own {
+	margin-bottom: 3px;
+}
+
+.comments .profile-picture.round {
+	border-radius: 50%;
+}
+
 .comments .textarea-wrapper {
 	overflow: hidden;
 	padding-left: 15px;
@@ -50,28 +58,31 @@
 	width: 100%;
 	resize: none;
 	margin: 0;
-	height: 50px;
 
-	border: 1px solid #CCC;
-	font-size: 15px;
-	padding: 5px 10px;
+	border: 1px solid #CCC;;
+	font-size: 14px;
+	line-height: 20px;
+	padding: 4px 10px;
 	outline: 0;
 }
 
-
 .comments .textarea-wrapper textarea:focus {
-	height: 100px;
+	min-height: 50px;
 }
 
 .comments ul.navigation {
 	list-style: none;
 	padding: 0;
+	clear: both;
+	float: left;
+	width: 100%;
 
 	color: #666;
 	border-bottom: 2px solid #CCC;
-	margin: 1em 0;
+	margin-top: .5em;
+	margin-bottom: 1em;
 	line-height: 2em;
-	font-size: 1.2em;
+	font-size: 1em;
 }
 
 .comments ul.navigation li {
@@ -80,15 +91,9 @@
 	padding: 0 1em;
 }
 
-.comments ul.navigation li.active:after {
-	content: " ";
-	display: block;
-	right: 0;
-	height: 2px;
-	background: #2E9FFF;
-	position: absolute;
-	bottom: -2px;
-	left: 0;
+.comments ul.navigation li.active {
+	font-weight: bold;
+	color: #000;
 }
 
 .comments ul.comment-list {
@@ -122,6 +127,8 @@
 	float: right;
 	line-height: 1.4em;
 	margin-left: .5em;
+	font-size: 0.8em;
+	color: #666;
 }
 
 .comments ul.comment-list li.comment .name {

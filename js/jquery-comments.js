@@ -4,11 +4,14 @@
 
         $el: null,
         options: {
-            commentCount: 0,
             profilePictureURL: '',
             textareaPlaceholder: 'Leave a message',
             sortPopularText: 'Popular',
             myCommentsText: 'My comments',
+
+            roundProfilePictures: false,
+            textareaRows: 2,
+
             getComments: function() {},
             postComment: function() {},
             timeFormatter: function(time) {
@@ -55,11 +58,8 @@
         createHTML: function() {
 
             // Profile picture
-            var profilePicture = $('<img/>', {
-                src: this.options.profilePictureURL,
-                class: 'profile-picture'
-            });
-            this.$el.append(profilePicture);
+            var profilePicture = this.createProfilePictureElement(this.options.profilePictureURL);
+            this.$el.append(profilePicture.addClass('own'));
 
             // New comment
             var textareaWrapper = $('<div/>', {
@@ -78,10 +78,19 @@
             this.$el.append(commentList);
         },
 
-        createTextareaElement: function() {
-            var textareaEl = $('<textarea/>', {
-                placeholder: this.options.textareaPlaceholder,
+        createProfilePictureElement: function(src) {
+            var profilePicture = $('<img/>', {
+                src: src,
+                class: 'profile-picture' + (this.options.roundProfilePictures ? ' round' : '')
             });
+            return profilePicture;
+        },
+
+        createTextareaElement: function() {
+            // Due to bug with Firefox the placeholder need to be embedded like this
+            var textareaEl = $('<textarea placeholder="'+this.options.textareaPlaceholder+'"/>');
+            var height = 30 + (this.options.textareaRows - 1) * 20;
+            textareaEl.css({height: height + 'px'});
             return textareaEl;
         },
 
@@ -113,10 +122,7 @@
             });
 
             // Profile picture
-            var profilePicture = $('<img/>', {
-                class: 'profile-picture',
-                src: commentJSON.profile_picture_url,
-            });
+            var profilePicture = this.createProfilePictureElement(commentJSON.profile_picture_url);
 
             // Time
             var time = $('<time/>', {
