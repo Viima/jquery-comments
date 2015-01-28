@@ -9,8 +9,10 @@
             sortPopularText: 'Popular',
             myCommentsText: 'My comments',
 
+            highlightColor: '#1093F0',
             roundProfilePictures: false,
             textareaRows: 2,
+            textareaMaxRows: 5,
 
             getComments: function() {},
             postComment: function() {},
@@ -28,6 +30,11 @@
             $(Object.keys(options)).each(function(index, key) {
                 self.options[key] = options[key];
             });
+
+            // Create css declarations
+            this.createCSS('.comments ul.navigation li.active:after {background: '
+                + this.options.highlightColor 
+                +'}');
 
             this.refresh();
         },
@@ -87,10 +94,36 @@
         },
 
         createTextareaElement: function() {
+            var self = this;
+
             // Due to bug with Firefox the placeholder need to be embedded like this
             var textareaEl = $('<textarea placeholder="'+this.options.textareaPlaceholder+'"/>');
-            var height = 30 + (this.options.textareaRows - 1) * 20;
-            textareaEl.css({height: height + 'px'});
+            var lineHeight = 20;
+            var textareaBaseHeight = 30;
+
+            var setRows = function(rows) {
+                textareaEl.css('height', textareaBaseHeight + (rows - 1) * lineHeight);
+            }
+
+            // Setting maximum height to the textarea so that it remains unscrollable
+            var adjustHeight = function()  {
+                var verticalPadding = parseInt(textareaEl.css('padding-top'))
+                    + parseInt(textareaEl.css('padding-bottom'));
+
+                var rowCount = self.options.textareaRows;
+                do {
+                    setRows(rowCount);
+                    rowCount++;
+                    var isAreaScrollable = textareaEl[0].scrollHeight > textareaEl.height() + verticalPadding;
+                } while(isAreaScrollable && rowCount <= self.options.textareaMaxRows);
+            }
+
+            // Setting the initial height
+            adjustHeight();
+
+            // Increase the height if neccessary
+            textareaEl.bind('input blur', adjustHeight);
+
             return textareaEl;
         },
 
@@ -144,6 +177,23 @@
             commentEl.append(profilePicture).append(time).append(name).append(content);
             return commentEl;
         },
+
+
+        // Styling
+        // =======
+        createCSS: function(css) {
+            var styleEl = $('<style/>', {
+                type: 'text/css',
+                text: css,
+            });
+            $('head').append(styleEl);
+        },
+
+
+        // Utilities
+        // =========
+
+
     }
 
     $.fn.comments = function(options) {

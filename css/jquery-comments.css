@@ -96,6 +96,17 @@
 	color: #000;
 }
 
+.comments ul.navigation li.active:after {
+	content: " ";
+	display: block;
+	right: 0;
+	height: 2px;
+	background: #000;
+	position: absolute;
+	bottom: -2px;
+	left: 0;
+}
+
 .comments ul.comment-list {
 	list-style: none;
 	padding: 0;
