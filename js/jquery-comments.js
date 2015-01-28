@@ -31,17 +31,13 @@
                 self.options[key] = options[key];
             });
 
-            // Create css declarations
-            this.createCSS('.comments ul.navigation li.active:after {background: '
-                + this.options.highlightColor 
-                +'}');
-
             this.refresh();
         },
 
         refresh: function() {
             this.$el.empty();
             this.createHTML();
+            this.createCssDeclarations();
 
             var self = this;
             var commentArray = this.options.getComments()
@@ -181,7 +177,16 @@
 
         // Styling
         // =======
-        createCSS: function(css) {
+
+        createCssDeclarations: function() {
+            // Navigation underline
+            this.createCss('.comments ul.navigation li.active:after {background: '
+                + this.options.highlightColor 
+                +'}');
+
+        },
+
+        createCss: function(css) {
             var styleEl = $('<style/>', {
                 type: 'text/css',
                 text: css,
