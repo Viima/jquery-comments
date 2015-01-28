@@ -8,8 +8,11 @@
             textareaPlaceholder: 'Leave a message',
             sortPopularText: 'Popular',
             myCommentsText: 'My comments',
+            sendText: 'Send',
+            likeText: 'Like',
+            replyText: 'Reply',
 
-            highlightColor: '#1093F0',
+            highlightColor: '#1B7FCC',
             roundProfilePictures: false,
             textareaRows: 2,
             textareaMaxRows: 5,
@@ -59,17 +62,8 @@
         // =============
 
         createHTML: function() {
-
-            // Profile picture
-            var profilePicture = this.createProfilePictureElement(this.options.profilePictureURL);
-            this.$el.append(profilePicture.addClass('own'));
-
-            // New comment
-            var textareaWrapper = $('<div/>', {
-                class: 'textarea-wrapper',
-            });
-            textareaWrapper.html(this.createTextareaElement());
-            this.$el.append(textareaWrapper);
+            // Commenting field
+            this.$el.append(this.createCommentingFieldElement());
 
             // Navigation bar
             this.$el.append(this.createNavigationElement());
@@ -79,6 +73,33 @@
                 class: 'comment-list'
             });
             this.$el.append(commentList);
+        },
+
+        createCommentingFieldElement: function() {
+
+            // Commenting field
+            var commentingField = $('<div/>', {
+                class: 'commenting-field',
+            });
+
+            // Profile picture
+            var profilePicture = this.createProfilePictureElement(this.options.profilePictureURL);
+            profilePicture.addClass('own');
+
+            // New comment
+            var textareaWrapper = $('<div/>', {
+                class: 'textarea-wrapper',
+            });
+
+            // Send -button
+            var sendButton = $('<span/>', {
+                class: 'send',
+                text: this.options.sendText
+            });
+
+            textareaWrapper.append(this.createTextareaElement()).append(sendButton);
+            commentingField.append(profilePicture).append(textareaWrapper);
+            return commentingField;
         },
 
         createProfilePictureElement: function(src) {
@@ -144,7 +165,7 @@
         },
 
         createCommentElement: function(commentJSON) {
-            
+
             // Comment container element
             var commentEl = $('<li/>', {
                 class: 'comment'
@@ -164,14 +185,57 @@
                 text: commentJSON.fullname,
             });
 
+            // Wrapper
+            var wrapper = $('<div/>', {
+                class: 'wrapper',
+            });
+
             // Content
             var content = $('<div/>', {
                 class: 'content',
                 text: commentJSON.content,
             });
 
-            commentEl.append(profilePicture).append(time).append(name).append(content);
+            // Like
+            var like = $('<span/>', {
+                class: 'like',
+                text: this.options.likeText,
+            });
+
+            // Reply
+            var reply = this.createReplyElement();
+            
+            wrapper.append(content);
+            wrapper.append(like).append(reply);
+            commentEl.append(profilePicture).append(time).append(name).append(wrapper);
             return commentEl;
+        },
+
+        createReplyElement: function() {
+            var self = this;
+
+            var reply = $('<span/>', {
+                class: 'reply',
+                text: this.options.replyText,
+            }).bind('click', function(ev) {
+
+                // Case: remove exsiting field
+                var existingEl = $(ev.currentTarget).parents('li.comment').find('.commenting-field');
+                if(existingEl.length) {
+                    existingEl.remove();
+
+                // Case: creating a new reply field
+                } else {
+                    var replyField = self.createCommentingFieldElement();
+                    $(ev.currentTarget).after(replyField);
+
+                    var textarea = replyField.find('textarea')
+                    textarea.focus();
+                }
+
+            });
+
+            return reply;
         },
 
 
@@ -181,6 +245,11 @@
         createCssDeclarations: function() {
             // Navigation underline
             this.createCss('.comments ul.navigation li.active:after {background: '
+                + this.options.highlightColor 
+                +'}');
+
+            // Send button
+            this.createCss('.comments span.send {background: '
                 + this.options.highlightColor 
                 +'}');
 

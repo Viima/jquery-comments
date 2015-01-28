@@ -1,3 +1,10 @@
+textarea,
+input,
+select {
+  margin: 0;
+  vertical-align: bottom;
+}
+
 .comments * {
 	box-sizing: border-box;
 	font-family: inherit;
@@ -9,12 +16,11 @@
 
 .comments .profile-picture {
 	float: left;
-	width: 50px;
-	height: 50px;
 }
 
 .comments .profile-picture.own {
-	margin-bottom: 3px;
+	width: 50px;
+	height: 50px;
 }
 
 .comments .profile-picture.round {
@@ -52,6 +58,17 @@
 	box-sizing: border-box;
 	border-bottom-color: rgba(0, 0, 0, 0);
 	border-left-color: rgba(0, 0, 0, 0);
+}
+
+.comments .textarea-wrapper span.send {
+	float: right;
+	cursor: pointer;
+
+	color: #FFF;
+	padding: 3px 10px;
+	font-size: 14px;
+	margin-top: 5px;
+	border: 1px solid rgba(0, 0, 0, 0);
 }
 
 .comments .textarea-wrapper textarea {
@@ -118,7 +135,7 @@
 	display: inline-block;
 }
 
-.comments ul.comment-list li .profile-picture {
+.comments ul.comment-list li > .profile-picture {
 	width: 3.5em;
 	height: 3.5em;
 	max-width: 50px;
@@ -150,7 +167,21 @@
 	white-space: nowrap;
 }
 
-.comments ul.comment-list li.comment .content {
+.comments ul.comment-list li.comment .wrapper{
 	line-height: 1.3em;
 	overflow: hidden;
+}
+
+.comments ul.comment-list li.comment .wrapper > span {
+	font-size: 0.8em;
+	color: #666;
+	cursor: pointer;
+}
+
+.comments ul.comment-list li.comment span:not(:last-child) {
+	margin-right: 2em;
+}
+
+.comments ul.comment-list li.comment .commenting-field {
+	margin-top: .5em;
 }
