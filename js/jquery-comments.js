@@ -93,7 +93,7 @@
 
             // Send -button
             var sendButton = $('<span/>', {
-                class: 'send',
+                class: 'send highlight-background',
                 text: this.options.sendText
             });
 
@@ -117,7 +117,7 @@
             var textareaEl = $('<textarea placeholder="'+this.options.textareaPlaceholder+'"/>');
             var lineHeight = 20;
             var textareaBaseHeight = 30;
-
+            return textareaEl;
             var setRows = function(rows) {
                 textareaEl.css('height', textareaBaseHeight + (rows - 1) * lineHeight);
             }
@@ -220,17 +220,19 @@
             }).bind('click', function(ev) {
 
                 // Case: remove exsiting field
-                var existingEl = $(ev.currentTarget).parents('li.comment').find('.commenting-field');
+                var existingEl = reply.parents('li.comment').find('.commenting-field');
                 if(existingEl.length) {
                     existingEl.remove();
+                    reply.removeClass('highlight-font');
 
                 // Case: creating a new reply field
                 } else {
                     var replyField = self.createCommentingFieldElement();
-                    $(ev.currentTarget).after(replyField);
+                    reply.after(replyField);
 
                     var textarea = replyField.find('textarea')
                     textarea.focus();
+                    reply.addClass('highlight-font');
                 }
 
             });
@@ -243,16 +245,22 @@
         // =======
 
         createCssDeclarations: function() {
+
             // Navigation underline
             this.createCss('.comments ul.navigation li.active:after {background: '
-                + this.options.highlightColor 
+                + this.options.highlightColor  + ' !important;',
                 +'}');
 
-            // Send button
-            this.createCss('.comments span.send {background: '
-                + this.options.highlightColor 
+            // Background highlight
+            this.createCss('.comments .highlight-background {background: '
+                + this.options.highlightColor  + ' !important;',
                 +'}');
 
+            // Font highlight
+            this.createCss('.comments .highlight-font {color: '
+                + this.options.highlightColor + ' !important;'
+                + 'font-weight: bold;'
+                +'}');
         },
 
         createCss: function(css) {

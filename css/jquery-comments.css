@@ -2,7 +2,7 @@ textarea,
 input,
 select {
   margin: 0;
-  vertical-align: bottom;
+  vertical-align: top;
 }
 
 .comments * {
@@ -65,8 +65,10 @@ select {
 	cursor: pointer;
 
 	color: #FFF;
-	padding: 3px 10px;
+	padding: 0 10px;
 	font-size: 14px;
+	line-height: 26px;
+
 	margin-top: 5px;
 	border: 1px solid rgba(0, 0, 0, 0);
 }
@@ -136,8 +138,8 @@ select {
 }
 
 .comments ul.comment-list li > .profile-picture {
-	width: 3.5em;
-	height: 3.5em;
+	width: 3.6em;
+	height: 3.6em;
 	max-width: 50px;
 	max-height: 50px;
 	margin-right: .5em;
@@ -148,7 +150,7 @@ select {
 }
 
 .comments ul.comment-list li.comment:not(:first-child) {
-	border-top: 1px solid #CCC;
+	border-top: 1px solid #DDD;
 }
 
 .comments ul.comment-list li.comment time {
@@ -173,7 +175,7 @@ select {
 }
 
 .comments ul.comment-list li.comment .wrapper > span {
-	font-size: 0.8em;
+	font-size: 0.9em;
 	color: #666;
 	cursor: pointer;
 }
