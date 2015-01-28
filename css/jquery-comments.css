@@ -77,14 +77,23 @@ select {
 
 .comments .textarea-wrapper span.send {
 	float: right;
-	cursor: pointer;
 
 	color: #FFF;
 	padding: 0 1em;
 	font-size: 1em;
-	line-height: 2em;
+	line-height: 1.6em;
 	margin-top: .4em;
 	border: 1px solid rgba(0, 0, 0, 0);
+	opacity: .5;
+}
+
+.comments .textarea-wrapper span.send.enabled {
+	opacity: 1;
+	cursor: pointer;
+}
+
+.comments .textarea-wrapper span.send.enabled:hover {
+	opacity: .9;
 }
 
 .comments ul.navigation {

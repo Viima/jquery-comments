@@ -94,10 +94,13 @@
             // Send -button
             var sendButton = $('<span/>', {
                 class: 'send highlight-background',
-                text: this.options.sendText
+                text: this.options.sendText,
             });
 
-            textareaWrapper.append(this.createTextareaElement()).append(sendButton);
+            // Textarea
+            var textarea = this.createTextareaElement();
+
+            textareaWrapper.append(textarea).append(sendButton);
             commentingField.append(profilePicture).append(textareaWrapper);
             return commentingField;
         },
@@ -133,12 +136,21 @@
                 } while(isAreaScrollable && rowCount <= self.options.textareaMaxRows);
             }
 
-            // Increase the height if neccessary
+            // Increase the height if necessary
             textareaEl.bind('input blur', adjustHeight);
+
+            // Enable send button if necessary
+            textareaEl.bind('input', function() {
+                if(textareaEl.val().length) {
+                    textareaEl.siblings('.send').addClass('enabled');
+                } else {
+                    textareaEl.siblings('.send').removeClass('enabled');
+                }
+            });
 
             // Setting the initial height
             setRows(self.options.textareaRows);
-            
+
             return textareaEl;
         },
 
