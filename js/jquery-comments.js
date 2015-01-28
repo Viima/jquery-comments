@@ -115,32 +115,30 @@
 
             // Due to bug with Firefox the placeholder need to be embedded like this
             var textareaEl = $('<textarea placeholder="'+this.options.textareaPlaceholder+'"/>');
-            var lineHeight = 20;
-            var textareaBaseHeight = 30;
-            return textareaEl;
+            var textareaBaseHeight = 2.2;
+            var lineHeight = 1.4;
+
             var setRows = function(rows) {
-                textareaEl.css('height', textareaBaseHeight + (rows - 1) * lineHeight);
+                var height = textareaBaseHeight + (rows - 1) * lineHeight;
+                textareaEl.css('height', height + 'em');
             }
 
             // Setting maximum height to the textarea so that it remains unscrollable
             var adjustHeight = function()  {
-                var verticalPadding = parseInt(textareaEl.css('padding-top'))
-                    + parseInt(textareaEl.css('padding-bottom'));
-
                 var rowCount = self.options.textareaRows;
                 do {
                     setRows(rowCount);
                     rowCount++;
-                    var isAreaScrollable = textareaEl[0].scrollHeight > textareaEl.height() + verticalPadding;
+                    var isAreaScrollable = textareaEl[0].scrollHeight > textareaEl.outerHeight();
                 } while(isAreaScrollable && rowCount <= self.options.textareaMaxRows);
             }
-
-            // Setting the initial height
-            adjustHeight();
 
             // Increase the height if neccessary
             textareaEl.bind('input blur', adjustHeight);
 
+            // Setting the initial height
+            setRows(self.options.textareaRows);
+            
             return textareaEl;
         },
 

@@ -16,11 +16,10 @@ select {
 
 .comments .profile-picture {
 	float: left;
-}
-
-.comments .profile-picture.own {
-	width: 50px;
-	height: 50px;
+	width: 3.6em;
+	height: 3.6em;
+	max-width: 50px;
+	max-height: 50px;	
 }
 
 .comments .profile-picture.round {
@@ -60,33 +59,32 @@ select {
 	border-left-color: rgba(0, 0, 0, 0);
 }
 
-.comments .textarea-wrapper span.send {
-	float: right;
-	cursor: pointer;
-
-	color: #FFF;
-	padding: 0 10px;
-	font-size: 14px;
-	line-height: 26px;
-
-	margin-top: 5px;
-	border: 1px solid rgba(0, 0, 0, 0);
-}
-
 .comments .textarea-wrapper textarea {
 	width: 100%;
 	resize: none;
 	margin: 0;
 
 	border: 1px solid #CCC;;
-	font-size: 14px;
-	line-height: 20px;
-	padding: 4px 10px;
+	font-size: 1em;
+	line-height: 1.45em;
+	padding: .3em .8em;
 	outline: 0;
 }
 
 .comments .textarea-wrapper textarea:focus {
-	min-height: 50px;
+	min-height: 3.6em;
+}
+
+.comments .textarea-wrapper span.send {
+	float: right;
+	cursor: pointer;
+
+	color: #FFF;
+	padding: 0 1em;
+	font-size: 1em;
+	line-height: 2em;
+	margin-top: .4em;
+	border: 1px solid rgba(0, 0, 0, 0);
 }
 
 .comments ul.navigation {
@@ -138,10 +136,6 @@ select {
 }
 
 .comments ul.comment-list li > .profile-picture {
-	width: 3.6em;
-	height: 3.6em;
-	max-width: 50px;
-	max-height: 50px;
 	margin-right: .5em;
 }
 
