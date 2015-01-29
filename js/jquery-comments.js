@@ -50,7 +50,8 @@
             });
         },
 
-        postComment: function() {
+        postComment: function(content) {
+            console.log(content)
             this.options.postComment();
         },
 
@@ -76,6 +77,7 @@
         },
 
         createCommentingFieldElement: function() {
+            var self = this;
 
             // Commenting field
             var commentingField = $('<div/>', {
@@ -90,17 +92,34 @@
             var textareaWrapper = $('<div/>', {
                 class: 'textarea-wrapper',
             });
+        
+            // Control row
+            var controlRow = $('<div/>', {
+                class: 'control-row',
+            }).hide();
+
+            // Textarea
+            var textarea = this.createTextareaElement()
+                .bind('focus', function() {
+                    controlRow.show();
+                })
+                .bind('blur', function() {
+                    controlRow.hide();
+                });
 
             // Send -button
             var sendButton = $('<span/>', {
                 class: 'send highlight-background',
                 text: this.options.sendText,
+            }).bind('click', function(ev) {
+                if(sendButton.hasClass('enabled')) {
+                    self.postComment(textarea.val());
+                    textarea.val('');
+                }
             });
 
-            // Textarea
-            var textarea = this.createTextareaElement();
-
-            textareaWrapper.append(textarea).append(sendButton);
+            controlRow.append(sendButton);
+            textareaWrapper.append(textarea).append(controlRow);
             commentingField.append(profilePicture).append(textareaWrapper);
             return commentingField;
         },
@@ -141,10 +160,11 @@
 
             // Enable send button if necessary
             textareaEl.bind('input', function() {
+                var sendButton = textareaEl.siblings('.control-row').find('.send');
                 if(textareaEl.val().length) {
-                    textareaEl.siblings('.send').addClass('enabled');
+                    sendButton.addClass('enabled');
                 } else {
-                    textareaEl.siblings('.send').removeClass('enabled');
+                    sendButton.removeClass('enabled');
                 }
             });
 

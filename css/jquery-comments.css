@@ -60,15 +60,16 @@ select {
 }
 
 .comments .textarea-wrapper textarea {
+	display: block;
 	width: 100%;
 	resize: none;
 	margin: 0;
+	outline: 0;
 
 	border: 1px solid #CCC;;
 	font-size: 1em;
 	line-height: 1.45em;
 	padding: .25em .8em;
-	outline: 0;
 }
 
 .comments .textarea-wrapper textarea:focus {
