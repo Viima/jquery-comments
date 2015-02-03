@@ -11,6 +11,7 @@
             sendText: 'Send',
             likeText: 'Like',
             replyText: 'Reply',
+            youText: 'You',
 
             highlightColor: '#1B7FCC',
             roundProfilePictures: false,
@@ -51,12 +52,28 @@
             });
         },
 
-        postComment: function(content) {
-            console.log(content)
-            this.options.postComment();
+        postComment: function(commentJSON) {
+            var success = function() {};
+            var error = function() {};
+
+            commentJSON.fullname = this.options.youText;
+            commentJSON.profile_picture_url = this.options.profilePictureURL;
+
+            var commentEl = this.createCommentElement(commentJSON);
+            this.$el.find('.comment-list').prepend(commentEl);
+
+            this.options.postComment(commentJSON, success, error);
         },
 
         editComment: function() {
+        },
+
+        createCommentJSON: function(content, parent) {
+            var comment = {
+                content: content,
+                parent: parent,
+            }
+            return comment;
         },
 
 
@@ -133,7 +150,12 @@
                 text: this.options.sendText,
             }).bind('click', function(ev) {
                 if(sendButton.hasClass('enabled')) {
-                    self.postComment(textarea.val());
+                    var parent = null;
+                    var data = sendButton.parents('.comment').data();
+                    if(data && data.id) parent = data.id;
+
+                    var commentJSON = self.createCommentJSON(textarea.val(), parent);
+                    self.postComment(commentJSON);
                     textarea.val('');
                 }
             });
@@ -213,6 +235,7 @@
 
             // Comment container element
             var commentEl = $('<li/>', {
+                'data-id': commentJSON.id,
                 class: 'comment'
             });
 
@@ -249,9 +272,15 @@
 
             // Reply
             var reply = this.createReplyElement();
+
+            // Child comments
+            var childComments = $('<ul/>', {
+                class: 'child-comments'
+            });
             
             wrapper.append(content);
-            wrapper.append(like).append(reply);
+            wrapper.append(like).append(reply)
+            wrapper.append(childComments);
             commentEl.append(profilePicture).append(time).append(name).append(wrapper);
             return commentEl;
         },
@@ -320,10 +349,6 @@
             });
             $('head').append(styleEl);
         },
-
-
-        // Utilities
-        // =========
 
     }
 

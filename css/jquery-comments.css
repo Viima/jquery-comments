@@ -14,6 +14,12 @@ select {
 	color: #666;
 }
 
+.comments ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
 .comments .profile-picture {
 	float: left;
 	width: 3.6em;
@@ -94,8 +100,6 @@ select {
 }
 
 .comments ul.navigation {
-	list-style: none;
-	padding: 0;
 	clear: both;
 	float: left;
 	width: 100%;
@@ -128,12 +132,6 @@ select {
 	position: absolute;
 	bottom: -2px;
 	left: 0;
-}
-
-.comments ul.comment-list {
-	list-style: none;
-	padding: 0;
-	margin: 0;
 }
 
 .comments ul.comment-list li.comment {
