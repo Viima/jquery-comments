@@ -72,10 +72,6 @@ select {
 	padding: .25em .8em;
 }
 
-.comments .textarea-wrapper textarea:focus {
-	min-height: 3.6em;
-}
-
 .comments .textarea-wrapper span.send {
 	float: right;
 

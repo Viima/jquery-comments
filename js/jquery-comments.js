@@ -15,6 +15,7 @@
             highlightColor: '#1B7FCC',
             roundProfilePictures: false,
             textareaRows: 2,
+            textareaRowsOnFocus: 2,
             textareaMaxRows: 5,
 
             getComments: function() {},
@@ -63,8 +64,25 @@
         // =============
 
         createHTML: function() {
+            var self = this;
+
             // Commenting field
-            this.$el.append(this.createCommentingFieldElement());
+            var mainCommentingField = this.createCommentingFieldElement();
+            this.$el.append(mainCommentingField);
+
+            // Adjust the height of the main commenting field when clicking elsewhere
+            var mainTextarea = mainCommentingField.find('textarea');
+            var mainControlRow = mainCommentingField.find('.control-row');
+            this.$el.bind('click', function(ev) {
+                if(ev.target != mainTextarea[0]) {
+                    self.adjustTextareaHeight(mainTextarea, false);
+                    mainControlRow.hide();
+                }
+            });
+            mainControlRow.hide();
+            mainTextarea.bind('focus', function() {
+                mainControlRow.show();
+            });
 
             // Navigation bar
             this.$el.append(this.createNavigationElement());
@@ -74,6 +92,14 @@
                 class: 'comment-list'
             });
             this.$el.append(commentList);
+        },
+
+        createProfilePictureElement: function(src) {
+            var profilePicture = $('<img/>', {
+                src: src,
+                class: 'profile-picture' + (this.options.roundProfilePictures ? ' round' : '')
+            });
+            return profilePicture;
         },
 
         createCommentingFieldElement: function() {
@@ -96,16 +122,10 @@
             // Control row
             var controlRow = $('<div/>', {
                 class: 'control-row',
-            }).hide();
+            });
 
             // Textarea
-            var textarea = this.createTextareaElement()
-                .bind('focus', function() {
-                    controlRow.show();
-                })
-                .bind('blur', function() {
-                    controlRow.hide();
-                });
+            var textarea = this.createTextareaElement();
 
             // Send -button
             var sendButton = $('<span/>', {
@@ -117,6 +137,16 @@
                     textarea.val('');
                 }
             });
+            //TODO: hide commenting after succesfull reply
+
+            // Enable and disable send button when necessary
+            textarea.bind('input', function() {
+                if(textarea.val().length) {
+                    sendButton.addClass('enabled');
+                } else {
+                    sendButton.removeClass('enabled');
+                }
+            });
 
             controlRow.append(sendButton);
             textareaWrapper.append(textarea).append(controlRow);
@@ -124,54 +154,39 @@
             return commentingField;
         },
 
-        createProfilePictureElement: function(src) {
-            var profilePicture = $('<img/>', {
-                src: src,
-                class: 'profile-picture' + (this.options.roundProfilePictures ? ' round' : '')
-            });
-            return profilePicture;
-        },
-
         createTextareaElement: function() {
             var self = this;
 
             // Due to bug with Firefox the placeholder need to be embedded like this
-            var textareaEl = $('<textarea placeholder="'+this.options.textareaPlaceholder+'"/>');
+            var textarea = $('<textarea placeholder="'+this.options.textareaPlaceholder+'"/>');
+
+            // Adjust the height dynamically
+            textarea.bind('focus input', function() {
+                self.adjustTextareaHeight(textarea, true);
+            });
+
+            // Setting the initial height
+            self.adjustTextareaHeight(textarea, false);
+
+            return textarea;
+        },
+
+        adjustTextareaHeight: function(textarea, focus) {
             var textareaBaseHeight = 2.2;
             var lineHeight = 1.4;
 
             var setRows = function(rows) {
                 var height = textareaBaseHeight + (rows - 1) * lineHeight;
-                textareaEl.css('height', height + 'em');
+                textarea.css('height', height + 'em');
             }
 
-            // Setting maximum height to the textarea so that it remains unscrollable
-            var adjustHeight = function()  {
-                var rowCount = self.options.textareaRows;
-                do {
-                    setRows(rowCount);
-                    rowCount++;
-                    var isAreaScrollable = textareaEl[0].scrollHeight > textareaEl.outerHeight();
-                } while(isAreaScrollable && rowCount <= self.options.textareaMaxRows);
-            }
-
-            // Increase the height if necessary
-            textareaEl.bind('input blur', adjustHeight);
-
-            // Enable send button if necessary
-            textareaEl.bind('input', function() {
-                var sendButton = textareaEl.siblings('.control-row').find('.send');
-                if(textareaEl.val().length) {
-                    sendButton.addClass('enabled');
-                } else {
-                    sendButton.removeClass('enabled');
-                }
-            });
-
-            // Setting the initial height
-            setRows(self.options.textareaRows);
-
-            return textareaEl;
+            var textarea = $(textarea);
+            var rowCount = focus == true ? this.options.textareaRowsOnFocus : this.options.textareaRows;
+            do {
+                setRows(rowCount);
+                rowCount++;
+                var isAreaScrollable = textarea[0].scrollHeight > textarea.outerHeight();
+            } while(isAreaScrollable && rowCount <= this.options.textareaMaxRows);
         },
 
         createNavigationElement: function() {
@@ -252,8 +267,13 @@
                 // Case: remove exsiting field
                 var existingEl = reply.parents('li.comment').find('.commenting-field');
                 if(existingEl.length) {
-                    existingEl.remove();
-                    reply.removeClass('highlight-font');
+                    if(existingEl.is(':visible')) {
+                        existingEl.hide();
+                    } else {
+                        existingEl.show();
+                        existingEl.find('textarea').focus();
+                    }
+                    reply.toggleClass('highlight-font');
 
                 // Case: creating a new reply field
                 } else {
@@ -304,7 +324,6 @@
 
         // Utilities
         // =========
-
 
     }
 
