@@ -3,26 +3,32 @@
     var Comments = {
 
         $el: null,
+        commentArray: [],
         options: {
             profilePictureURL: '',
             textareaPlaceholder: 'Leave a message',
-            sortPopularText: 'Popular',
+            newestText: 'Newest',
+            popularText: 'Popular',
             myCommentsText: 'My comments',
             sendText: 'Send',
             likeText: 'Like',
             replyText: 'Reply',
             youText: 'You',
 
+            viewAllRepliesText: 'View all replies',
+            hideRepliesText: 'Hide replies',
+
             highlightColor: '#1B7FCC',
             roundProfilePictures: false,
             textareaRows: 2,
             textareaRowsOnFocus: 2,
             textareaMaxRows: 5,
+            maxRepliesVisible: 2,
 
             getComments: function() {},
             postComment: function() {},
             timeFormatter: function(time) {
-                return time;
+                return new Date(time).toLocaleDateString('fi-FI');;
             }
         },
 
@@ -36,21 +42,98 @@
                 self.options[key] = options[key];
             });
 
-            this.refresh();
-        },
-
-        refresh: function() {
-            this.$el.empty();
-            this.createHTML();
+            // Create CSS declarations for highlight color
             this.createCssDeclarations();
 
-            var self = this;
-            var commentArray = this.options.getComments()
-            $(commentArray).each(function(index, commentJSON) {
-                var commentEl = self.createCommentElement(commentJSON);
-                self.$el.find('ul.comment-list').append(commentEl);
-            });
+            // Get comments
+            this.commentArray = this.options.getComments();
+
+            this.render();
         },
+
+        render: function() {
+            var self = this;
+
+            this.$el.empty();
+            this.createHTML();
+
+            // Sort comments by date (oldest first)
+            this.commentArray.sort(function(commentJSON) {
+                return -new Date(commentJSON.created).getTime();
+            });
+
+            // Divide commments into main level comments and replies
+            var mainLevelComments = [];
+            var replies = [];
+            $(this.commentArray).each(function(index, commentJSON) {
+                if(commentJSON.parent == null) {
+                    mainLevelComments.push(commentJSON);
+                } else {
+                    replies.push(commentJSON);
+                }
+            });
+
+
+            // Append main level comments
+            $(mainLevelComments).each(function(index, commentJSON) {
+                var commentEl = self.createCommentElement(commentJSON);
+                self.$el.find('#comment-list').prepend(commentEl);
+            });
+
+            // Append replies
+            $(replies).each(function(index, commentJSON) {
+                var commentEl = self.createCommentElement(commentJSON);
+                var directParentEl = self.$el.find('.comment[data-id="'+commentJSON.parent+'"]');
+
+                // Force replies into one level only
+                var outerMostParent = directParentEl.parents('.comment');
+                if(outerMostParent.length == 0) {
+                    var childCommentsEl = directParentEl.find('.child-comments');
+                } else {
+                    var childCommentsEl = outerMostParent.find('.child-comments');
+                }
+
+                // Append element to DOM
+                childCommentsEl.append(commentEl);
+
+                // Show only limited amount of replies
+                var hiddenReplies = childCommentsEl.children().slice(0, -self.options.maxRepliesVisible)
+                hiddenReplies.addClass('hidden-reply');
+
+                // Append button to toggle all replies if necessary
+                if(hiddenReplies.length && !childCommentsEl.find('li.toggle-all').length) {
+                    var toggleAllContainer = $('<li/>', {
+                        class: 'toggle-all highlight-font comment',
+                    });
+                    var toggleAllButton = $('<span/>', {
+                        text: self.options.viewAllRepliesText,
+                    });
+                    var caret = $('<span/>', {
+                        class: 'caret highlight-border',
+                    });
+
+                    toggleAllContainer.bind('click', function(){
+                        // Toggle text in toggle button
+                        if(toggleAllButton.text() == self.options.hideRepliesText) {
+                            toggleAllButton.text(self.options.viewAllRepliesText);
+                        } else {
+                            toggleAllButton.text(self.options.hideRepliesText);
+                        }
+                        // Toggle direction of the caret
+                        caret.toggleClass('up');
+
+                        // Toggle replies
+                        childCommentsEl.find('.hidden-reply').toggle();
+                    });
+
+                    // Append toggle button to DOM
+                    toggleAllContainer.append(toggleAllButton).append(caret)
+                    childCommentsEl.prepend(toggleAllContainer);
+                }
+            });
+
+        },
+
 
         postComment: function(commentJSON) {
             var success = function() {};
@@ -58,9 +141,8 @@
 
             commentJSON.fullname = this.options.youText;
             commentJSON.profile_picture_url = this.options.profilePictureURL;
-
-            var commentEl = this.createCommentElement(commentJSON);
-            this.$el.find('.comment-list').prepend(commentEl);
+            
+            this.createCommentElement(commentJSON);
 
             this.options.postComment(commentJSON, success, error);
         },
@@ -106,7 +188,7 @@
 
             // Comment list
             var commentList = $('<ul/>', {
-                class: 'comment-list'
+                id: 'comment-list'
             });
             this.$el.append(commentList);
         },
@@ -216,18 +298,23 @@
                 class: 'navigation'
             });
 
-            // Sorting
-            var sortEl = $('<li/>', {
-                text: this.options.sortPopularText,
+            // Newest
+            var newest = $('<li/>', {
+                text: this.options.newestText,
                 class: 'active'
             });
 
+            // Popular
+            var popular = $('<li/>', {
+                text: this.options.popularText,
+            });
+
             // My comments
-            var myCommentsEl = $('<li/>', {
+            var myComments = $('<li/>', {
                 text: this.options.myCommentsText,
             });
 
-            navigationEl.append(sortEl).append(myCommentsEl);
+            navigationEl.append(newest).append(popular).append(myComments);;
             return navigationEl;
         },
 
@@ -248,9 +335,16 @@
             });
 
             // Name
+            var nameText = commentJSON.fullname;
+            if(commentJSON.parent) {
+                var replyTo = this.commentArray.filter(function(comment){
+                    return comment.id == commentJSON.parent
+                })[0].fullname;
+                nameText += ' to ' + replyTo;
+            }
             var name = $('<div/>', {
                 class: 'name',
-                text: commentJSON.fullname,
+                text: nameText,
             });
 
             // Wrapper
@@ -280,7 +374,7 @@
             
             wrapper.append(content);
             wrapper.append(like).append(reply)
-            wrapper.append(childComments);
+            if(commentJSON.parent == null) wrapper.append(childComments);
             commentEl.append(profilePicture).append(time).append(name).append(wrapper);
             return commentEl;
         },
@@ -293,24 +387,30 @@
                 text: this.options.replyText,
             }).bind('click', function(ev) {
 
-                // Case: remove exsiting field
-                var existingEl = reply.parents('li.comment').find('.commenting-field');
-                if(existingEl.length) {
-                    if(existingEl.is(':visible')) {
-                        existingEl.hide();
+                var toggleReplyField = function() {
+                    if(replyField.is(':visible')) {
+                        replyField.hide();
                     } else {
-                        existingEl.show();
-                        existingEl.find('textarea').focus();
+                        replyField.show();
+                        replyField.find('textarea').focus();
                     }
                     reply.toggleClass('highlight-font');
+                }
+
+                // Case: remove exsiting field
+                var replyField = reply.siblings('.commenting-field');
+                if(replyField.length) {
+                    toggleReplyField();
 
                 // Case: creating a new reply field
                 } else {
                     var replyField = self.createCommentingFieldElement();
                     reply.after(replyField);
 
-                    var textarea = replyField.find('textarea')
-                    textarea.focus();
+                    // Hide the field on send
+                    replyField.find('.send').bind('click', toggleReplyField);
+
+                    replyField.find('textarea').focus();
                     reply.addClass('highlight-font');
                 }
 
@@ -339,6 +439,11 @@
             this.createCss('.comments .highlight-font {color: '
                 + this.options.highlightColor + ' !important;'
                 + 'font-weight: bold;'
+                +'}');
+
+            // Font highlight
+            this.createCss('.comments .highlight-border {border-color: '
+                + this.options.highlightColor + ';'
                 +'}');
         },
 

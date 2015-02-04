@@ -134,24 +134,29 @@ select {
 	left: 0;
 }
 
-.comments ul.comment-list li.comment {
+.comments ul#comment-list li.comment {
 	width: 100%;
 	display: inline-block;
-}
-
-.comments ul.comment-list li > .profile-picture {
-	margin-right: .5em;
-}
-
-.comments ul.comment-list li.comment {
 	padding: .5em 0;
 }
 
-.comments ul.comment-list li.comment:not(:first-child) {
+.comments ul#comment-list li.comment:last-child {
+	padding-bottom: 0;
+}
+
+.comments ul#comment-list li.comment:first-child {
+	padding-top: 0;
+}
+
+.comments ul#comment-list li > .profile-picture {
+	margin-right: .5em;
+}
+
+.comments ul#comment-list li.comment:not(:first-child) {
 	border-top: 1px solid #DDD;
 }
 
-.comments ul.comment-list li.comment time {
+.comments ul#comment-list li.comment time {
 	float: right;
 	line-height: 1.4em;
 	margin-left: .5em;
@@ -159,7 +164,7 @@ select {
 	color: #666;
 }
 
-.comments ul.comment-list li.comment .name {
+.comments ul#comment-list li.comment .name {
 	line-height: 1.4em;
 	font-weight: bold;
 	overflow: hidden;
@@ -167,21 +172,64 @@ select {
 	white-space: nowrap;
 }
 
-.comments ul.comment-list li.comment .wrapper{
+.comments ul#comment-list li.comment .wrapper{
 	line-height: 1.3em;
 	overflow: hidden;
 }
 
-.comments ul.comment-list li.comment .wrapper > span {
+.comments ul#comment-list li.comment .wrapper > span {
 	font-size: 0.9em;
 	color: #666;
 	cursor: pointer;
 }
 
-.comments ul.comment-list li.comment span:not(:last-child) {
+.comments ul#comment-list li.comment .wrapper .profile-picture {
+	height: 3em;
+	width: 3em;
+}
+
+.comments ul#comment-list li.comment .wrapper > span:not(:last-child) {
 	margin-right: 2em;
 }
 
-.comments ul.comment-list li.comment .commenting-field {
+.comments ul#comment-list li.comment .commenting-field {
 	margin-top: .5em;
+}
+
+.comments ul#comment-list li.comment .child-comments {
+	padding-top: 0.5em;
+}
+
+.comments ul#comment-list li.comment .child-comments li.toggle-all span:first-child {
+	vertical-align: middle;
+}
+
+.comments ul#comment-list li.comment .child-comments li.toggle-all span:first-child:hover {
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+.comments ul#comment-list li.comment .child-comments li.toggle-all .caret {
+	display: inline-block;
+	vertical-align: middle;
+	width: 0;
+	height: 0;
+
+	margin-left: .5em;
+	border: .3em solid;
+	margin-top: .35em;
+
+	border-left-color: rgba(0, 0, 0, 0);
+	border-bottom-color: rgba(0, 0, 0, 0);
+	border-right-color: rgba(0, 0, 0, 0);
+}
+
+.comments ul#comment-list li.comment .child-comments li.toggle-all .caret.up {
+	border-top-color: rgba(0, 0, 0, 0);
+	border-bottom-color: initial;
+	margin-top: -.2em;
+}
+
+.comments ul#comment-list li.comment .child-comments .hidden-reply {
+	display: none;
 }
