@@ -97,13 +97,13 @@
                 childCommentsEl.append(commentEl);
 
                 // Show only limited amount of replies
-                var hiddenReplies = childCommentsEl.children().slice(0, -self.options.maxRepliesVisible)
+                var hiddenReplies = childCommentsEl.children('.comment').slice(0, -self.options.maxRepliesVisible)
                 hiddenReplies.addClass('hidden-reply');
 
                 // Append button to toggle all replies if necessary
                 if(hiddenReplies.length && !childCommentsEl.find('li.toggle-all').length) {
                     var toggleAllContainer = $('<li/>', {
-                        class: 'toggle-all highlight-font comment',
+                        class: 'toggle-all highlight-font',
                     });
                     var toggleAllButton = $('<span/>', {
                         text: self.options.viewAllRepliesText,
