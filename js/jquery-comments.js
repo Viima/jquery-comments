@@ -149,7 +149,7 @@
                         text: getViewAllReplysText(),
                     });
                     var caret = $('<span/>', {
-                        class: 'caret highlight-border',
+                        class: 'caret',
                     });
 
                     toggleAllContainer.bind('click', function(){
@@ -542,11 +542,6 @@
             this.createCss('.comments .highlight-font {color: '
                 + this.options.highlightColor + ' !important;'
                 + 'font-weight: bold;'
-                +'}');
-
-            // Font highlight
-            this.createCss('.comments .highlight-border {border-color: '
-                + this.options.highlightColor + ';'
                 +'}');
         },
 
