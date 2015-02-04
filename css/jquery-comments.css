@@ -104,7 +104,7 @@ select {
 	float: left;
 	width: 100%;
 
-	color: #666;
+	color: #CCC;
 	border-bottom: 2px solid #CCC;
 	margin-top: .5em;
 	margin-bottom: 1em;
@@ -116,10 +116,11 @@ select {
 	display: inline-block;
 	position: relative;
 	padding: 0 1em;
+	cursor: pointer;
+	font-weight: bold;
 }
 
-.comments ul.navigation li.active {
-	font-weight: bold;
+.comments ul.navigation li.active, .comments ul.navigation li:hover {
 	color: #000;
 }
 

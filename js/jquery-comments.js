@@ -4,12 +4,14 @@
 
         $el: null,
         commentArray: [],
+        commentTree: {},
+        currentSortKey: '',
+
         options: {
             profilePictureURL: '',
             textareaPlaceholder: 'Leave a message',
             newestText: 'Newest',
             popularText: 'Popular',
-            myCommentsText: 'My comments',
             sendText: 'Send',
             likeText: 'Like',
             replyText: 'Reply',
@@ -45,10 +47,36 @@
             // Create CSS declarations for highlight color
             this.createCssDeclarations();
 
+            this.refresh();
+            this.render();
+        },
+
+        refresh: function () {
             // Get comments
             this.commentArray = this.options.getComments();
 
-            this.render();
+            // Sort comments by date (oldest first so that they can be appended to DOM
+            // without caring dependencies)
+            this.sortComments(this.commentArray, 'oldest');
+
+            var self = this;
+            $(this.commentArray).each(function(index, commentJSON) {
+                self.commentTree[commentJSON.id] = {
+                    model: commentJSON,
+                    childs: []
+                };
+
+                // Update child array of the parent (append childs to the array of outer most parent)
+                if(commentJSON.parent != null) {
+                    var parentId = commentJSON.parent;
+                    do {
+                        var parentComment = self.commentTree[parentId];
+                        var parentId = parentComment.model.parent;
+                    } while(parentComment.model.parent != null)
+                    parentComment.childs.push(commentJSON.id);
+
+                }
+            });
         },
 
         render: function() {
@@ -56,11 +84,6 @@
 
             this.$el.empty();
             this.createHTML();
-
-            // Sort comments by date (oldest first)
-            this.commentArray.sort(function(commentJSON) {
-                return -new Date(commentJSON.created).getTime();
-            });
 
             // Divide commments into main level comments and replies
             var mainLevelComments = [];
@@ -73,11 +96,14 @@
                 }
             });
 
+            // Sort the main level comments based on active tab
+            this.currentSortKey = this.$el.find('.navigation li.active').data().sortKey;
+            this.sortComments(mainLevelComments, this.currentSortKey);
 
             // Append main level comments
             $(mainLevelComments).each(function(index, commentJSON) {
                 var commentEl = self.createCommentElement(commentJSON);
-                self.$el.find('#comment-list').prepend(commentEl);
+                self.$el.find('#comment-list').append(commentEl);
             });
 
             // Append replies
@@ -99,6 +125,7 @@
                 // Show only limited amount of replies
                 var hiddenReplies = childCommentsEl.children('.comment').slice(0, -self.options.maxRepliesVisible)
                 hiddenReplies.addClass('hidden-reply');
+
 
                 // Append button to toggle all replies if necessary
                 if(hiddenReplies.length && !childCommentsEl.find('li.toggle-all').length) {
@@ -134,6 +161,50 @@
 
         },
 
+        sortComments: function (comments, sortKey) {
+            var self = this;
+
+            // Sort by popularity
+            if(sortKey == 'popularity') {
+                comments.sort(function(commentA, commentB) {
+                    var childsOfA = self.commentTree[commentA.id].childs.length;
+                    var childsOfB = self.commentTree[commentB.id].childs.length;
+                    return childsOfB - childsOfA;
+                });
+
+            // Sort by date
+            } else {
+                comments.sort(function(commentA, commentB) {
+                    var createdA = new Date(commentA.created).getTime();
+                    var createdB = new Date(commentB.created).getTime();
+                    if(sortKey == 'newest') {
+                        return createdB - createdA;
+                    } else {
+                        return createdA - createdB;
+                    }
+                });
+            }
+        },
+
+        sortAndReArrangeComments: function(sortKey) {
+            if(sortKey != this.currentSortKey) {
+                var commentList = this.$el.find('#comment-list');
+                var mainLevelComments = [];
+
+                var self = this;
+                commentList.find('> li.comment').each(function(index, el) {
+                    var commentId = $(el).data().id;
+                    mainLevelComments.push(self.commentTree[commentId].model);
+                });
+                this.sortComments(mainLevelComments, sortKey);
+
+                // Rearrange the main level comments
+                $(mainLevelComments).each(function(index, commentJSON) {
+                    var commentEl = commentList.find('> li.comment[data-id='+commentJSON.id+']');
+                    commentList.append(commentEl);
+                });
+            }
+        },
 
         postComment: function(commentJSON) {
             var success = function() {};
@@ -298,23 +369,37 @@
                 class: 'navigation'
             });
 
-            // Newest
-            var newest = $('<li/>', {
-                text: this.options.newestText,
-                class: 'active'
-            });
-
             // Popular
             var popular = $('<li/>', {
                 text: this.options.popularText,
+                class: 'active',
+                'data-sort-key': 'popularity',
+            });
+            
+            // Newest
+            var newest = $('<li/>', {
+                text: this.options.newestText,
+                 'data-sort-key': 'newest',
             });
 
-            // My comments
-            var myComments = $('<li/>', {
-                text: this.options.myCommentsText,
-            });
+            navigationEl.append(popular).append(newest);;
 
-            navigationEl.append(newest).append(popular).append(myComments);;
+            // Bind click to sorting
+            var self = this;
+            navigationEl.find('li').bind('click', function(ev) {
+                var el = $(ev.currentTarget);
+
+                // Indicate active sort
+                navigationEl.find('li').removeClass('active');
+                el.addClass('active');
+
+                // Sort the comments
+                var sortKey = el.data().sortKey;
+                self.sortAndReArrangeComments(sortKey);
+
+                // Save the current sort key
+                self.currentSortKey = sortKey;
+            });
             return navigationEl;
         },
 
