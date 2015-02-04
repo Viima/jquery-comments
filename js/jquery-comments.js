@@ -335,17 +335,22 @@
             });
 
             // Name
-            var nameText = commentJSON.fullname;
-            if(commentJSON.parent) {
-                var replyTo = this.commentArray.filter(function(comment){
-                    return comment.id == commentJSON.parent
-                })[0].fullname;
-                nameText += ' to ' + replyTo;
-            }
             var name = $('<div/>', {
                 class: 'name',
-                text: nameText,
+                text: commentJSON.fullname,
             });
+
+            if(commentJSON.parent) {
+                var replyToName = this.commentArray.filter(function(comment){
+                    return comment.id == commentJSON.parent
+                })[0].fullname;
+
+                var replyTo = $('<span/>', {
+                    class: 'reply-to',
+                    text: ' @' + replyToName,
+                });
+                name.append(replyTo);
+            }
 
             // Wrapper
             var wrapper = $('<div/>', {

@@ -168,6 +168,12 @@ select {
 	white-space: nowrap;
 }
 
+.comments ul#comment-list li.comment .name .reply-to {
+	color: #666;
+	font-size: .9em;
+	font-weight: normal;
+}
+
 .comments ul#comment-list li.comment .wrapper{
 	line-height: 1.3em;
 	overflow: hidden;
