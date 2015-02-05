@@ -17,7 +17,7 @@
             replyText: 'Reply',
             youText: 'You',
 
-            viewAllRepliesText: 'View all replies',
+            viewAllRepliesText: 'View all __replyCount__ replies',
             hideRepliesText: 'Hide replies',
 
             highlightColor: '#1B7FCC',
@@ -134,12 +134,7 @@
                     var getViewAllReplysText = function() {
                         var text = self.options.viewAllRepliesText;
                         var replyCount = self.commentTree[outerMostParent.data().id].childs.length;
-
-                        // Append the reply count to correct position
-                        var parts = text.split(' ');
-                        var lastPart = parts[parts.length - 1];
-                        text = text.replace(lastPart, replyCount + ' ' + lastPart);
-                        return text;
+                        return text.replace('__replyCount__', replyCount);
                     }
 
                     var toggleAllContainer = $('<li/>', {
