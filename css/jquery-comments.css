@@ -1,4 +1,4 @@
-textarea,
+.textarea,
 input,
 select {
   margin: 0;
@@ -65,17 +65,26 @@ select {
 	border-left-color: rgba(0, 0, 0, 0);
 }
 
-.comments .textarea-wrapper textarea {
+.comments .textarea-wrapper .textarea {
 	display: block;
 	width: 100%;
 	resize: none;
 	margin: 0;
 	outline: 0;
+	overflow-y: scroll;
 
 	border: 1px solid #CCC;;
 	font-size: 1em;
 	line-height: 1.45em;
 	padding: .25em .8em;
+}
+
+.comments .textarea-wrapper .textarea .reply-to-badge {
+	background: #EEE;
+	border: 1px solid #DDD;
+	font-weight: normal;
+	margin-right: .5em;
+	vertical-align: baseline;
 }
 
 .comments .textarea-wrapper span.send {

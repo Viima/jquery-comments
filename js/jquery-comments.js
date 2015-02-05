@@ -249,7 +249,7 @@
             this.$el.append(mainCommentingField);
 
             // Adjust the height of the main commenting field when clicking elsewhere
-            var mainTextarea = mainCommentingField.find('textarea');
+            var mainTextarea = mainCommentingField.find('.textarea');
             var mainControlRow = mainCommentingField.find('.control-row');
             this.$el.bind('click', function(ev) {
                 if(ev.target != mainTextarea[0]) {
@@ -324,10 +324,16 @@
 
             // Enable and disable send button when necessary
             textarea.bind('input', function() {
-                if(textarea.val().length) {
+                var content = textarea.text();
+                if(content.trim().length) {
                     sendButton.addClass('enabled');
                 } else {
                     sendButton.removeClass('enabled');
+                }
+
+                // Remove reply-to badge if necessary
+                if(!content.length) {
+                    textarea.empty();
                 }
             });
 
@@ -340,8 +346,12 @@
         createTextareaElement: function() {
             var self = this;
 
-            // Due to bug with Firefox the placeholder need to be embedded like this
-            var textarea = $('<textarea placeholder="'+this.options.textareaPlaceholder+'"/>');
+            // Textarea element
+            var textarea = $('<div/>', {
+                class: 'textarea',
+                placeholder: this.options.textareaPlaceholder,
+                contenteditable: true,
+            });
 
             // Adjust the height dynamically
             textarea.bind('focus input', function() {
@@ -370,6 +380,8 @@
                 rowCount++;
                 var isAreaScrollable = textarea[0].scrollHeight > textarea.outerHeight();
             } while(isAreaScrollable && rowCount <= this.options.textareaMaxRows);
+
+            //TODO scroll to bottom if scrollbar became visible
         },
 
         createNavigationElement: function() {
@@ -485,31 +497,37 @@
                 text: this.options.replyText,
             }).bind('click', function(ev) {
 
-                var toggleReplyField = function() {
-                    if(replyField.is(':visible')) {
-                        replyField.hide();
-                    } else {
-                        replyField.show();
-                        replyField.find('textarea').focus();
-                    }
-                    reply.toggleClass('highlight-font');
-                }
 
                 // Case: remove exsiting field
-                var replyField = reply.siblings('.commenting-field');
+                var replyField = reply.parents('.wrapper').last().find('.commenting-field');
                 if(replyField.length) {
-                    toggleReplyField();
+                    replyField.remove();
 
                 // Case: creating a new reply field
                 } else {
                     var replyField = self.createCommentingFieldElement();
-                    reply.after(replyField);
+                    reply.parents('.wrapper').last().append(replyField);
+                    textarea = replyField.find('.textarea');
+                    textarea.html('&nbsp;');
 
-                    // Hide the field on send
-                    replyField.find('.send').bind('click', toggleReplyField);
+                    // Append reply-to badge
+                    var replyToBadge = $('<input/>', {
+                        class: 'reply-to-badge highlight-font',
+                        type: 'button'
+                    });
+                    var replyToName = '@Antti';
+                    replyToBadge.val(replyToName);
+                    textarea.prepend(replyToBadge);
 
-                    replyField.find('textarea').focus();
-                    reply.addClass('highlight-font');
+
+                    // Move cursor to the end
+                    var range = document.createRange();
+                    var selection = window.getSelection();
+                    range.setStart(textarea[0], 2);
+                    range.collapse(true);
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                    textarea.focus();
                 }
 
             });
