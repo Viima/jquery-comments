@@ -311,9 +311,7 @@
                 text: this.options.sendText,
             }).bind('click', function(ev) {
                 if(sendButton.hasClass('enabled')) {
-                    var parent = null;
-                    var data = sendButton.parents('.comment').data();
-                    if(data && data.id) parent = data.id;
+                    var parent = parseInt(textarea.attr('data-parent')) || null;
 
                     var commentJSON = self.createCommentJSON(textarea.val(), parent);
                     self.postComment(commentJSON);
@@ -334,6 +332,7 @@
                 // Remove reply-to badge if necessary
                 if(!content.length) {
                     textarea.empty();
+                    textarea.attr('data-parent', textarea.parents('li.comment').data('id'));
                 }
             });
 
@@ -497,25 +496,29 @@
                 text: this.options.replyText,
             }).bind('click', function(ev) {
 
-
-                // Case: remove exsiting field
+                // Remove existing field
                 var replyField = reply.parents('.wrapper').last().find('.commenting-field');
-                if(replyField.length) {
-                    replyField.remove();
+                if(replyField.length) replyField.remove();
 
-                // Case: creating a new reply field
-                } else {
-                    var replyField = self.createCommentingFieldElement();
-                    reply.parents('.wrapper').last().append(replyField);
-                    textarea = replyField.find('.textarea');
+                // Create the reply field
+                var replyField = self.createCommentingFieldElement();
+                reply.parents('.wrapper').last().append(replyField);
+                textarea = replyField.find('.textarea');
+
+                // Set the correct parent id to the field
+                var parentId = reply.parents('.comment').first().data().id;
+                textarea.attr('data-parent', parentId);
+
+                // Append reply-to badge if necessary
+                var parentModel = self.commentTree[parentId].model;
+                if(parentModel.parent) {
                     textarea.html('&nbsp;');
 
-                    // Append reply-to badge
                     var replyToBadge = $('<input/>', {
                         class: 'reply-to-badge highlight-font',
                         type: 'button'
                     });
-                    var replyToName = '@Antti';
+                    var replyToName = '@' + parentModel.fullname;
                     replyToBadge.val(replyToName);
                     textarea.prepend(replyToBadge);
 
@@ -527,8 +530,9 @@
                     range.collapse(true);
                     selection.removeAllRanges();
                     selection.addRange(range);
-                    textarea.focus();
                 }
+                
+                textarea.focus();
 
             });
 
