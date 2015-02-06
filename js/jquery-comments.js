@@ -2,6 +2,9 @@
 
     var Comments = {
 
+        // Instance variables
+        // ==================
+
         $el: null,
         commentArray: [],
         commentTree: {},
@@ -35,12 +38,13 @@
         },
 
         events: {
-            'click .textarea' : 'vamos',
+            'input .textarea' : 'textareaContentChanged',
+            'click li.comment .child-comments .toggle-all': 'toggleReplies',
         },
 
-        vamos: function(ev) {
-            console.log(this.events)
-        },
+
+        // Initialization
+        // ==============
 
         init: function(options, el) {
             this.$el = $(el);
@@ -64,7 +68,7 @@
             for (var key in this.events) {
                 var method = this[this.events[key]];
                 var eventName = key.split(' ')[0];
-                var selector = key.split(' ')[1];
+                var selector = key.split(' ').slice(1).join(' ');
 
                 // Keep the context
                 method = $.proxy(method, this);
@@ -76,6 +80,51 @@
                 }
             }
         },
+
+
+        // Event handlers
+        // ==============
+
+        textareaContentChanged: function(ev) {
+            var el = $(ev.currentTarget);
+            var content = el.text();
+            var sendButton = el.siblings('.control-row').find('.send');
+
+            if(content.trim().length) {
+                sendButton.addClass('enabled');
+            } else {
+                sendButton.removeClass('enabled');
+            }
+
+            // Remove reply-to badge if necessary
+            if(!content.length) {
+                el.empty();
+                el.attr('data-parent', el.parents('li.comment').data('id'));
+            }
+        },
+
+        toggleReplies: function(ev) {
+            var el = $(ev.currentTarget);
+            var toggleAllButton = el.find('span').first();
+            var caret = el.find('.caret');
+
+            // Toggle text in toggle button
+            if(toggleAllButton.text() == this.options.hideRepliesText) {
+                var parentId = toggleAllButton.parents('li.comment').last().data().id;
+                toggleAllButton.text(this.getViewAllReplysText(parentId));
+            } else {
+                toggleAllButton.text(this.options.hideRepliesText);
+            }
+            // Toggle direction of the caret
+            caret.toggleClass('up');
+
+            // Toggle replies
+            el.siblings('.hidden-reply').toggle();
+        },
+
+
+        // Basic functionalities
+        // =====================
 
         refresh: function () {
             // Get comments
@@ -157,34 +206,14 @@
                 // Append button to toggle all replies if necessary
                 if(hiddenReplies.length && !childCommentsEl.find('li.toggle-all').length) {
 
-                    var getViewAllReplysText = function() {
-                        var text = self.options.viewAllRepliesText;
-                        var replyCount = self.commentTree[outerMostParent.data().id].childs.length;
-                        return text.replace('__replyCount__', replyCount);
-                    }
-
                     var toggleAllContainer = $('<li/>', {
                         class: 'toggle-all highlight-font',
                     });
                     var toggleAllButton = $('<span/>', {
-                        text: getViewAllReplysText(),
+                        text: self.getViewAllReplysText(outerMostParent.data().id),
                     });
                     var caret = $('<span/>', {
                         class: 'caret',
-                    });
-
-                    toggleAllContainer.bind('click', function(){
-                        // Toggle text in toggle button
-                        if(toggleAllButton.text() == self.options.hideRepliesText) {
-                            toggleAllButton.text(getViewAllReplysText());
-                        } else {
-                            toggleAllButton.text(self.options.hideRepliesText);
-                        }
-                        // Toggle direction of the caret
-                        caret.toggleClass('up');
-
-                        // Toggle replies
-                        childCommentsEl.find('.hidden-reply').toggle();
                     });
 
                     // Append toggle button to DOM
@@ -342,23 +371,6 @@
                     var commentJSON = self.createCommentJSON(textarea.val(), parent);
                     self.postComment(commentJSON);
                     textarea.val('');
-                }
-            });
-            //TODO: hide commenting after succesfull reply
-
-            // Enable and disable send button when necessary
-            textarea.bind('input', function() {
-                var content = textarea.text();
-                if(content.trim().length) {
-                    sendButton.addClass('enabled');
-                } else {
-                    sendButton.removeClass('enabled');
-                }
-
-                // Remove reply-to badge if necessary
-                if(!content.length) {
-                    textarea.empty();
-                    textarea.attr('data-parent', textarea.parents('li.comment').data('id'));
                 }
             });
 
@@ -595,6 +607,16 @@
             });
             $('head').append(styleEl);
         },
+
+
+        // Utilities
+        // =========
+
+        getViewAllReplysText: function(id) {
+            var text = this.options.viewAllRepliesText;
+            var replyCount = this.commentTree[id].childs.length;
+            return text.replace('__replyCount__', replyCount);
+        }
 
     }
 
