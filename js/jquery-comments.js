@@ -30,13 +30,22 @@
             getComments: function() {},
             postComment: function() {},
             timeFormatter: function(time) {
-                return new Date(time).toLocaleDateString('fi-FI');;
+                return new Date(time).toLocaleDateString(navigator.language);
             }
+        },
+
+        events: {
+            'click .textarea' : 'vamos',
+        },
+
+        vamos: function(ev) {
+            console.log(this.events)
         },
 
         init: function(options, el) {
             this.$el = $(el);
             this.$el.addClass('comments')
+            this.delegateEvents();
 
             // Init options
             var self = this;
@@ -49,6 +58,23 @@
 
             this.refresh();
             this.render();
+        },
+
+        delegateEvents: function() {
+            for (var key in this.events) {
+                var method = this[this.events[key]];
+                var eventName = key.split(' ')[0];
+                var selector = key.split(' ')[1];
+
+                // Keep the context
+                method = $.proxy(method, this);
+
+                if (selector == '') {
+                    this.$el.on(eventName, method);
+                } else {
+                    this.$el.on(eventName, selector, method);
+                }
+            }
         },
 
         refresh: function () {
