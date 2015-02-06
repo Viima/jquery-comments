@@ -38,6 +38,7 @@
         },
 
         events: {
+            'click' : 'hideControlRowOfMainCommentingField',
             'input .textarea' : 'textareaContentChanged',
             'click li.comment .child-comments .toggle-all': 'toggleReplies',
         },
@@ -84,6 +85,15 @@
 
         // Event handlers
         // ==============
+
+        hideControlRowOfMainCommentingField: function(ev) {
+            var mainTextarea = this.$el.find('.commenting-field.main .textarea');
+            var mainControlRow = this.$el.find('.commenting-field.main .control-row');
+            if(ev.target != mainTextarea[0]) {
+                this.adjustTextareaHeight(mainTextarea, false);
+                mainControlRow.hide();
+            }
+        },
 
         textareaContentChanged: function(ev) {
             var el = $(ev.currentTarget);
@@ -301,17 +311,12 @@
 
             // Commenting field
             var mainCommentingField = this.createCommentingFieldElement();
+            mainCommentingField.addClass('main');
             this.$el.append(mainCommentingField);
 
             // Adjust the height of the main commenting field when clicking elsewhere
             var mainTextarea = mainCommentingField.find('.textarea');
             var mainControlRow = mainCommentingField.find('.control-row');
-            this.$el.bind('click', function(ev) {
-                if(ev.target != mainTextarea[0]) {
-                    self.adjustTextareaHeight(mainTextarea, false);
-                    mainControlRow.hide();
-                }
-            });
             mainControlRow.hide();
             mainTextarea.bind('focus', function() {
                 mainControlRow.show();
@@ -399,26 +404,6 @@
             self.adjustTextareaHeight(textarea, false);
 
             return textarea;
-        },
-
-        adjustTextareaHeight: function(textarea, focus) {
-            var textareaBaseHeight = 2.2;
-            var lineHeight = 1.4;
-
-            var setRows = function(rows) {
-                var height = textareaBaseHeight + (rows - 1) * lineHeight;
-                textarea.css('height', height + 'em');
-            }
-
-            var textarea = $(textarea);
-            var rowCount = focus == true ? this.options.textareaRowsOnFocus : this.options.textareaRows;
-            do {
-                setRows(rowCount);
-                rowCount++;
-                var isAreaScrollable = textarea[0].scrollHeight > textarea.outerHeight();
-            } while(isAreaScrollable && rowCount <= this.options.textareaMaxRows);
-
-            //TODO scroll to bottom if scrollbar became visible
         },
 
         createNavigationElement: function() {
@@ -616,7 +601,27 @@
             var text = this.options.viewAllRepliesText;
             var replyCount = this.commentTree[id].childs.length;
             return text.replace('__replyCount__', replyCount);
-        }
+        },
+
+        adjustTextareaHeight: function(textarea, focus) {
+            var textareaBaseHeight = 2.2;
+            var lineHeight = 1.4;
+
+            var setRows = function(rows) {
+                var height = textareaBaseHeight + (rows - 1) * lineHeight;
+                textarea.css('height', height + 'em');
+            }
+
+            var textarea = $(textarea);
+            var rowCount = focus == true ? this.options.textareaRowsOnFocus : this.options.textareaRows;
+            do {
+                setRows(rowCount);
+                rowCount++;
+                var isAreaScrollable = textarea[0].scrollHeight > textarea.outerHeight();
+            } while(isAreaScrollable && rowCount <= this.options.textareaMaxRows);
+
+            //TODO scroll to bottom if scrollbar became visible
+        },
 
     }
 
