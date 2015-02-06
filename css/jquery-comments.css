@@ -71,7 +71,7 @@ select {
 	resize: none;
 	margin: 0;
 	outline: 0;
-	overflow-y: scroll;
+	overflow-y: auto;
 
 	border: 1px solid #CCC;;
 	font-size: 1em;
