@@ -38,8 +38,16 @@
         },
 
         events: {
-            'click' : 'hideControlRowOfMainCommentingField',
-            'input .textarea' : 'textareaContentChanged',
+
+            // Main comenting field
+            'focus .commenting-field.main .textarea': 'showMainControlRow',
+            'click' : 'hideMainControlRow',
+
+            // All commenting fields
+            'input .commenting-field .textarea' : 'textareaContentChanged',
+            'click .commenting-field .send' : 'sendButtonCliked',
+
+            // Comment
             'click li.comment .child-comments .toggle-all': 'toggleReplies',
         },
 
@@ -86,10 +94,15 @@
         // Event handlers
         // ==============
 
-        hideControlRowOfMainCommentingField: function(ev) {
+        showMainControlRow: function(ev) {
+            var textarea = $(ev.currentTarget);
+            textarea.siblings('.control-row').show();
+        },
+
+        hideMainControlRow: function(ev) {
             var mainTextarea = this.$el.find('.commenting-field.main .textarea');
             var mainControlRow = this.$el.find('.commenting-field.main .control-row');
-            if(ev.target != mainTextarea[0]) {
+            if(!$(ev.target).parents('.commenting-field.main').length) {
                 this.adjustTextareaHeight(mainTextarea, false);
                 mainControlRow.hide();
             }
@@ -110,6 +123,19 @@
             if(!content.length) {
                 el.empty();
                 el.attr('data-parent', el.parents('li.comment').data('id'));
+            }
+        },
+
+        sendButtonCliked: function(ev) {
+            var sendButton = $(ev.currentTarget);
+            var textarea = sendButton.parents('.commenting-field').first().find('.textarea');
+
+            if(sendButton.hasClass('enabled')) {
+                var parent = parseInt(textarea.attr('data-parent')) || null;
+
+                var commentJSON = this.createCommentJSON(textarea.text(), parent);
+                this.postComment(commentJSON);
+                textarea.empty().trigger('input');
             }
         },
 
@@ -318,9 +344,6 @@
             var mainTextarea = mainCommentingField.find('.textarea');
             var mainControlRow = mainCommentingField.find('.control-row');
             mainControlRow.hide();
-            mainTextarea.bind('focus', function() {
-                mainControlRow.show();
-            });
 
             // Navigation bar
             this.$el.append(this.createNavigationElement());
@@ -369,14 +392,6 @@
             var sendButton = $('<span/>', {
                 class: 'send highlight-background',
                 text: this.options.sendText,
-            }).bind('click', function(ev) {
-                if(sendButton.hasClass('enabled')) {
-                    var parent = parseInt(textarea.attr('data-parent')) || null;
-
-                    var commentJSON = self.createCommentJSON(textarea.val(), parent);
-                    self.postComment(commentJSON);
-                    textarea.val('');
-                }
             });
 
             controlRow.append(sendButton);
@@ -619,8 +634,6 @@
                 rowCount++;
                 var isAreaScrollable = textarea[0].scrollHeight > textarea.outerHeight();
             } while(isAreaScrollable && rowCount <= this.options.textareaMaxRows);
-
-            //TODO scroll to bottom if scrollbar became visible
         },
 
     }
