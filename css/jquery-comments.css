@@ -85,6 +85,9 @@ select {
 	font-weight: normal;
 	margin-right: .5em;
 	vertical-align: baseline;
+	line-height: 1.4em;
+	padding: 0 .5em;
+	font-size: .8em;
 }
 
 .comments .textarea-wrapper span.send {
