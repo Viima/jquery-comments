@@ -39,6 +39,9 @@
 
         events: {
 
+            // Navigation
+            'click .navigation li' : 'navigationElementClicked',
+
             // Main comenting field
             'focus .commenting-field.main .textarea': 'showMainControlRow',
             'click' : 'hideMainControlRow',
@@ -97,6 +100,21 @@
 
         // Event handlers
         // ==============
+
+        navigationElementClicked: function(ev) {
+            var navigationEl = $(ev.currentTarget);
+
+            // Indicate active sort
+            navigationEl.siblings().removeClass('active');
+            navigationEl.addClass('active');
+
+            // Sort the comments
+            var sortKey = navigationEl.data().sortKey;
+            this.sortAndReArrangeComments(sortKey);
+
+            // Save the current sort key
+            this.currentSortKey = sortKey;
+        },
 
         showMainControlRow: function(ev) {
             var textarea = $(ev.currentTarget);
@@ -266,7 +284,6 @@
                     childCommentsEl.prepend(toggleAllContainer);
                 }
             });
-
         },
 
         sortComments: function (comments, sortKey) {
@@ -435,23 +452,6 @@
             });
 
             navigationEl.append(popular).append(newest);;
-
-            // Bind click to sorting
-            var self = this;
-            navigationEl.find('li').bind('click', function(ev) {
-                var el = $(ev.currentTarget);
-
-                // Indicate active sort
-                navigationEl.find('li').removeClass('active');
-                el.addClass('active');
-
-                // Sort the comments
-                var sortKey = el.data().sortKey;
-                self.sortAndReArrangeComments(sortKey);
-
-                // Save the current sort key
-                self.currentSortKey = sortKey;
-            });
             return navigationEl;
         },
 
