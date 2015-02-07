@@ -534,16 +534,16 @@
                 text: commentJSON.fullname,
             });
 
+            // Show reply-to name if parent of parent exists
             if(commentJSON.parent) {
-                var replyToName = this.commentArray.filter(function(comment){
-                    return comment.id == commentJSON.parent
-                })[0].fullname;
-
-                var replyTo = $('<span/>', {
-                    class: 'reply-to',
-                    text: ' @' + replyToName,
-                });
-                name.append(replyTo);
+                var parent = this.commentTree[commentJSON.parent].model;
+                if(parent.parent) {
+                    var replyTo = $('<span/>', {
+                        class: 'reply-to',
+                        text: ' @' + parent.fullname,
+                    });
+                    name.append(replyTo);
+                }
             }
 
             // Wrapper
