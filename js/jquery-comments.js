@@ -444,11 +444,8 @@
             mainCommentingField.addClass('main');
             this.$el.append(mainCommentingField);
 
-            // Adjust the height of the main commenting field when clicking elsewhere
-            var mainTextarea = mainCommentingField.find('.textarea');
-            var mainControlRow = mainCommentingField.find('.control-row');
-            
             // Hide control row and close button
+            var mainControlRow = mainCommentingField.find('.control-row');
             mainControlRow.hide();
             mainCommentingField.find('.close').hide();
 
