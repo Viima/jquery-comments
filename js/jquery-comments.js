@@ -53,6 +53,7 @@
 
             // Comment
             'click li.comment .child-comments .toggle-all': 'toggleReplies',
+            'click li.comment .reply': 'replyButtonClicked',
         },
 
         // Initialization
@@ -124,7 +125,13 @@
         hideMainControlRow: function(ev) {
             var mainTextarea = this.$el.find('.commenting-field.main .textarea');
             var mainControlRow = this.$el.find('.commenting-field.main .control-row');
-            if(!$(ev.target).parents('.commenting-field.main').length) {
+
+            var clickSource = ev.target;
+            var sourceIsMainTextarea = clickSource == mainTextarea[0];
+            var sourceIsChildOfMainTextarea = $(clickSource).parents('.textarea').first()[0] == mainTextarea[0];
+
+            // Hide the main control row if the click didn't originate from the main textarea
+            if(!sourceIsMainTextarea && !sourceIsChildOfMainTextarea) {
                 this.adjustTextareaHeight(mainTextarea, false);
                 mainControlRow.hide();
             }
@@ -155,14 +162,21 @@
 
         sendButtonCliked: function(ev) {
             var sendButton = $(ev.currentTarget);
-            var textarea = sendButton.parents('.commenting-field').first().find('.textarea');
+            var commentingField = sendButton.parents('.commenting-field').first();
+            var textarea = commentingField.find('.textarea');
 
             if(sendButton.hasClass('enabled')) {
                 var parent = parseInt(textarea.attr('data-parent')) || null;
 
                 var commentJSON = this.createCommentJSON(textarea.text(), parent);
                 this.postComment(commentJSON);
-                textarea.empty().trigger('input');
+
+                // Proper handling for textarea
+                if(commentingField.hasClass('main')) {
+                    textarea.empty().trigger('input');
+                } else {
+                    commentingField.remove();
+                }
             }
         },
 
@@ -183,6 +197,49 @@
 
             // Toggle replies
             el.siblings('.hidden-reply').toggle();
+        },
+
+        replyButtonClicked: function(ev) {
+            var replyButton = $(ev.currentTarget);
+            var wrapperOfOuterMostParent = replyButton.parents('.wrapper').last();
+
+            // Remove existing field
+            var replyField = wrapperOfOuterMostParent.find('.commenting-field');
+            if(replyField.length) replyField.remove();
+
+            // Create the reply field
+            var replyField = this.createCommentingFieldElement();
+            wrapperOfOuterMostParent.append(replyField);
+            textarea = replyField.find('.textarea');
+
+            // Set the correct parent id to the field
+            var parentId = replyButton.parents('.comment').first().data().id;
+            textarea.attr('data-parent', parentId);
+
+            // Append reply-to badge if necessary
+            var parentModel = this.commentTree[parentId].model;
+            if(parentModel.parent) {
+                textarea.html('&nbsp;');    // Needed to set the cursor to correct place
+
+                // Creating the reply-to badge
+                var replyToBadge = $('<input/>', {
+                    class: 'reply-to-badge highlight-font',
+                    type: 'button'
+                });
+                var replyToName = '@' + parentModel.fullname;
+                replyToBadge.val(replyToName);
+                textarea.prepend(replyToBadge);
+
+                // Move cursor to the end
+                var range = document.createRange();
+                var selection = window.getSelection();
+                range.setStart(textarea[0], 2);
+                range.collapse(true);
+                selection.removeAllRanges();
+                selection.addRange(range);
+            }
+            
+            textarea.focus();
         },
 
 
@@ -507,7 +564,10 @@
             });
 
             // Reply
-            var reply = this.createReplyElement();
+            var reply = $('<span/>', {
+                class: 'reply',
+                text: this.options.replyText,
+            })
 
             // Child comments
             var childComments = $('<ul/>', {
@@ -519,57 +579,6 @@
             if(commentJSON.parent == null) wrapper.append(childComments);
             commentEl.append(profilePicture).append(time).append(name).append(wrapper);
             return commentEl;
-        },
-
-        createReplyElement: function() {
-            var self = this;
-
-            var reply = $('<span/>', {
-                class: 'reply',
-                text: this.options.replyText,
-            }).bind('click', function(ev) {
-
-                // Remove existing field
-                var replyField = reply.parents('.wrapper').last().find('.commenting-field');
-                if(replyField.length) replyField.remove();
-
-                // Create the reply field
-                var replyField = self.createCommentingFieldElement();
-                reply.parents('.wrapper').last().append(replyField);
-                textarea = replyField.find('.textarea');
-
-                // Set the correct parent id to the field
-                var parentId = reply.parents('.comment').first().data().id;
-                textarea.attr('data-parent', parentId);
-
-                // Append reply-to badge if necessary
-                var parentModel = self.commentTree[parentId].model;
-                if(parentModel.parent) {
-                    textarea.html('&nbsp;');
-
-                    var replyToBadge = $('<input/>', {
-                        class: 'reply-to-badge highlight-font',
-                        type: 'button'
-                    });
-                    var replyToName = '@' + parentModel.fullname;
-                    replyToBadge.val(replyToName);
-                    textarea.prepend(replyToBadge);
-
-
-                    // Move cursor to the end
-                    var range = document.createRange();
-                    var selection = window.getSelection();
-                    range.setStart(textarea[0], 2);
-                    range.collapse(true);
-                    selection.removeAllRanges();
-                    selection.addRange(range);
-                }
-                
-                textarea.focus();
-
-            });
-
-            return reply;
         },
 
 
