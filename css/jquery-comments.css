@@ -65,6 +65,37 @@ select {
 	border-left-color: rgba(0, 0, 0, 0);
 }
 
+.comments .textarea-wrapper .close {
+	width: 1em;
+	height: 1em;
+	right: 0;
+	position: absolute;
+	margin-top: .5em;
+	margin-right: .5em;
+}
+
+.comments .scrollable .textarea-wrapper .close {
+	margin-right: calc(.5em + 15px);	/* Because of scrollbar */
+}
+
+.comments .textarea-wrapper .close span {
+	cursor: pointer;
+	background: #CCC;
+	width: 25%;
+	left: 37.5%;
+	height: 100%;
+	position: absolute;
+	-ms-transform: rotate(45deg);
+	-webkit-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+
+.comments .textarea-wrapper .close .right {
+	-ms-transform: rotate(-45deg);
+	-webkit-transform: rotate(-45deg);
+	transform: rotate(-45deg);
+}
+
 .comments .textarea-wrapper .textarea {
 	display: block;
 	width: 100%;
@@ -77,6 +108,11 @@ select {
 	font-size: 1em;
 	line-height: 1.45em;
 	padding: .25em .8em;
+	padding-right: 2em;
+}
+
+.comments .scrollable .textarea-wrapper .textarea {
+	padding-right: calc(2em + 15px);	/* Because of scrollbar */
 }
 
 .comments .textarea-wrapper .textarea .reply-to-badge {
