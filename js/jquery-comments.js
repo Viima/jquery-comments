@@ -44,13 +44,13 @@
             'click' : 'hideMainControlRow',
 
             // All commenting fields
-            'input .commenting-field .textarea' : 'textareaContentChanged',
+            'focus .commenting-field .textarea' : 'increaseTextareaHeight',
+            'input .commenting-field .textarea' : 'increaseTextareaHeight textareaContentChanged',
             'click .commenting-field .send' : 'sendButtonCliked',
 
             // Comment
             'click li.comment .child-comments .toggle-all': 'toggleReplies',
         },
-
 
         // Initialization
         // ==============
@@ -75,17 +75,21 @@
 
         delegateEvents: function() {
             for (var key in this.events) {
-                var method = this[this.events[key]];
                 var eventName = key.split(' ')[0];
                 var selector = key.split(' ').slice(1).join(' ');
+                var methodNames = this.events[key].split(' ');
 
-                // Keep the context
-                method = $.proxy(method, this);
+                for(var index in methodNames) {
+                    var method = this[methodNames[index]];
 
-                if (selector == '') {
-                    this.$el.on(eventName, method);
-                } else {
-                    this.$el.on(eventName, selector, method);
+                    // Keep the context
+                    method = $.proxy(method, this);
+
+                    if (selector == '') {
+                        this.$el.on(eventName, method);
+                    } else {
+                        this.$el.on(eventName, selector, method);
+                    }
                 }
             }
         },
@@ -106,6 +110,11 @@
                 this.adjustTextareaHeight(mainTextarea, false);
                 mainControlRow.hide();
             }
+        },
+
+        increaseTextareaHeight: function(ev) {
+            var textarea = $(ev.currentTarget);
+            this.adjustTextareaHeight(textarea, true);
         },
 
         textareaContentChanged: function(ev) {
@@ -386,7 +395,14 @@
             });
 
             // Textarea
-            var textarea = this.createTextareaElement();
+            var textarea = $('<div/>', {
+                class: 'textarea',
+                placeholder: this.options.textareaPlaceholder,
+                contenteditable: true,
+            });
+
+            // Setting the initial height for the textarea
+            this.adjustTextareaHeight(textarea, false);
 
             // Send -button
             var sendButton = $('<span/>', {
@@ -398,27 +414,6 @@
             textareaWrapper.append(textarea).append(controlRow);
             commentingField.append(profilePicture).append(textareaWrapper);
             return commentingField;
-        },
-
-        createTextareaElement: function() {
-            var self = this;
-
-            // Textarea element
-            var textarea = $('<div/>', {
-                class: 'textarea',
-                placeholder: this.options.textareaPlaceholder,
-                contenteditable: true,
-            });
-
-            // Adjust the height dynamically
-            textarea.bind('focus input', function() {
-                self.adjustTextareaHeight(textarea, true);
-            });
-
-            // Setting the initial height
-            self.adjustTextareaHeight(textarea, false);
-
-            return textarea;
         },
 
         createNavigationElement: function() {
