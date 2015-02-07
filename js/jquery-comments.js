@@ -12,7 +12,7 @@
 
         options: {
             profilePictureURL: '',
-            textareaPlaceholder: 'Leave a message',
+            textareaPlaceholder: 'Leave a comment',
             newestText: 'Newest',
             popularText: 'Popular',
             sendText: 'Send',

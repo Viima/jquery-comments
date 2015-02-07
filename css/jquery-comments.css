@@ -1,13 +1,17 @@
-.textarea,
-input,
-select {
-  margin: 0;
-  vertical-align: top;
-}
 
 .comments * {
 	box-sizing: border-box;
 	font-family: inherit;
+}
+
+.comments .textarea, .comments input, .comments select {
+  margin: 0;
+  vertical-align: top;
+}
+
+.comments [contentEditable=true]:empty:not(:focus):before{
+    content:attr(placeholder);
+    color: #CCC;
 }
 
 .comments h3 {
