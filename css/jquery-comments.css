@@ -66,6 +66,7 @@ select {
 }
 
 .comments .textarea-wrapper .close {
+	cursor: pointer;
 	width: 1em;
 	height: 1em;
 	right: 0;
@@ -79,7 +80,6 @@ select {
 }
 
 .comments .textarea-wrapper .close span {
-	cursor: pointer;
 	background: #CCC;
 	width: 25%;
 	left: 37.5%;

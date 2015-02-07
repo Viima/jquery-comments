@@ -50,6 +50,7 @@
             'focus .commenting-field .textarea' : 'increaseTextareaHeight',
             'input .commenting-field .textarea' : 'increaseTextareaHeight textareaContentChanged',
             'click .commenting-field .send' : 'sendButtonCliked',
+            'click .commenting-field .close' : 'closeButtonClicked',
 
             // Comment
             'click li.comment .child-comments .toggle-all': 'toggleReplies',
@@ -184,10 +185,19 @@
 
                 // Proper handling for textarea
                 if(commentingField.hasClass('main')) {
-                    textarea.empty().trigger('input');
+                    this.clearTextarea(textarea);
                 } else {
                     commentingField.remove();
                 }
+            }
+        },
+
+        closeButtonClicked: function(ev) {
+            var commentingField = $(ev.currentTarget).parents('.commenting-field').first();
+            if(commentingField.hasClass('main')) {
+                this.clearTextarea(commentingField.find('.textarea'));
+            } else {
+                commentingField.remove();
             }
         },
 
@@ -657,6 +667,11 @@
                 rowCount++;
                 var isAreaScrollable = textarea[0].scrollHeight > textarea.outerHeight();
             } while(isAreaScrollable && rowCount <= this.options.textareaMaxRows);
+        },
+
+        clearTextarea: function(textarea) {
+            textarea.empty().trigger('input');
+            this.$el.focus();
         },
 
     }
