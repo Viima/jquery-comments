@@ -112,18 +112,16 @@
 
             var self = this;
             $(commentsArray).each(function(index, commentJSON) {
-                self.commentsById[commentJSON.id] = {
-                    model: commentJSON,
-                    childs: []
-                };
+                commentJSON.childs = [];
+                self.commentsById[commentJSON.id] = commentJSON;
 
                 // Update child array of the parent (append childs to the array of outer most parent)
                 if(commentJSON.parent != null) {
                     var parentId = commentJSON.parent;
                     do {
                         var parentComment = self.commentsById[parentId];
-                        var parentId = parentComment.model.parent;
-                    } while(parentComment.model.parent != null)
+                        parentId = parentComment.parent;
+                    } while(parentComment.parent != null)
                     parentComment.childs.push(commentJSON.id);
 
                 }
@@ -232,7 +230,7 @@
                 var self = this;
                 commentList.find('> li.comment').each(function(index, el) {
                     var commentId = $(el).data().id;
-                    mainLevelComments.push(self.commentsById[commentId].model);
+                    mainLevelComments.push(self.commentsById[commentId]);
                 });
                 this.sortComments(mainLevelComments, sortKey);
 
@@ -406,7 +404,7 @@
             textarea.attr('data-parent', parentId);
 
             // Append reply-to badge if necessary
-            var parentModel = this.commentsById[parentId].model;
+            var parentModel = this.commentsById[parentId];
             if(parentModel.parent) {
                 textarea.html('&nbsp;');    // Needed to set the cursor to correct place
 
@@ -561,7 +559,7 @@
 
             // Show reply-to name if parent of parent exists
             if(commentJSON.parent) {
-                var parent = this.commentsById[commentJSON.parent].model;
+                var parent = this.commentsById[commentJSON.parent];
                 if(parent.parent) {
                     var replyTo = $('<span/>', {
                         class: 'reply-to',
@@ -643,7 +641,7 @@
 
         getComments: function() {
             var self = this;
-            return Object.keys(this.commentsById).map(function(id){return self.commentsById[id].model});
+            return Object.keys(this.commentsById).map(function(id){return self.commentsById[id]});
         },
 
         getViewAllReplysText: function(id) {
