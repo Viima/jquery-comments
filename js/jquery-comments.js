@@ -6,8 +6,7 @@
         // ==================
 
         $el: null,
-        commentArray: [],
-        commentTree: {},
+        commentsById: {},
         currentSortKey: '',
 
         options: {
@@ -74,7 +73,7 @@
             // Create CSS declarations for highlight color
             this.createCssDeclarations();
 
-            this.refresh();
+            this.updateData();
             this.render();
         },
 
@@ -238,7 +237,7 @@
             textarea.attr('data-parent', parentId);
 
             // Append reply-to badge if necessary
-            var parentModel = this.commentTree[parentId].model;
+            var parentModel = this.commentsById[parentId].model;
             if(parentModel.parent) {
                 textarea.html('&nbsp;');    // Needed to set the cursor to correct place
 
@@ -267,17 +266,17 @@
         // Basic functionalities
         // =====================
 
-        refresh: function () {
+        updateData: function () {
             // Get comments
-            this.commentArray = this.options.getComments();
+            var commentsArray = this.options.getComments();
 
             // Sort comments by date (oldest first so that they can be appended to DOM
             // without caring dependencies)
-            this.sortComments(this.commentArray, 'oldest');
+            this.sortComments(commentsArray, 'oldest');
 
             var self = this;
-            $(this.commentArray).each(function(index, commentJSON) {
-                self.commentTree[commentJSON.id] = {
+            $(commentsArray).each(function(index, commentJSON) {
+                self.commentsById[commentJSON.id] = {
                     model: commentJSON,
                     childs: []
                 };
@@ -286,7 +285,7 @@
                 if(commentJSON.parent != null) {
                     var parentId = commentJSON.parent;
                     do {
-                        var parentComment = self.commentTree[parentId];
+                        var parentComment = self.commentsById[parentId];
                         var parentId = parentComment.model.parent;
                     } while(parentComment.model.parent != null)
                     parentComment.childs.push(commentJSON.id);
@@ -304,7 +303,7 @@
             // Divide commments into main level comments and replies
             var mainLevelComments = [];
             var replies = [];
-            $(this.commentArray).each(function(index, commentJSON) {
+            $(this.getComments()).each(function(index, commentJSON) {
                 if(commentJSON.parent == null) {
                     mainLevelComments.push(commentJSON);
                 } else {
@@ -370,8 +369,8 @@
             // Sort by popularity
             if(sortKey == 'popularity') {
                 comments.sort(function(commentA, commentB) {
-                    var childsOfA = self.commentTree[commentA.id].childs.length;
-                    var childsOfB = self.commentTree[commentB.id].childs.length;
+                    var childsOfA = self.commentsById[commentA.id].childs.length;
+                    var childsOfB = self.commentsById[commentB.id].childs.length;
                     return childsOfB - childsOfA;
                 });
 
@@ -397,7 +396,7 @@
                 var self = this;
                 commentList.find('> li.comment').each(function(index, el) {
                     var commentId = $(el).data().id;
-                    mainLevelComments.push(self.commentTree[commentId].model);
+                    mainLevelComments.push(self.commentsById[commentId].model);
                 });
                 this.sortComments(mainLevelComments, sortKey);
 
@@ -562,7 +561,7 @@
 
             // Show reply-to name if parent of parent exists
             if(commentJSON.parent) {
-                var parent = this.commentTree[commentJSON.parent].model;
+                var parent = this.commentsById[commentJSON.parent].model;
                 if(parent.parent) {
                     var replyTo = $('<span/>', {
                         class: 'reply-to',
@@ -642,9 +641,14 @@
         // Utilities
         // =========
 
+        getComments: function() {
+            var self = this;
+            return Object.keys(this.commentsById).map(function(id){return self.commentsById[id].model});
+        },
+
         getViewAllReplysText: function(id) {
             var text = this.options.viewAllRepliesText;
-            var replyCount = this.commentTree[id].childs.length;
+            var replyCount = this.commentsById[id].childs.length;
             return text.replace('__replyCount__', replyCount);
         },
 
