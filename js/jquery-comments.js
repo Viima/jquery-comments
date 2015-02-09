@@ -154,17 +154,20 @@
 
             // Append main level comments
             $(mainLevelComments).each(function(index, commentJSON) {
-                self.addComment(commentJSON);
+                self.addComment(commentJSON, false);
             });
 
             // Append replies in chronological order
             this.sortComments(replies, 'oldest');
             $(replies).each(function(index, commentJSON) {
-                self.addComment(commentJSON);
+                self.addComment(commentJSON, false);
             });
+
+            // Re-arrange the comments
+            this.sortAndReArrangeComments(this.currentSortKey);
         },
 
-        addComment: function(commentJSON) {
+        addComment: function(commentJSON, rearrange) {
             this.addCommentToDataModel(commentJSON);
             var commentEl = this.createCommentElement(commentJSON);
 
@@ -187,8 +190,10 @@
             } else {
                 var mainCommentList = this.$el.find('#comment-list');
                 mainCommentList.append(commentEl);
-                this.sortAndReArrangeComments(this.currentSortKey);
             }
+
+            // Re-arranging the comments if necessary
+            if(rearrange) this.sortAndReArrangeComments(this.currentSortKey);
         },
 
         updateToggleAllButton: function(parentEl) {
@@ -386,7 +391,7 @@
                 var content = this.getTextareaContent(textarea)
                 var commentJSON = this.createCommentJSON(content, parent);
                 this.postComment(commentJSON);
-                this.addComment(commentJSON);
+                this.addComment(commentJSON, true);
 
                 // Proper handling for textarea
                 if(commentingField.hasClass('main')) {
