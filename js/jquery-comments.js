@@ -239,7 +239,16 @@
                 comments.sort(function(commentA, commentB) {
                     var childsOfA = self.commentsById[commentA.id].childs.length;
                     var childsOfB = self.commentsById[commentB.id].childs.length;
-                    return childsOfB - childsOfA;
+
+                    if(childsOfB != childsOfA) {
+                        return childsOfB - childsOfA;
+
+                    // Return older if popularity is the same (force new comments to last)
+                    } else {
+                        var createdA = new Date(commentA.created).getTime();
+                        var createdB = new Date(commentB.created).getTime();
+                        return createdA - createdB;
+                    }
                 });
 
             // Sort by date
