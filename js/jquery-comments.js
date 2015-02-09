@@ -114,17 +114,6 @@
             var self = this;
             $(commentsArray).each(function(index, commentJSON) {
                 self.addCommentToDataModel(commentJSON);
-
-                // Update child array of the parent (append childs to the array of outer most parent)
-                if(commentJSON.parent != null) {
-                    var parentId = commentJSON.parent;
-                    do {
-                        var parentComment = self.commentsById[parentId];
-                        parentId = parentComment.parent;
-                    } while(parentComment.parent != null)
-                    parentComment.childs.push(commentJSON.id);
-
-                }
             });
         },
 
@@ -132,6 +121,16 @@
             if(!(commentJSON.id in this.commentsById)) {
                 this.commentsById[commentJSON.id] = commentJSON;
                 commentJSON.childs = [];
+
+                // Update child array of the parent (append childs to the array of outer most parent)
+                if(commentJSON.parent != null) {
+                    var parentId = commentJSON.parent;
+                    do {
+                        var parentComment = this.commentsById[parentId];
+                        parentId = parentComment.parent;
+                    } while(parentComment.parent != null)
+                    parentComment.childs.push(commentJSON.id);
+                }
             }
         },
 
