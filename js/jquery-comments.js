@@ -698,7 +698,6 @@
                     showExpandingText();
                 }
             }
-
         },
 
         adjustTextareaHeight: function(textarea, focus) {
@@ -724,22 +723,10 @@
         },
 
         getTextareaContent: function(textarea) {
-            var content = '';
-            var raw = textarea.html();
-            var indexOfFirstElement = raw.indexOf('<');
-
-            if(indexOfFirstElement == -1) {
-                content = raw;
-            } else {
-                content = raw.substring(0, indexOfFirstElement);
-                var childs = $(raw.substring(indexOfFirstElement));
-                childs.each(function(index, child) {
-                    if(content.length) content += '\n';
-                    content += $(child).text();
-                });
-            }
-
-            return content;
+            var ce = $('<pre/>').html(textarea.html());
+            ce.find('div').replaceWith(function() { return '\n' + this.innerHTML; });
+            ce.find('br').replaceWith(function() { return '\n' + this.innerHTML; });
+            return ce.text().trim();
         },
 
     }

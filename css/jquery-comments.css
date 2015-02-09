@@ -243,6 +243,10 @@
 	width: 3em;
 }
 
+.comments ul#comment-list li.comment .wrapper .content {
+	white-space: pre-line;
+}
+
 .comments ul#comment-list li.comment .wrapper > span:not(:last-child) {
 	margin-right: 2em;
 }
