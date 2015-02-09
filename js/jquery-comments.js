@@ -12,8 +12,9 @@
         options: {
             profilePictureURL: '',
             textareaPlaceholder: 'Leave a comment',
-            newestText: 'Newest',
             popularText: 'Popular',
+            newestText: 'Newest',
+            oldestText: 'Oldest',
             sendText: 'Send',
             likeText: 'Like',
             replyText: 'Reply',
@@ -139,6 +140,7 @@
 
             this.$el.empty();
             this.createHTML();
+            this.currentSortKey = this.$el.find('.navigation li.active').data().sortKey;
 
             // Divide commments into main level comments and replies
             var mainLevelComments = [];
@@ -151,14 +153,9 @@
                 }
             });
 
-            // Sort the main level comments based on active tab
-            this.currentSortKey = this.$el.find('.navigation li.active').data().sortKey;
-            this.sortComments(mainLevelComments, this.currentSortKey);
-
             // Append main level comments
             $(mainLevelComments).each(function(index, commentJSON) {
-                var commentEl = self.createCommentElement(commentJSON);
-                self.$el.find('#comment-list').append(commentEl);
+                self.addComment(commentJSON);
             });
 
             // Append replies in chronological order
@@ -189,7 +186,9 @@
 
             // Case: main level comment
             } else {
-                //TODO
+                var mainCommentList = this.$el.find('#comment-list');
+                mainCommentList.append(commentEl);
+                this.sortAndReArrangeComments(this.currentSortKey);
             }
         },
 
@@ -258,23 +257,17 @@
         },
 
         sortAndReArrangeComments: function(sortKey) {
-            if(sortKey != this.currentSortKey) {
-                var commentList = this.$el.find('#comment-list');
-                var mainLevelComments = [];
+            var commentList = this.$el.find('#comment-list');
+            
+            // Get main level comments
+            var mainLevelComments = this.getComments().filter(function(commentJSON){return !commentJSON.parent});
+            this.sortComments(mainLevelComments, sortKey);
 
-                var self = this;
-                commentList.find('> li.comment').each(function(index, el) {
-                    var commentId = $(el).data().id;
-                    mainLevelComments.push(self.commentsById[commentId]);
-                });
-                this.sortComments(mainLevelComments, sortKey);
-
-                // Rearrange the main level comments
-                $(mainLevelComments).each(function(index, commentJSON) {
-                    var commentEl = commentList.find('> li.comment[data-id='+commentJSON.id+']');
-                    commentList.append(commentEl);
-                });
-            }
+            // Rearrange the main level comments
+            $(mainLevelComments).each(function(index, commentJSON) {
+                var commentEl = commentList.find('> li.comment[data-id='+commentJSON.id+']');
+                commentList.append(commentEl);
+            });
         },
 
         postComment: function(commentJSON) {
@@ -283,7 +276,8 @@
 
             commentJSON.fullname = this.options.youText;
             commentJSON.profile_picture_url = this.options.profilePictureURL;
-            commentJSON.id = this.getComments().length + 1; //TODO: fix
+            commentJSON.created = new Date().getTime();
+            commentJSON.id = this.getComments().length + 1;
 
             this.createCommentElement(commentJSON);
 
@@ -545,8 +539,8 @@
             // Popular
             var popular = $('<li/>', {
                 text: this.options.popularText,
-                class: 'active',
                 'data-sort-key': 'popularity',
+                 class: 'active',
             });
             
             // Newest
@@ -555,7 +549,13 @@
                  'data-sort-key': 'newest',
             });
 
-            navigationEl.append(popular).append(newest);;
+            // Oldest
+            var oldest = $('<li/>', {
+                text: this.options.oldestText,
+                 'data-sort-key': 'oldest',
+            });
+
+            navigationEl.append(popular).append(newest).append(oldest);
             return navigationEl;
         },
 
