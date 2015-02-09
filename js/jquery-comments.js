@@ -112,8 +112,7 @@
 
             var self = this;
             $(commentsArray).each(function(index, commentJSON) {
-                commentJSON.childs = [];
-                self.commentsById[commentJSON.id] = commentJSON;
+                self.addCommentToDataModel(commentJSON);
 
                 // Update child array of the parent (append childs to the array of outer most parent)
                 if(commentJSON.parent != null) {
@@ -126,6 +125,13 @@
 
                 }
             });
+        },
+
+        addCommentToDataModel: function(commentJSON) {
+            if(!(commentJSON.id in this.commentsById)) {
+                this.commentsById[commentJSON.id] = commentJSON;
+                commentJSON.childs = [];
+            }
         },
 
         render: function() {
@@ -163,6 +169,7 @@
         },
 
         addComment: function(commentJSON) {
+            this.addCommentToDataModel(commentJSON);
             var commentEl = this.createCommentElement(commentJSON);
 
             // Case: reply
@@ -202,7 +209,7 @@
                 }
 
                 // Append button to toggle all replies if necessary
-                if(hiddenReplies.length && !toggleAllButton.length) {
+                if(!toggleAllButton.length) {
 
                     toggleAllButton = $('<li/>', {
                         class: 'toggle-all highlight-font',
@@ -218,10 +225,8 @@
                     toggleAllButton.append(toggleAllButtonText).append(caret)
                     childCommentsEl.prepend(toggleAllButton);
                 }
-            }
 
-            // Update the text of toggle all -button
-            if(toggleAllButton.length) {
+                // Update the text of toggle all -button
                 this.setToggleAllButtonText(toggleAllButton, false);
             }
 
@@ -278,7 +283,8 @@
 
             commentJSON.fullname = this.options.youText;
             commentJSON.profile_picture_url = this.options.profilePictureURL;
-            
+            commentJSON.id = this.getComments().length + 1; //TODO: fix
+
             this.createCommentElement(commentJSON);
 
             this.options.postComment(commentJSON, success, error);
