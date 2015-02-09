@@ -155,46 +155,76 @@
                 self.$el.find('#comment-list').append(commentEl);
             });
 
-            // Append replies
+            // Append replies in chronological order
+            this.sortComments(replies, 'oldest');
             $(replies).each(function(index, commentJSON) {
-                var commentEl = self.createCommentElement(commentJSON);
-                var directParentEl = self.$el.find('.comment[data-id="'+commentJSON.parent+'"]');
+                self.addComment(commentJSON);
+            });
+        },
+
+        addComment: function(commentJSON) {
+            var commentEl = this.createCommentElement(commentJSON);
+
+            // Case: reply
+            if(commentJSON.parent) {
+                var directParentEl = this.$el.find('.comment[data-id="'+commentJSON.parent+'"]');
 
                 // Force replies into one level only
-                var outerMostParent = directParentEl.parents('.comment');
-                if(outerMostParent.length == 0) {
-                    var childCommentsEl = directParentEl.find('.child-comments');
-                    outerMostParent = directParentEl;
-                } else {
-                    var childCommentsEl = outerMostParent.find('.child-comments');
-                }
+                var outerMostParent = directParentEl.parents('.comment').last();
+                if(outerMostParent.length == 0) outerMostParent = directParentEl;
 
                 // Append element to DOM
-                childCommentsEl.append(commentEl);
+                var childCommentsEl = outerMostParent.find('.child-comments');
+                childCommentsEl.append(commentEl)
 
-                // Show only limited amount of replies
-                var hiddenReplies = childCommentsEl.children('.comment').slice(0, -self.options.maxRepliesVisible)
+                // Update toggle all -button
+                this.updateToggleAllButton(outerMostParent);
+
+            // Case: main level comment
+            } else {
+                //TODO
+            }
+        },
+
+        updateToggleAllButton: function(parentEl) {
+            var childCommentsEl = parentEl.find('.child-comments');
+            var childComments = childCommentsEl.find('.comment');
+            var toggleAllButton = childCommentsEl.find('li.toggle-all')
+            childComments.removeClass('hidden-reply');
+
+            if(childComments.length > this.options.maxRepliesVisible) {
+                var hiddenReplies = childComments.slice(0, -this.options.maxRepliesVisible)
                 hiddenReplies.addClass('hidden-reply');
 
+                // Show all replies if replies are expanded
+                if(toggleAllButton.find('span.text').text() == this.options.hideRepliesText) {
+                    hiddenReplies.show();
+                }
 
                 // Append button to toggle all replies if necessary
-                if(hiddenReplies.length && !childCommentsEl.find('li.toggle-all').length) {
+                if(hiddenReplies.length && !toggleAllButton.length) {
 
-                    var toggleAllContainer = $('<li/>', {
+                    toggleAllButton = $('<li/>', {
                         class: 'toggle-all highlight-font',
                     });
-                    var toggleAllButton = $('<span/>', {
-                        text: self.getViewAllReplysText(outerMostParent.data().id),
+                    var toggleAllButtonText = $('<span/>', {
+                        class: 'text'
                     });
                     var caret = $('<span/>', {
                         class: 'caret',
                     });
 
                     // Append toggle button to DOM
-                    toggleAllContainer.append(toggleAllButton).append(caret)
-                    childCommentsEl.prepend(toggleAllContainer);
+                    toggleAllButton.append(toggleAllButtonText).append(caret)
+                    childCommentsEl.prepend(toggleAllButton);
                 }
-            });
+            }
+
+            // Update the text of toggle all -button
+            if(toggleAllButton.length) {
+                this.setToggleAllButtonText(toggleAllButton, false);
+            }
+
         },
 
         sortComments: function (comments, sortKey) {
@@ -348,6 +378,7 @@
                 var content = this.getTextareaContent(textarea)
                 var commentJSON = this.createCommentJSON(content, parent);
                 this.postComment(commentJSON);
+                this.addComment(commentJSON);
 
                 // Proper handling for textarea
                 if(commentingField.hasClass('main')) {
@@ -369,21 +400,8 @@
 
         toggleReplies: function(ev) {
             var el = $(ev.currentTarget);
-            var toggleAllButton = el.find('span').first();
-            var caret = el.find('.caret');
-
-            // Toggle text in toggle button
-            if(toggleAllButton.text() == this.options.hideRepliesText) {
-                var parentId = toggleAllButton.parents('li.comment').last().data().id;
-                toggleAllButton.text(this.getViewAllReplysText(parentId));
-            } else {
-                toggleAllButton.text(this.options.hideRepliesText);
-            }
-            // Toggle direction of the caret
-            caret.toggleClass('up');
-
-            // Toggle replies
             el.siblings('.hidden-reply').toggle();
+            this.setToggleAllButtonText(el, true);
         },
 
         replyButtonClicked: function(ev) {
@@ -644,10 +662,37 @@
             return Object.keys(this.commentsById).map(function(id){return self.commentsById[id]});
         },
 
-        getViewAllReplysText: function(id) {
-            var text = this.options.viewAllRepliesText;
-            var replyCount = this.commentsById[id].childs.length;
-            return text.replace('__replyCount__', replyCount);
+        setToggleAllButtonText: function(toggleAllButton, toggle) {
+            var self = this;
+            var textContainer = toggleAllButton.find('span.text');
+            var caret = toggleAllButton.find('.caret');
+
+            var showExpandingText = function() {
+                var text = self.options.viewAllRepliesText;
+                var replyCount = toggleAllButton.siblings('.comment').length;
+                text = text.replace('__replyCount__', replyCount);
+                textContainer.text(text);
+            }
+
+            if(toggle) {
+
+                // Toggle text
+                if(textContainer.text() == this.options.hideRepliesText) {
+                    showExpandingText();
+                } else {
+                    textContainer.text(this.options.hideRepliesText);
+                }
+                // Toggle direction of the caret
+                caret.toggleClass('up');
+
+            } else {
+
+                // Update text if necessary
+                if(textContainer.text() != this.options.hideRepliesText) {
+                    showExpandingText();
+                }
+            }
+
         },
 
         adjustTextareaHeight: function(textarea, focus) {
