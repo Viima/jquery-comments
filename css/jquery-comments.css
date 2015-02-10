@@ -261,24 +261,24 @@
 	margin-top: .5em;
 }
 
-.jquery-comments ul#comment-list li.comment .child-jquery-comments {
+.jquery-comments ul#comment-list li.comment .child-comments {
 	padding-top: 0.5em;
 }
 
-.jquery-comments ul#comment-list li.comment .child-jquery-comments li.toggle-all {
+.jquery-comments ul#comment-list li.comment .child-comments li.toggle-all {
 	padding-top: 0;
 }
 
-.jquery-comments ul#comment-list li.comment .child-jquery-comments li.toggle-all span:first-child {
+.jquery-comments ul#comment-list li.comment .child-comments li.toggle-all span:first-child {
 	vertical-align: middle;
 }
 
-.jquery-comments ul#comment-list li.comment .child-jquery-comments li.toggle-all span:first-child:hover {
+.jquery-comments ul#comment-list li.comment .child-comments li.toggle-all span:first-child:hover {
 	cursor: pointer;
 	text-decoration: underline;
 }
 
-.jquery-comments ul#comment-list li.comment .child-jquery-comments li.toggle-all .caret {
+.jquery-comments ul#comment-list li.comment .child-comments li.toggle-all .caret {
 	display: inline-block;
 	vertical-align: middle;
 	width: 0;
@@ -293,12 +293,12 @@
 	border-right-color: rgba(0, 0, 0, 0);
 }
 
-.jquery-comments ul#comment-list li.comment .child-jquery-comments li.toggle-all .caret.up {
+.jquery-comments ul#comment-list li.comment .child-comments li.toggle-all .caret.up {
 	border-top-color: rgba(0, 0, 0, 0);
 	border-bottom-color: initial;
 	margin-top: -.2em;
 }
 
-.jquery-comments ul#comment-list li.comment .child-jquery-comments .hidden-reply {
+.jquery-comments ul#comment-list li.comment .child-comments .hidden-reply {
 	display: none;
 }
