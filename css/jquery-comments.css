@@ -1,30 +1,30 @@
 
-.comments * {
+.jquery-comments * {
 	box-sizing: border-box;
 	font-family: inherit;
 }
 
-.comments .textarea, .comments input, .comments select {
+.jquery-comments .textarea, .jquery-comments input, .jquery-comments select {
   margin: 0;
   vertical-align: top;
 }
 
-.comments [contentEditable=true]:empty:not(:focus):before{
+.jquery-comments [contentEditable=true]:empty:not(:focus):before{
     content:attr(placeholder);
     color: #CCC;
 }
 
-.comments h3 {
+.jquery-comments h3 {
 	color: #666;
 }
 
-.comments ul {
+.jquery-comments ul {
 	list-style: none;
 	padding: 0;
 	margin: 0;
 }
 
-.comments .profile-picture {
+.jquery-comments .profile-picture {
 	float: left;
 	width: 3.6em;
 	height: 3.6em;
@@ -32,18 +32,18 @@
 	max-height: 50px;	
 }
 
-.comments .profile-picture.round {
+.jquery-comments .profile-picture.round {
 	border-radius: 50%;
 }
 
-.comments .textarea-wrapper {
+.jquery-comments .textarea-wrapper {
 	overflow: hidden;
 	padding-left: 15px;
 	position: relative;
 }
 
 
-.comments .textarea-wrapper:before {
+.jquery-comments .textarea-wrapper:before {
 	content: " ";
 	position: absolute;
 	border: 5px solid #D5D5D5;
@@ -56,7 +56,7 @@
 	border-left-color: rgba(0, 0, 0, 0);
 }
 
-.comments .textarea-wrapper:after {
+.jquery-comments .textarea-wrapper:after {
 	content: " ";
 	position: absolute;
 	border: 7px solid #FFF;
@@ -69,7 +69,7 @@
 	border-left-color: rgba(0, 0, 0, 0);
 }
 
-.comments .textarea-wrapper .close {
+.jquery-comments .textarea-wrapper .close {
 	cursor: pointer;
 	width: 1em;
 	height: 1em;
@@ -79,11 +79,11 @@
 	margin-right: .5em;
 }
 
-.comments .scrollable .textarea-wrapper .close {
+.jquery-comments .scrollable .textarea-wrapper .close {
 	margin-right: calc(.5em + 15px);	/* Because of scrollbar */
 }
 
-.comments .textarea-wrapper .close span {
+.jquery-comments .textarea-wrapper .close span {
 	background: #CCC;
 	width: 25%;
 	left: 37.5%;
@@ -94,13 +94,13 @@
 	transform: rotate(45deg);
 }
 
-.comments .textarea-wrapper .close .right {
+.jquery-comments .textarea-wrapper .close .right {
 	-ms-transform: rotate(-45deg);
 	-webkit-transform: rotate(-45deg);
 	transform: rotate(-45deg);
 }
 
-.comments .textarea-wrapper .textarea {
+.jquery-comments .textarea-wrapper .textarea {
 	display: block;
 	width: 100%;
 	resize: none;
@@ -115,11 +115,11 @@
 	padding-right: 2em;
 }
 
-.comments .scrollable .textarea-wrapper .textarea {
+.jquery-comments .scrollable .textarea-wrapper .textarea {
 	padding-right: calc(2em + 15px);	/* Because of scrollbar */
 }
 
-.comments .textarea-wrapper .textarea .reply-to-badge {
+.jquery-comments .textarea-wrapper .textarea .reply-to-badge {
 	background: #EEE;
 	border: 1px solid #DDD;
 	font-weight: normal;
@@ -130,7 +130,7 @@
 	font-size: .8em;
 }
 
-.comments .textarea-wrapper span.send {
+.jquery-comments .textarea-wrapper span.send {
 	float: right;
 
 	color: #FFF;
@@ -142,16 +142,16 @@
 	opacity: .5;
 }
 
-.comments .textarea-wrapper span.send.enabled {
+.jquery-comments .textarea-wrapper span.send.enabled {
 	opacity: 1;
 	cursor: pointer;
 }
 
-.comments .textarea-wrapper span.send.enabled:hover {
+.jquery-comments .textarea-wrapper span.send.enabled:hover {
 	opacity: .9;
 }
 
-.comments ul.navigation {
+.jquery-comments ul.navigation {
 	clear: both;
 	float: left;
 	width: 100%;
@@ -164,7 +164,7 @@
 	font-size: 1em;
 }
 
-.comments ul.navigation li {
+.jquery-comments ul.navigation li {
 	display: inline-block;
 	position: relative;
 	padding: 0 1em;
@@ -172,11 +172,11 @@
 	font-weight: bold;
 }
 
-.comments ul.navigation li.active, .comments ul.navigation li:hover {
+.jquery-comments ul.navigation li.active, .jquery-comments ul.navigation li:hover {
 	color: #000;
 }
 
-.comments ul.navigation li.active:after {
+.jquery-comments ul.navigation li.active:after {
 	content: " ";
 	display: block;
 	right: 0;
@@ -187,29 +187,29 @@
 	left: 0;
 }
 
-.comments ul#comment-list li {
+.jquery-comments ul#comment-list li {
 	width: 100%;
 	display: inline-block;
 	padding: .5em 0;
 }
 
-.comments ul#comment-list li.comment:last-child {
+.jquery-comments ul#comment-list li.comment:last-child {
 	padding-bottom: 0;
 }
 
-.comments ul#comment-list li > .profile-picture {
+.jquery-comments ul#comment-list li > .profile-picture {
 	margin-right: .5em;
 }
 
-.comments ul#comment-list li.comment {
+.jquery-comments ul#comment-list li.comment {
 	border-top: 1px solid #DDD;
 }
 
-.comments ul#comment-list > li.comment:first-child {
+.jquery-comments ul#comment-list > li.comment:first-child {
 	border-top: none;
 }
 
-.comments ul#comment-list li.comment time {
+.jquery-comments ul#comment-list li.comment time {
 	float: right;
 	line-height: 1.4em;
 	margin-left: .5em;
@@ -217,7 +217,7 @@
 	color: #666;
 }
 
-.comments ul#comment-list li.comment .name {
+.jquery-comments ul#comment-list li.comment .name {
 	line-height: 1.4em;
 	font-weight: bold;
 	overflow: hidden;
@@ -225,7 +225,7 @@
 	white-space: nowrap;
 }
 
-.comments ul#comment-list li.comment .name .reply-to {
+.jquery-comments ul#comment-list li.comment .name .reply-to {
 	color: #999;
 	font-size: .8em;
 	font-weight: normal;
@@ -233,52 +233,52 @@
 	vertical-align: top;
 }
 
-.comments ul#comment-list li.comment .wrapper{
+.jquery-comments ul#comment-list li.comment .wrapper{
 	line-height: 1.3em;
 	overflow: hidden;
 }
 
-.comments ul#comment-list li.comment .wrapper > span {
+.jquery-comments ul#comment-list li.comment .wrapper > span {
 	font-size: 0.9em;
 	color: #666;
 	cursor: pointer;
 }
 
-.comments ul#comment-list li.comment .wrapper .profile-picture {
+.jquery-comments ul#comment-list li.comment .wrapper .profile-picture {
 	height: 3em;
 	width: 3em;
 }
 
-.comments ul#comment-list li.comment .wrapper .content {
+.jquery-comments ul#comment-list li.comment .wrapper .content {
 	white-space: pre-line;
 }
 
-.comments ul#comment-list li.comment .wrapper > span:not(:last-child) {
+.jquery-comments ul#comment-list li.comment .wrapper > span:not(:last-child) {
 	margin-right: 2em;
 }
 
-.comments ul#comment-list li.comment .commenting-field {
+.jquery-comments ul#comment-list li.comment .commenting-field {
 	margin-top: .5em;
 }
 
-.comments ul#comment-list li.comment .child-comments {
+.jquery-comments ul#comment-list li.comment .child-jquery-comments {
 	padding-top: 0.5em;
 }
 
-.comments ul#comment-list li.comment .child-comments li.toggle-all {
+.jquery-comments ul#comment-list li.comment .child-jquery-comments li.toggle-all {
 	padding-top: 0;
 }
 
-.comments ul#comment-list li.comment .child-comments li.toggle-all span:first-child {
+.jquery-comments ul#comment-list li.comment .child-jquery-comments li.toggle-all span:first-child {
 	vertical-align: middle;
 }
 
-.comments ul#comment-list li.comment .child-comments li.toggle-all span:first-child:hover {
+.jquery-comments ul#comment-list li.comment .child-jquery-comments li.toggle-all span:first-child:hover {
 	cursor: pointer;
 	text-decoration: underline;
 }
 
-.comments ul#comment-list li.comment .child-comments li.toggle-all .caret {
+.jquery-comments ul#comment-list li.comment .child-jquery-comments li.toggle-all .caret {
 	display: inline-block;
 	vertical-align: middle;
 	width: 0;
@@ -293,12 +293,12 @@
 	border-right-color: rgba(0, 0, 0, 0);
 }
 
-.comments ul#comment-list li.comment .child-comments li.toggle-all .caret.up {
+.jquery-comments ul#comment-list li.comment .child-jquery-comments li.toggle-all .caret.up {
 	border-top-color: rgba(0, 0, 0, 0);
 	border-bottom-color: initial;
 	margin-top: -.2em;
 }
 
-.comments ul#comment-list li.comment .child-comments .hidden-reply {
+.jquery-comments ul#comment-list li.comment .child-jquery-comments .hidden-reply {
 	display: none;
 }

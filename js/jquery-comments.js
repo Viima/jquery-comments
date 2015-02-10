@@ -62,7 +62,7 @@
 
         init: function(options, el) {
             this.$el = $(el);
-            this.$el.addClass('comments')
+            this.$el.addClass('jquery-comments');
             this.delegateEvents();
 
             // Init options
@@ -660,17 +660,17 @@
         createCssDeclarations: function() {
 
             // Navigation underline
-            this.createCss('.comments ul.navigation li.active:after {background: '
+            this.createCss('.jquery-comments ul.navigation li.active:after {background: '
                 + this.options.highlightColor  + ' !important;',
                 +'}');
 
             // Background highlight
-            this.createCss('.comments .highlight-background {background: '
+            this.createCss('.jquery-comments .highlight-background {background: '
                 + this.options.highlightColor  + ' !important;',
                 +'}');
 
             // Font highlight
-            this.createCss('.comments .highlight-font {color: '
+            this.createCss('.jquery-comments .highlight-font {color: '
                 + this.options.highlightColor + ' !important;'
                 + 'font-weight: bold;'
                 +'}');
