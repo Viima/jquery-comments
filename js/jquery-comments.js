@@ -161,36 +161,36 @@
             // Divide commments into main level comments and replies
             var mainLevelComments = [];
             var replies = [];
-            $(this.getComments()).each(function(index, commentJSON) {
-                if(commentJSON.parent == null) {
-                    mainLevelComments.push(commentJSON);
+            $(this.getComments()).each(function(index, commentModel) {
+                if(commentModel.parent == null) {
+                    mainLevelComments.push(commentModel);
                 } else {
-                    replies.push(commentJSON);
+                    replies.push(commentModel);
                 }
             });
 
             // Append main level comments
-            $(mainLevelComments).each(function(index, commentJSON) {
-                self.addComment(commentJSON, false);
+            $(mainLevelComments).each(function(index, commentModel) {
+                self.addComment(commentModel, false);
             });
 
             // Append replies in chronological order
             this.sortComments(replies, 'oldest');
-            $(replies).each(function(index, commentJSON) {
-                self.addComment(commentJSON, false);
+            $(replies).each(function(index, commentModel) {
+                self.addComment(commentModel, false);
             });
 
             // Re-arrange the comments
             this.sortAndReArrangeComments(this.currentSortKey);
         },
 
-        addComment: function(commentJSON, rearrange) {
-            this.addCommentToDataModel(commentJSON);
-            var commentEl = this.createCommentElement(commentJSON);
+        addComment: function(commentModel, rearrange) {
+            this.addCommentToDataModel(commentModel);
+            var commentEl = this.createCommentElement(commentModel);
 
             // Case: reply
-            if(commentJSON.parent) {
-                var directParentEl = this.$el.find('.comment[data-id="'+commentJSON.parent+'"]');
+            if(commentModel.parent) {
+                var directParentEl = this.$el.find('.comment[data-id="'+commentModel.parent+'"]');
 
                 // Force replies into one level only
                 var outerMostParent = directParentEl.parents('.comment').last();
@@ -290,28 +290,28 @@
             var commentList = this.$el.find('#comment-list');
             
             // Get main level comments
-            var mainLevelComments = this.getComments().filter(function(commentJSON){return !commentJSON.parent});
+            var mainLevelComments = this.getComments().filter(function(commentModel){return !commentModel.parent});
             this.sortComments(mainLevelComments, sortKey);
 
             // Rearrange the main level comments
-            $(mainLevelComments).each(function(index, commentJSON) {
-                var commentEl = commentList.find('> li.comment[data-id='+commentJSON.id+']');
+            $(mainLevelComments).each(function(index, commentModel) {
+                var commentEl = commentList.find('> li.comment[data-id='+commentModel.id+']');
                 commentList.append(commentEl);
             });
         },
 
-        postComment: function(commentJSON) {
+        postComment: function(commentModel) {
             var success = function() {};
             var error = function() {};
 
-            commentJSON.fullname = this.options.youText;
-            commentJSON.profile_picture_url = this.options.profilePictureURL;
-            commentJSON.created = new Date().getTime();
-            commentJSON.id = this.getComments().length + 1;
+            commentModel.fullname = this.options.youText;
+            commentModel.profile_picture_url = this.options.profilePictureURL;
+            commentModel.created = new Date().getTime();
+            commentModel.id = this.getComments().length + 1;
 
-            this.createCommentElement(commentJSON);
+            this.createCommentElement(commentModel);
 
-            this.options.postComment(commentJSON, success, error);
+            this.options.postComment(commentModel, success, error);
         },
 
         editComment: function() {
@@ -584,31 +584,31 @@
             return navigationEl;
         },
 
-        createCommentElement: function(commentJSON) {
+        createCommentElement: function(commentModel) {
 
             // Comment container element
             var commentEl = $('<li/>', {
-                'data-id': commentJSON.id,
+                'data-id': commentModel.id,
                 class: 'comment'
             });
 
             // Profile picture
-            var profilePicture = this.createProfilePictureElement(commentJSON.profile_picture_url);
+            var profilePicture = this.createProfilePictureElement(commentModel.profile_picture_url);
 
             // Time
             var time = $('<time/>', {
-                text: this.options.timeFormatter(commentJSON.created)
+                text: this.options.timeFormatter(commentModel.created)
             });
 
             // Name
             var name = $('<div/>', {
                 class: 'name',
-                text: commentJSON.fullname,
+                text: commentModel.fullname,
             });
 
             // Show reply-to name if parent of parent exists
-            if(commentJSON.parent) {
-                var parent = this.commentsById[commentJSON.parent];
+            if(commentModel.parent) {
+                var parent = this.commentsById[commentModel.parent];
                 if(parent.parent) {
                     var replyTo = $('<span/>', {
                         class: 'reply-to',
@@ -626,7 +626,7 @@
             // Content
             var content = $('<div/>', {
                 class: 'content',
-                text: commentJSON.content,
+                text: commentModel.content,
             });
 
             // Like
@@ -648,7 +648,7 @@
             
             wrapper.append(content);
             wrapper.append(like).append(reply)
-            if(commentJSON.parent == null) wrapper.append(childComments);
+            if(commentModel.parent == null) wrapper.append(childComments);
             commentEl.append(profilePicture).append(time).append(name).append(wrapper);
             return commentEl;
         },
