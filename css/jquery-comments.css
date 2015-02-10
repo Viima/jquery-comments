@@ -201,8 +201,12 @@
 	margin-right: .5em;
 }
 
-.comments ul#comment-list li.comment:not(:first-child) {
+.comments ul#comment-list li.comment {
 	border-top: 1px solid #DDD;
+}
+
+.comments ul#comment-list > li.comment:first-child {
+	border-top: none;
 }
 
 .comments ul#comment-list li.comment time {
