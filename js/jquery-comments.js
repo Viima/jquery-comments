@@ -407,7 +407,7 @@
                 }
                 var commentModel = this.createCommentModel(data);
                 this.addCommentToDataModel(commentModel);
-                
+
                 this.postComment(commentModel);
                 this.addComment(commentModel, true);
 
@@ -596,7 +596,7 @@
             var commentEl = $('<li/>', {
                 'data-id': commentModel.id,
                 class: 'comment'
-            });
+            }).data('model', commentModel);
 
             // Profile picture
             var profilePicture = this.createProfilePictureElement(commentModel.profile_picture_url);
