@@ -107,29 +107,46 @@
             // Get comments
             var commentsArray = this.options.getComments();
 
-            // Sort comments by date (oldest first so that they can be appended to DOM
+            // Convert comments to custom data model
+            var self = this;
+            var commentModels = commentsArray.map(function(commentsJSON){
+                return self.createCommentModel(commentsJSON)
+            });
+
+            // Sort comments by date (oldest first so that they can be appended to the data model
             // without caring dependencies)
-            this.sortComments(commentsArray, 'oldest');
+            this.sortComments(commentModels, 'oldest');
 
             var self = this;
-            $(commentsArray).each(function(index, commentJSON) {
-                self.addCommentToDataModel(commentJSON);
+            $(commentModels).each(function(index, commentModel) {
+                self.addCommentToDataModel(commentModel);
             });
         },
 
-        addCommentToDataModel: function(commentJSON) {
-            if(!(commentJSON.id in this.commentsById)) {
-                this.commentsById[commentJSON.id] = commentJSON;
-                commentJSON.childs = [];
+        createCommentModel: function(params) {
+            var commentModel = {
+                childs: [],
+            };
+
+            // Apply parameters
+            for(var key in params) {
+                commentModel[key] = params[key];
+            }
+            return commentModel;
+        },
+
+        addCommentToDataModel: function(commentModel) {
+            if(!(commentModel.id in this.commentsById)) {
+                this.commentsById[commentModel.id] = commentModel;
 
                 // Update child array of the parent (append childs to the array of outer most parent)
-                if(commentJSON.parent != null) {
-                    var parentId = commentJSON.parent;
+                if(commentModel.parent != null) {
+                    var parentId = commentModel.parent;
                     do {
                         var parentComment = this.commentsById[parentId];
                         parentId = parentComment.parent;
                     } while(parentComment.parent != null)
-                    parentComment.childs.push(commentJSON.id);
+                    parentComment.childs.push(commentModel.id);
                 }
             }
         },
@@ -300,14 +317,6 @@
         editComment: function() {
         },
 
-        createCommentJSON: function(content, parent) {
-            var comment = {
-                content: content,
-                parent: parent,
-            }
-            return comment;
-        },
-
 
         // Event handlers
         // ==============
@@ -387,11 +396,14 @@
             var textarea = commentingField.find('.textarea');
 
             if(sendButton.hasClass('enabled')) {
-                var parent = parseInt(textarea.attr('data-parent')) || null;
-                var content = this.getTextareaContent(textarea)
-                var commentJSON = this.createCommentJSON(content, parent);
-                this.postComment(commentJSON);
-                this.addComment(commentJSON, true);
+                var data = {                    
+                    parent: parseInt(textarea.attr('data-parent')) || null,
+                    content: this.getTextareaContent(textarea)
+                }
+                var commentModel = this.createCommentModel(data);
+
+                this.postComment(commentModel);
+                this.addComment(commentModel, true);
 
                 // Proper handling for textarea
                 if(commentingField.hasClass('main')) {
