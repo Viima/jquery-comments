@@ -207,16 +207,34 @@ describe('Basic features', function() {
 
             it('Should be able to reply to the original user', function() {
                 mostPopularComment.find('.reply').first().click();
-                var replyField = mostPopularComment.find('.wrapper').first().children().last();
+                var replyField = mostPopularComment.find('.commenting-field');
                 expect(replyField.length).toBe(1);
                 expect(replyField.find('.reply-to-badge').length).toBe(0);
+
+                // Check that the field is last child
+                var lastChild = mostPopularComment.find('.wrapper').first().children().last();
+                expect(lastChild[0]).toBe(replyField[0]);
             }); 
+
+            it('Should close the reply field when clicking the close icon', function() {
+                mostPopularComment.find('.reply').first().click();
+                var replyField = mostPopularComment.find('.commenting-field');
+                expect(replyField.length).toBe(1);
+                replyField.find('.close').click();
+
+                replyField = mostPopularComment.find('.commenting-field');
+                expect(replyField.length).toBe(0);
+            });
 
             it('Should be able to re-reply', function() {
                 var childComment = mostPopularComment.find('.child-comments li.comment').last();
                 childComment.find('.reply').first().click();
-                var replyField = mostPopularComment.find('.wrapper').first().children().last();
+                var replyField = mostPopularComment.find('.commenting-field');
                 expect(replyField.find('.reply-to-badge').val()).toBe('@Bryan Connery');
+
+                // Check that the field is last child
+                var lastChild = mostPopularComment.find('.wrapper').first().children().last();
+                expect(lastChild[0]).toBe(replyField[0]);
             });
 
             it('Should be able to re-reply to a hidden reply', function() {
@@ -224,14 +242,14 @@ describe('Basic features', function() {
                 var childComment = mostPopularComment.find('.child-comments li.comment').first();
                 childComment.find('.reply').first().click();
 
-                var replyField = mostPopularComment.find('.wrapper').first().children().last();
+                var replyField = mostPopularComment.find('.commenting-field');
                 expect(replyField.find('.reply-to-badge').val()).toBe('@Jack Hemsworth');
             });
 
             it('Should reply to original user when erasing the reply-to badge', function() {
                 var childComment = mostPopularComment.find('.child-comments li.comment').last();
                 childComment.find('.reply').first().click();
-                var replyField = mostPopularComment.find('.wrapper').first().children().last();
+                var replyField = mostPopularComment.find('.commenting-field');
                 var textarea = replyField.find('.textarea');
                 expect(parseInt(textarea.attr('data-parent'))).toBe(childComment.data().model.id);
 
