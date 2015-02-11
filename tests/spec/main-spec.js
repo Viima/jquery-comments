@@ -1,4 +1,4 @@
-describe('Initialization', function() {
+describe('Basic features', function() {
 
     var comments;
 
@@ -9,6 +9,7 @@ describe('Initialization', function() {
             profilePictureURL: 'https://app.viima.com/static/media/user_profiles/user-icon.png',
             roundProfilePictures: true,
             textareaRows: 1,
+            textareaMaxRows: 4,
             getComments: function() {
                 return commentsArray;
             },
@@ -37,18 +38,17 @@ describe('Initialization', function() {
 
         expect(comments.render.calls.count()).toEqual(1);
         expect(comments.updateData.calls.count()).toEqual(1);
-        expect(comments.createCommentModel.calls.count()).toEqual(commentsArray.length);
-        expect(comments.addCommentToDataModel.calls.count()).toEqual(commentsArray.length);
+        expect(comments.createCommentModel.calls.count()).toEqual(9);
+        expect(comments.addCommentToDataModel.calls.count()).toEqual(9);
         expect(comments.sortComments.calls.count()).toBeGreaterThan(1);
     });
 
     it('Should have rendered the comments', function() {
         var commentElements = $('li.comment');
-        expect(commentElements.length).toEqual(commentsArray.length);
+        expect(commentElements.length).toEqual(9);
         commentElements.each(function(index, commentEl) {
             checkCommentElementData($(commentEl));
         });
-
     });
 
     it('Should sort the main level comments wihtout affecting the order of child comments', function() {
@@ -60,9 +60,102 @@ describe('Initialization', function() {
         checkOrder($('#comment-list > li.comment'), [3,2,1]);
         checkOrder($('li.comment[data-id=1] .child-comments li.comment'), [6,7,8,9]);
 
-        comments.sortAndReArrangeComments('oldets');
+        comments.sortAndReArrangeComments('oldest');
         checkOrder($('#comment-list > li.comment'), [1,2,3]);
         checkOrder($('li.comment[data-id=1] .child-comments li.comment'), [6,7,8,9]);
+    });
+
+
+    it('Should be able to toggle all replies', function() {
+        var toggleAll = $('li.comment[data-id=1]').find('.child-comments li.toggle-all');
+        expect(toggleAll.length).toBe(1);
+        expect(toggleAll.text()).toBe('View all 4 replies');
+        expect($('li.comment[data-id=1] li.comment:visible').length).toBe(2);
+
+        // Show all replies
+        toggleAll.click();
+        expect(toggleAll.text()).toBe('Hide replies');
+        expect($('li.comment[data-id=1] li.comment:visible').length).toBe(4);
+
+        // Hide replies
+        toggleAll.click();
+        expect(toggleAll.text()).toBe('View all 4 replies');
+        expect($('li.comment[data-id=1] li.comment:visible').length).toBe(2);
+    });
+
+    describe('Textarea', function() {
+
+        var mainTextarea;
+        var lineHeight;
+
+        beforeEach(function() {
+            mainTextarea = $('.commenting-field.main .textarea');
+            lineHeight = parseInt(mainTextarea.css('line-height'));
+        });
+
+        it('Should adjust the height dynamically', function() {
+
+            // Should have 1 row
+            expect(mainTextarea.outerHeight()).toBeLessThan(2*lineHeight);
+
+            // Should have 2 rows
+            mainTextarea.trigger('focus').focus();
+            expect(mainTextarea.outerHeight()).toBeGreaterThan(2*lineHeight);
+            expect(mainTextarea.outerHeight()).toBeLessThan(3*lineHeight);
+
+            // Should have 2 rows
+            mainTextarea.append($('<div>row 1</div>')).trigger('input');
+            mainTextarea.append($('<div>row 2</div>')).trigger('input');
+            expect(mainTextarea.outerHeight()).toBeGreaterThan(2*lineHeight);
+            expect(mainTextarea.outerHeight()).toBeLessThan(3*lineHeight);
+
+            // Should have 3 rows
+            mainTextarea.append($('<div>row 3</div>')).trigger('input');
+            expect(mainTextarea.outerHeight()).toBeGreaterThan(3*lineHeight);
+            expect(mainTextarea.outerHeight()).toBeLessThan(4*lineHeight);
+
+            // Should have 4 rows
+            mainTextarea.append($('<div>row 4</div>')).trigger('input');
+            expect(mainTextarea.outerHeight()).toBeGreaterThan(4*lineHeight);
+            expect(mainTextarea.outerHeight()).toBeLessThan(5*lineHeight);
+
+            // Should have 4 rows as it's the max value
+            mainTextarea.append($('<div>row 5</div>')).trigger('input');
+            expect(mainTextarea.outerHeight()).toBeGreaterThan(4*lineHeight);
+            expect(mainTextarea.outerHeight()).toBeLessThan(5*lineHeight);
+
+            // Should have 3 rows
+            mainTextarea.find('div').last().remove();
+            mainTextarea.find('div').last().remove();
+            mainTextarea.trigger('input');
+            expect(mainTextarea.outerHeight()).toBeGreaterThan(3*lineHeight);
+            expect(mainTextarea.outerHeight()).toBeLessThan(4*lineHeight);
+
+            // Should have 2 rows
+            mainTextarea.find('div').remove();
+            mainTextarea.trigger('input');
+            expect(mainTextarea.outerHeight()).toBeGreaterThan(2*lineHeight);
+            expect(mainTextarea.outerHeight()).toBeLessThan(3*lineHeight);
+
+            // Should have 1 row
+            comments.$el.trigger('click');
+            expect(mainTextarea.outerHeight()).toBeLessThan(2*lineHeight);
+
+        });
+
+        it('TODO', function() {
+            //expect(mainTextarea.outerHeight()).toBeGreaterThan(2*lineHeight);
+        });
+
+    });
+
+
+    xit('TODO', function() {
+
+    });
+
+    xit('TODO', function() {
+
     });
 
     afterEach(function() {
