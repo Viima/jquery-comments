@@ -244,6 +244,10 @@
 	cursor: pointer;
 }
 
+.jquery-comments ul#comment-list li.comment .wrapper > span.like {
+	display: none;
+}
+
 .jquery-comments ul#comment-list li.comment .wrapper .profile-picture {
 	height: 3em;
 	width: 3em;
