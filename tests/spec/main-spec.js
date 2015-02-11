@@ -6,7 +6,7 @@ describe('Initialization', function() {
         var commentsContainer = $('<div/>');
 
         commentsContainer.comments({
-            profilePictureURL: 'http://graph.facebook.com/100000219433295/picture',
+            profilePictureURL: 'https://app.viima.com/static/media/user_profiles/user-icon.png',
             roundProfilePictures: true,
             textareaRows: 1,
             getComments: function() {
@@ -51,8 +51,18 @@ describe('Initialization', function() {
 
     });
 
-    xit('Should have forced the indentation to only one level', function() {
-        //expect($('.jquery-comments').length).toBe(1);
+    it('Should sort the main level comments wihtout affecting the order of child comments', function() {
+        comments.sortAndReArrangeComments('popularity');
+        checkOrder($('#comment-list > li.comment'), [1,3,2]);
+        checkOrder($('li.comment[data-id=1] .child-comments li.comment'), [6,7,8,9]);
+
+        comments.sortAndReArrangeComments('newest');
+        checkOrder($('#comment-list > li.comment'), [3,2,1]);
+        checkOrder($('li.comment[data-id=1] .child-comments li.comment'), [6,7,8,9]);
+
+        comments.sortAndReArrangeComments('oldets');
+        checkOrder($('#comment-list > li.comment'), [1,2,3]);
+        checkOrder($('li.comment[data-id=1] .child-comments li.comment'), [6,7,8,9]);
     });
 
     afterEach(function() {
@@ -81,7 +91,7 @@ describe('Initialization', function() {
         expect(fullname).toBe(commentModel.fullname);
         expect(content).toBe(commentModel.content);
 
-        // Check reply to field
+        // Check reply to -field
         if(commentModel.parent) {
             var parent = comments.commentsById[commentModel.parent];
             if(parent.parent) {
@@ -93,11 +103,27 @@ describe('Initialization', function() {
             expect(replyTo.length).toBe(0);
         }
 
+        // Check position in DOM
+        if(commentModel.parent) {
+            expect(commentEl.parents('.child-comments').length).toBe(1);
+        } else {
+            expect(commentEl.parents('.child-comments').length).toBe(0);
+        }
+
         // Check time
         var modelCreatedDate = new Date(commentModel.created);
         expect(dateUI.getDate()).toBe(modelCreatedDate.getDate());
         expect(dateUI.getMonth()).toBe(modelCreatedDate.getMonth());
         expect(dateUI.getFullYear()).toBe(modelCreatedDate.getFullYear());
+    }
+
+    function getOrder(elements) {
+        return elements.map(function(index, commentEl){return $(commentEl).data().id}).toArray();
+    }
+
+    function checkOrder(elements, expectedOrder) {
+        var order = getOrder(elements);
+        expect(JSON.stringify(order)).toBe(JSON.stringify(expectedOrder));
     }
 
 });
