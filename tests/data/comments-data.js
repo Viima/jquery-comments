@@ -49,7 +49,7 @@ var commentsArray = [
   },
   {  
      "id": 5,
-     "parent": 3,
+     "parent": 4,
      "created": "2015-01-05",
      "modified": "2015-01-05",
      "content": "Quisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu. Sed arcu lectus auctor vitae, consectetuer et venenatis eget velit.",
@@ -73,7 +73,7 @@ var commentsArray = [
   },
   {  
      "id": 7,
-     "parent": 1,
+     "parent": 6,
      "created": "2015-01-07",
      "modified": "2015-01-07",
      "content": "Sed posuere interdum sem. Quisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu.",
@@ -97,7 +97,7 @@ var commentsArray = [
   },
   {  
      "id": 9,
-     "parent": 1,
+     "parent": 7,
      "created": "2015-01-09",
      "modified": "2015-01-09",
      "content": "Quisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu. Sed arcu lectus auctor vitae, consectetuer et venenatis eget velit.",

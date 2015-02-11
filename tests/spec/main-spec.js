@@ -51,18 +51,25 @@ describe('Basic features', function() {
         });
     });
 
+    it('Should have appended the child comments under their outermost parent', function() {
+        expect($('#comment-list > li.comment').length).toBe(3);
+        checkOrder($('li.comment[data-id=1] .child-comments > li.comment'), [6,7,8,9]);
+        checkOrder($('li.comment[data-id=2] .child-comments > li.comment'), []);
+        checkOrder($('li.comment[data-id=3] .child-comments > li.comment'), [4,5]);
+    });
+
     it('Should sort the main level comments wihtout affecting the order of child comments', function() {
         comments.sortAndReArrangeComments('popularity');
         checkOrder($('#comment-list > li.comment'), [1,3,2]);
-        checkOrder($('li.comment[data-id=1] .child-comments li.comment'), [6,7,8,9]);
+        checkOrder($('li.comment[data-id=1] .child-comments > li.comment'), [6,7,8,9]);
 
         comments.sortAndReArrangeComments('newest');
         checkOrder($('#comment-list > li.comment'), [3,2,1]);
-        checkOrder($('li.comment[data-id=1] .child-comments li.comment'), [6,7,8,9]);
+        checkOrder($('li.comment[data-id=1] .child-comments > li.comment'), [6,7,8,9]);
 
         comments.sortAndReArrangeComments('oldest');
         checkOrder($('#comment-list > li.comment'), [1,2,3]);
-        checkOrder($('li.comment[data-id=1] .child-comments li.comment'), [6,7,8,9]);
+        checkOrder($('li.comment[data-id=1] .child-comments > li.comment'), [6,7,8,9]);
     });
 
 
@@ -83,13 +90,15 @@ describe('Basic features', function() {
         expect($('li.comment[data-id=1] li.comment:visible').length).toBe(2);
     });
 
-    describe('Textarea', function() {
+    describe('Commenting field', function() {
 
+        var mainCommentingField;
         var mainTextarea;
         var lineHeight;
 
         beforeEach(function() {
-            mainTextarea = $('.commenting-field.main .textarea');
+            mainCommentingField = $('.commenting-field.main');
+            mainTextarea = mainCommentingField.find('.textarea');
             lineHeight = parseInt(mainTextarea.css('line-height'));
         });
 
@@ -138,23 +147,99 @@ describe('Basic features', function() {
             expect(mainTextarea.outerHeight()).toBeLessThan(3*lineHeight);
 
             // Should have 1 row
-            comments.$el.trigger('click');
+            mainCommentingField.find('.close').click();
             expect(mainTextarea.outerHeight()).toBeLessThan(2*lineHeight);
 
         });
 
-        it('TODO', function() {
-            //expect(mainTextarea.outerHeight()).toBeGreaterThan(2*lineHeight);
+        it('Should enable control row on focus', function() {
+            var controlRow = mainCommentingField.find('.control-row');;
+
+            // Show on focus
+            expect(controlRow.is(':visible')).toBe(false);
+            mainTextarea.trigger('focus').focus();
+            expect(controlRow.is(':visible')).toBe(true);
+
+            // Hide when clicking elsewhere
+            comments.$el.click();
+            expect(controlRow.is(':visible')).toBe(false);
         });
 
-    });
+        it('Should enable send button when texarea is not empty', function() {
+            var sendButton = mainCommentingField.find('.send');
 
+            expect(sendButton.is(':visible')).toBe(false);
+            expect(sendButton.hasClass('enabled')).toBe(false);
+            
+            // Show on focus
+            mainTextarea.trigger('focus').focus();
+            expect(sendButton.is(':visible')).toBe(true);
+            expect(sendButton.hasClass('enabled')).toBe(false);
 
-    xit('TODO', function() {
+            // Enable when content
+            mainTextarea.append($('<div>row 1</div>')).trigger('input');
+            expect(sendButton.is(':visible')).toBe(true);
+            expect(sendButton.hasClass('enabled')).toBe(true);
 
-    });
+            // Disable when no content
+            mainTextarea.empty().trigger('input');
+            expect(sendButton.is(':visible')).toBe(true);
+            expect(sendButton.hasClass('enabled')).toBe(false);
 
-    xit('TODO', function() {
+            // Hide when clicking elsewhere
+            comments.$el.click();
+            expect(sendButton.is(':visible')).toBe(false);
+            expect(sendButton.hasClass('enabled')).toBe(false);
+        });
+
+        describe('Replying', function() {
+
+            var mostPopularComment;
+
+            beforeEach(function() {
+                mostPopularComment = $('li.comment[data-id=1]');
+            });
+
+            it('Should be hidden by default', function() {
+                var replyField = mostPopularComment.find('.commenting-field');
+                expect(replyField.length).toBe(0);
+            });
+
+            it('Should be able to reply to the original user', function() {
+                mostPopularComment.find('.reply').first().click();
+                var replyField = mostPopularComment.find('.wrapper').first().children().last();
+                expect(replyField.length).toBe(1);
+                expect(replyField.find('.reply-to-badge').length).toBe(0);
+            }); 
+
+            it('Should be able to re-reply', function() {
+                var childComment = mostPopularComment.find('.child-comments li.comment').last();
+                childComment.find('.reply').first().click();
+                var replyField = mostPopularComment.find('.wrapper').first().children().last();
+                expect(replyField.find('.reply-to-badge').val()).toBe('@Bryan Connery');
+            });
+
+            it('Should be able to re-reply to a hidden reply', function() {
+                mostPopularComment.find('.toggle-all').click();
+                var childComment = mostPopularComment.find('.child-comments li.comment').first();
+                childComment.find('.reply').first().click();
+
+                var replyField = mostPopularComment.find('.wrapper').first().children().last();
+                expect(replyField.find('.reply-to-badge').val()).toBe('@Jack Hemsworth');
+            });
+
+            it('Should reply to original user when erasing the reply-to badge', function() {
+                var childComment = mostPopularComment.find('.child-comments li.comment').last();
+                childComment.find('.reply').first().click();
+                var replyField = mostPopularComment.find('.wrapper').first().children().last();
+                var textarea = replyField.find('.textarea');
+                expect(parseInt(textarea.attr('data-parent'))).toBe(childComment.data().model.id);
+
+                textarea.empty().trigger('input');
+                expect(parseInt(textarea.attr('data-parent'))).toBe(1);
+            });
+
+        });
 
     });
 
@@ -194,13 +279,6 @@ describe('Basic features', function() {
             }
         } else {
             expect(replyTo.length).toBe(0);
-        }
-
-        // Check position in DOM
-        if(commentModel.parent) {
-            expect(commentEl.parents('.child-comments').length).toBe(1);
-        } else {
-            expect(commentEl.parents('.child-comments').length).toBe(0);
         }
 
         // Check time
