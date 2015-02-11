@@ -30,6 +30,19 @@
             textareaMaxRows: 5,
             maxRepliesVisible: 2,
 
+            fieldMappings: {
+               id: 'id',
+               parent: 'parent',
+               created: 'created',
+               modified: 'modified',
+               content: 'content',
+               fullname: 'fullname',
+               profilePictureURL: 'profile_picture_url',
+               createdByStaff: 'created_by_staff',
+               createdByCurrentUser: 'created_by_current_user',
+               moderationPending: 'moderation_pending'
+            },
+
             getComments: function() {},
             postComment: function() {},
             timeFormatter: function(time) {
@@ -135,9 +148,13 @@
                 childs: [],
             };
 
-            // Apply parameters
+            // Apply parameters to mapped fields
+            var invertedMappings = this.invertDictionary(this.options.fieldMappings);
             for(var key in params) {
-                commentModel[key] = params[key];
+                if(key in invertedMappings) {
+                    var internalKey = invertedMappings[key];
+                    commentModel[internalKey] = params[key];
+                }
             }
             return commentModel;
         },
@@ -311,7 +328,7 @@
             var error = function() {};
 
             commentModel.fullname = this.options.youText;
-            commentModel.profile_picture_url = this.options.profilePictureURL;
+            commentModel.profilePictureURL = this.options.profilePictureURL;
             commentModel.created = new Date().getTime();
             commentModel.id = this.getComments().length + 1;
 
@@ -600,7 +617,7 @@
             }).data('model', commentModel);
 
             // Profile picture
-            var profilePicture = this.createProfilePictureElement(commentModel.profile_picture_url);
+            var profilePicture = this.createProfilePictureElement(commentModel.profilePictureURL);
 
             // Time
             var time = $('<time/>', {
@@ -760,6 +777,16 @@
             ce.find('br').replaceWith(function() { return '\n' + this.innerHTML; });
             return ce.text().trim();
         },
+
+        invertDictionary: function(dict) {
+            var result = {};
+            for (var prop in dict) {
+                if(dict.hasOwnProperty(prop)) {
+                    result[dict[prop]] = prop;
+                }
+            }
+            return result;
+        }
 
     }
 

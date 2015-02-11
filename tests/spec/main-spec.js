@@ -283,7 +283,7 @@ describe('Basic features', function() {
         var commentModel = commentEl.data().model;
 
         // Check basic fields
-        expect(profilePicture).toBe(commentModel.profile_picture_url);
+        expect(profilePicture).toBe(commentModel.profilePictureURL);
         expect(fullname).toBe(commentModel.fullname);
         expect(content).toBe(commentModel.content);
 
