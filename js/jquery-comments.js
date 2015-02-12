@@ -456,44 +456,49 @@
         replyButtonClicked: function(ev) {
             var replyButton = $(ev.currentTarget);
             var wrapperOfOuterMostParent = replyButton.parents('.wrapper').last();
+            var parentId = replyButton.parents('.comment').first().data().id;
+
 
             // Remove existing field
             var replyField = wrapperOfOuterMostParent.find('.commenting-field');
             if(replyField.length) replyField.remove();
+            var previousParentId = parseInt(replyField.find('.textarea').attr('data-parent'));
 
-            // Create the reply field
-            var replyField = this.createCommentingFieldElement();
-            wrapperOfOuterMostParent.append(replyField);
-            textarea = replyField.find('.textarea');
+            // Create the reply field (do not re-create)
+            if(previousParentId != parentId) {            
+                var replyField = this.createCommentingFieldElement();
+                wrapperOfOuterMostParent.append(replyField);
+                textarea = replyField.find('.textarea');
 
-            // Set the correct parent id to the field
-            var parentId = replyButton.parents('.comment').first().data().id;
-            textarea.attr('data-parent', parentId);
+                // Set the correct parent id to the field
+                textarea.attr('data-parent', parentId);
 
-            // Append reply-to badge if necessary
-            var parentModel = this.commentsById[parentId];
-            if(parentModel.parent) {
-                textarea.html('&nbsp;');    // Needed to set the cursor to correct place
+                // Append reply-to badge if necessary
+                var parentModel = this.commentsById[parentId];
+                if(parentModel.parent) {
+                    textarea.html('&nbsp;');    // Needed to set the cursor to correct place
 
-                // Creating the reply-to badge
-                var replyToBadge = $('<input/>', {
-                    class: 'reply-to-badge highlight-font',
-                    type: 'button'
-                });
-                var replyToName = '@' + parentModel.fullname;
-                replyToBadge.val(replyToName);
-                textarea.prepend(replyToBadge);
+                    // Creating the reply-to badge
+                    var replyToBadge = $('<input/>', {
+                        class: 'reply-to-badge highlight-font',
+                        type: 'button'
+                    });
+                    var replyToName = '@' + parentModel.fullname;
+                    replyToBadge.val(replyToName);
+                    textarea.prepend(replyToBadge);
 
-                // Move cursor to the end
-                var range = document.createRange();
-                var selection = window.getSelection();
-                range.setStart(textarea[0], 2);
-                range.collapse(true);
-                selection.removeAllRanges();
-                selection.addRange(range);
+                    // Move cursor to the end
+                    var range = document.createRange();
+                    var selection = window.getSelection();
+                    range.setStart(textarea[0], 2);
+                    range.collapse(true);
+                    selection.removeAllRanges();
+                    selection.addRange(range);
+                }
+                
+                textarea.focus();
             }
-            
-            textarea.focus();
+
         },
 
 
