@@ -79,6 +79,11 @@
 	margin-top: .5em;
 	margin-right: .5em;
 	font-size: inherit;
+	opacity: 0.5;
+}
+
+.jquery-comments .textarea-wrapper .close:hover {
+	opacity: 1;
 }
 
 .jquery-comments .scrollable .textarea-wrapper .close {
@@ -86,7 +91,7 @@
 }
 
 .jquery-comments .textarea-wrapper .close span {
-	background: #666;
+	background: #999;
 	width: 25%;
 	left: 37.5%;
 	height: 100%;
