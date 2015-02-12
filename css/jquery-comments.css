@@ -101,9 +101,6 @@
 }
 
 .jquery-comments .textarea-wrapper .textarea {
-	display: block;
-	width: 100%;
-	resize: none;
 	margin: 0;
 	outline: 0;
 	overflow-y: auto;
@@ -153,12 +150,9 @@
 
 .jquery-comments ul.navigation {
 	clear: both;
-	float: left;
-	width: 100%;
 
 	color: #CCC;
 	border-bottom: 2px solid #CCC;
-	margin-top: .5em;
 	margin-bottom: 1em;
 	line-height: 2em;
 	font-size: 1em;
@@ -187,9 +181,11 @@
 	left: 0;
 }
 
-.jquery-comments ul#comment-list li {
-	width: 100%;
+.jquery-comments ul#comment-list {
 	display: inline-block;
+}
+
+.jquery-comments ul#comment-list li {
 	padding: .5em 0;
 }
 
