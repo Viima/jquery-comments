@@ -556,7 +556,7 @@
             // Textarea
             var textarea = $('<div/>', {
                 class: 'textarea',
-                placeholder: this.options.textareaPlaceholder,
+                'data-placeholder': this.options.textareaPlaceholder,
                 contenteditable: true,
             });
 

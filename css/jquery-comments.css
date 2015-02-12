@@ -10,8 +10,9 @@
 }
 
 .jquery-comments [contentEditable=true]:empty:not(:focus):before{
-    content:attr(placeholder);
+    content:attr(data-placeholder);
     color: #CCC;
+    position: inherit;
 }
 
 .jquery-comments h3 {
@@ -77,6 +78,7 @@
 	position: absolute;
 	margin-top: .5em;
 	margin-right: .5em;
+	font-size: inherit;
 }
 
 .jquery-comments .scrollable .textarea-wrapper .close {
@@ -104,6 +106,7 @@
 	margin: 0;
 	outline: 0;
 	overflow-y: auto;
+	cursor: text;
 
 	border: 1px solid #CCC;;
 	font-size: 1em;
@@ -251,6 +254,7 @@
 
 .jquery-comments ul#comment-list li.comment .wrapper .content {
 	white-space: pre-line;
+	word-break: break-word;
 }
 
 .jquery-comments ul#comment-list li.comment .wrapper > span:not(:last-child) {
