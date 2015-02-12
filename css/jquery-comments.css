@@ -271,7 +271,7 @@
 }
 
 .jquery-comments ul#comment-list li.comment .child-comments {
-	padding-top: 0.5em;
+	padding-top: 0.25em;
 }
 
 .jquery-comments ul#comment-list li.comment .child-comments:empty {
