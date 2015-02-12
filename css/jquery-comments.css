@@ -86,7 +86,7 @@
 }
 
 .jquery-comments .textarea-wrapper .close span {
-	background: #CCC;
+	background: #666;
 	width: 25%;
 	left: 37.5%;
 	height: 100%;
@@ -267,6 +267,10 @@
 
 .jquery-comments ul#comment-list li.comment .child-comments {
 	padding-top: 0.5em;
+}
+
+.jquery-comments ul#comment-list li.comment .child-comments:empty {
+	padding-top: 0;
 }
 
 .jquery-comments ul#comment-list li.comment .child-comments li.toggle-all {
