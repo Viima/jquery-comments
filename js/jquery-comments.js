@@ -195,20 +195,20 @@
 
             // Append main level comments
             $(mainLevelComments).each(function(index, commentModel) {
-                self.addComment(commentModel, false);
+                self.addComment(commentModel);
             });
 
             // Append replies in chronological order
             this.sortComments(replies, 'oldest');
             $(replies).each(function(index, commentModel) {
-                self.addComment(commentModel, false);
+                self.addComment(commentModel);
             });
 
             // Re-arrange the comments
             this.sortAndReArrangeComments(this.currentSortKey);
         },
 
-        addComment: function(commentModel, rearrange) {
+        addComment: function(commentModel) {
             var commentEl = this.createCommentElement(commentModel);
 
             // Case: reply
@@ -229,11 +229,8 @@
             // Case: main level comment
             } else {
                 var mainCommentList = this.$el.find('#comment-list');
-                mainCommentList.append(commentEl);
+                mainCommentList.prepend(commentEl);
             }
-
-            // Re-arranging the comments if necessary
-            if(rearrange) this.sortAndReArrangeComments(this.currentSortKey);
         },
 
         updateToggleAllButton: function(parentEl) {
@@ -416,7 +413,7 @@
                 
                 var commentModel = this.createCommentModel(data);
                 this.addCommentToDataModel(commentModel);
-                this.addComment(commentModel, true);
+                this.addComment(commentModel);
                 
                 // Proper handling for textarea
                 if(commentingField.hasClass('main')) {
