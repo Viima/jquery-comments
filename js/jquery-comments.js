@@ -323,20 +323,6 @@
             });
         },
 
-        postComment: function(commentModel) {
-            var success = function() {};
-            var error = function() {};
-
-            commentModel.fullname = this.options.youText;
-            commentModel.profilePictureURL = this.options.profilePictureURL;
-            commentModel.created = new Date().getTime();
-            commentModel.id = this.getComments().length + 1;
-
-            this.createCommentElement(commentModel);
-
-            this.options.postComment(commentModel, success, error);
-        },
-
         editComment: function() {
         },
 
@@ -420,15 +406,18 @@
 
             if(sendButton.hasClass('enabled')) {
                 var data = {                    
+                    fullname: this.options.youText,
+                    profile_picture_url: this.options.profilePictureURL,
+                    created: new Date().getTime(),
+                    id: this.getComments().length + 1,
                     parent: parseInt(textarea.attr('data-parent')) || null,
-                    content: this.getTextareaContent(textarea)
+                    content: this.getTextareaContent(textarea),
                 }
+                
                 var commentModel = this.createCommentModel(data);
                 this.addCommentToDataModel(commentModel);
-
-                this.postComment(commentModel);
                 this.addComment(commentModel, true);
-
+                
                 // Proper handling for textarea
                 if(commentingField.hasClass('main')) {
                     this.clearTextarea(textarea);
