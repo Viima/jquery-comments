@@ -284,11 +284,11 @@
                     if(childsOfB != childsOfA) {
                         return childsOfB - childsOfA;
 
-                    // Return older if popularity is the same (force new comments to last)
+                    // Return newer if popularity is the same
                     } else {
                         var createdA = new Date(commentA.created).getTime();
                         var createdB = new Date(commentB.created).getTime();
-                        return createdA - createdB;
+                        return createdB - createdA;
                     }
                 });
 
