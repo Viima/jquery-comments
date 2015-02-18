@@ -349,18 +349,23 @@
         },
 
         hideMainControlRow: function(ev) {
-            var mainTextarea = this.$el.find('.commenting-field.main .textarea');
             var mainControlRow = this.$el.find('.commenting-field.main .control-row');
+            var sendButton = mainControlRow.find('.send');
 
-            var clickSource = ev.target;
-            var sourceIsMainTextarea = clickSource == mainTextarea[0];
-            var sourceIsChildOfMainTextarea = $(clickSource).parents('.textarea').first()[0] == mainTextarea[0];
+            // Check that tehere is nothing to comment
+            if(!sendButton.hasClass('enabled')) {            
+                var mainTextarea = this.$el.find('.commenting-field.main .textarea');
 
-            // Hide the main control row if the click didn't originate from the main textarea
-            if(!sourceIsMainTextarea && !sourceIsChildOfMainTextarea) {
-                this.adjustTextareaHeight(mainTextarea, false);
-                mainControlRow.hide();
-                mainTextarea.parent().find('.close').hide();
+                var clickSource = ev.target;
+                var sourceIsMainTextarea = clickSource == mainTextarea[0];
+                var sourceIsChildOfMainTextarea = $(clickSource).parents('.textarea').first()[0] == mainTextarea[0];
+
+                // Hide the main control row if the click didn't originate from the main textarea
+                if(!sourceIsMainTextarea && !sourceIsChildOfMainTextarea) {
+                    this.adjustTextareaHeight(mainTextarea, false);
+                    mainControlRow.hide();
+                    mainTextarea.parent().find('.close').hide();
+                }
             }
         },
 
