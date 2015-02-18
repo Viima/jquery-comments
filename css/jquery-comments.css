@@ -250,11 +250,6 @@
 	display: none;
 }
 
-.jquery-comments ul#comment-list li.comment .wrapper .profile-picture {
-	height: 3em;
-	width: 3em;
-}
-
 .jquery-comments ul#comment-list li.comment .wrapper .content {
 	white-space: pre-line;
 	word-break: break-word;
@@ -268,8 +263,10 @@
 	margin-left: 4.1em;	/* Profile picture width plus margin */
 }
 
-.jquery-comments ul#comment-list li.comment .child-comments:empty {
-	padding-top: 0;
+.jquery-comments ul#comment-list li.comment .child-comments .profile-picture,
+.jquery-comments ul#comment-list li.comment .commenting-field .profile-picture {
+	height: 3em;
+	width: 3em;
 }
 
 .jquery-comments ul#comment-list li.comment .child-comments li.toggle-all {
