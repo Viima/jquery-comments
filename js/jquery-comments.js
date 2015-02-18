@@ -446,19 +446,19 @@
 
         replyButtonClicked: function(ev) {
             var replyButton = $(ev.currentTarget);
-            var wrapperOfOuterMostParent = replyButton.parents('.wrapper').last();
+            var outermostParent = replyButton.parents('li.comment').last();
             var parentId = replyButton.parents('.comment').first().data().id;
 
 
             // Remove existing field
-            var replyField = wrapperOfOuterMostParent.find('.commenting-field');
+            var replyField = outermostParent.find('.commenting-field');
             if(replyField.length) replyField.remove();
             var previousParentId = parseInt(replyField.find('.textarea').attr('data-parent'));
 
             // Create the reply field (do not re-create)
             if(previousParentId != parentId) {            
                 var replyField = this.createCommentingFieldElement();
-                wrapperOfOuterMostParent.append(replyField);
+                outermostParent.append(replyField);
                 textarea = replyField.find('.textarea');
 
                 // Set the correct parent id to the field

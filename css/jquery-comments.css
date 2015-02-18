@@ -194,7 +194,8 @@
 }
 
 .jquery-comments ul#comment-list li.comment .comment-wrapper,
-.jquery-comments ul#comment-list li.toggle-all {
+.jquery-comments ul#comment-list li.toggle-all,
+.jquery-comments ul#comment-list li.comment .commenting-field {
 	padding: .5em;
 }
 
@@ -263,12 +264,8 @@
 	margin-right: 2em;
 }
 
-.jquery-comments ul#comment-list li.comment .commenting-field {
-	margin-top: .5em;
-}
-
-.jquery-comments ul#comment-list li.comment .child-comments {
-	padding-left: 4.1em;	/* Profile picture width plus margin */
+.jquery-comments ul#comment-list li.comment > *:not(:first-child) {
+	margin-left: 4.1em;	/* Profile picture width plus margin */
 }
 
 .jquery-comments ul#comment-list li.comment .child-comments:empty {
