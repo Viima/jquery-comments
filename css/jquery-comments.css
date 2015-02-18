@@ -193,24 +193,21 @@
 	display: inline-block;
 }
 
-.jquery-comments ul#comment-list li {
-	padding: .5em 0;
+.jquery-comments ul#comment-list li.comment .comment-wrapper,
+.jquery-comments ul#comment-list li.toggle-all {
+	padding: .5em;
 }
 
-.jquery-comments ul#comment-list li.comment:last-child {
-	padding-bottom: 0;
-}
-
-.jquery-comments ul#comment-list li > .profile-picture {
-	margin-right: .5em;
-}
-
-.jquery-comments ul#comment-list li.comment {
+.jquery-comments ul#comment-list li.comment .comment-wrapper {
 	border-top: 1px solid #DDD;
 }
 
-.jquery-comments ul#comment-list > li.comment:first-child {
+.jquery-comments ul#comment-list > li.comment:first-child > .comment-wrapper {
 	border-top: none;
+}
+
+.jquery-comments ul#comment-list li.comment .profile-picture {
+	margin-right: .5em;
 }
 
 .jquery-comments ul#comment-list li.comment time {
@@ -271,7 +268,7 @@
 }
 
 .jquery-comments ul#comment-list li.comment .child-comments {
-	padding-top: 0.25em;
+	padding-left: 4.1em;	/* Profile picture width plus margin */
 }
 
 .jquery-comments ul#comment-list li.comment .child-comments:empty {

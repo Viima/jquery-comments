@@ -607,6 +607,10 @@
                 class: 'comment'
             }).data('model', commentModel);
 
+            var commentWrapper = $('<div/>', {
+                class: 'comment-wrapper'
+            });
+
             // Profile picture
             var profilePicture = this.createProfilePictureElement(commentModel.profilePictureURL);
 
@@ -663,8 +667,10 @@
             
             wrapper.append(content);
             wrapper.append(like).append(reply)
-            if(commentModel.parent == null) wrapper.append(childComments);
-            commentEl.append(profilePicture).append(time).append(name).append(wrapper);
+            commentWrapper.append(profilePicture).append(time).append(name).append(wrapper);
+
+            commentEl.append(commentWrapper);
+            if(commentModel.parent == null) commentEl.append(childComments);
             return commentEl;
         },
 
