@@ -611,7 +611,7 @@
             // Comment container element
             var commentEl = $('<li/>', {
                 'data-id': commentModel.id,
-                class: 'comment'
+                class: 'comment',
             }).data('model', commentModel);
 
             if(commentModel.createdByCurrentUser) commentEl.addClass('by-current-user');

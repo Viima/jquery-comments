@@ -27,10 +27,10 @@
 
 .jquery-comments .profile-picture {
 	float: left;
-	width: 3.6em;
-	height: 3.6em;
+	width: 50px;
+	height: 50px;
 	max-width: 50px;
-	max-height: 50px;	
+	max-height: 50px;
 }
 
 .jquery-comments .profile-picture.round {
@@ -246,11 +246,6 @@
 	display: none;
 }
 
-.jquery-comments ul#comment-list li.comment .wrapper .profile-picture {
-	height: 3em;
-	width: 3em;
-}
-
 .jquery-comments ul#comment-list li.comment .wrapper .content {
 	white-space: pre-line;
 	word-break: break-word;
@@ -260,8 +255,13 @@
 	margin-right: 2em;
 }
 
-.jquery-comments ul#comment-list li.comment > *:not(:first-child) {
-	margin-left: 4.1em;	/* Profile picture width plus margin */
+.jquery-comments ul#comment-list li.comment .other-content {
+	margin-left: calc(50px + .5em);	/* Profile picture width plus margin */
+}
+
+.jquery-comments ul#comment-list li.comment .other-content .profile-picture {
+	height: 3em;
+	width: 3em;
 }
 
 .jquery-comments ul#comment-list li.comment .child-comments:not(:empty) {
