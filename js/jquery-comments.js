@@ -419,13 +419,15 @@
                 var commentModel = this.createCommentModel(data);
                 this.addCommentToDataModel(commentModel);
                 this.addComment(commentModel);
-                
+
                 // Proper handling for textarea
                 if(commentingField.hasClass('main')) {
                     this.clearTextarea(textarea);
                 } else {
                     commentingField.remove();
                 }
+
+                this.options.postComment(commentModel);
             }
         },
 
@@ -458,7 +460,7 @@
             // Create the reply field (do not re-create)
             if(previousParentId != parentId) {            
                 var replyField = this.createCommentingFieldElement();
-                outermostParent.append(replyField);
+                outermostParent.children().last().append(replyField);
                 textarea = replyField.find('.textarea');
 
                 // Set the correct parent id to the field
@@ -665,6 +667,10 @@
                 text: this.options.replyText,
             })
 
+            var otherContent = $('<div/>', {
+                class: 'other-content',
+            });
+
             // Child comments
             var childComments = $('<ul/>', {
                 class: 'child-comments'
@@ -674,8 +680,8 @@
             wrapper.append(like).append(reply)
             commentWrapper.append(profilePicture).append(time).append(name).append(wrapper);
 
-            commentEl.append(commentWrapper);
-            if(commentModel.parent == null) commentEl.append(childComments);
+            commentEl.append(commentWrapper).append(otherContent);
+            if(commentModel.parent == null) otherContent.append(childComments);
             return commentEl;
         },
 

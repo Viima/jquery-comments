@@ -140,10 +140,9 @@
                     getComments: function() {
                         return commentsArray;
                     },
-                    postComment: function(commentJSON, successCallback, errorCallback) {
+                    postComment: function(commentModel) {
                       setTimeout(function() {
                         console.log(commentJSON);
-                        successCallback();
                       }, 100);
                     }
                 });
