@@ -38,13 +38,14 @@
                content: 'content',
                fullname: 'fullname',
                profilePictureURL: 'profile_picture_url',
-               createdByStaff: 'created_by_staff',
+               createdByAdmin: 'created_by_staff',
                createdByCurrentUser: 'created_by_current_user',
                moderationPending: 'moderation_pending'
             },
 
-            getComments: function() {},
+            getComments: function(callback) {callback()},
             postComment: function() {},
+            refresh: function() {},
             timeFormatter: function(time) {
                 return new Date(time).toLocaleDateString(navigator.language);
             }
@@ -88,7 +89,7 @@
             // Create CSS declarations for highlight color
             this.createCssDeclarations();
 
-            this.refresh();
+            this.fetchDataAndRender();
         },
 
         delegateEvents: function() {
@@ -116,31 +117,29 @@
         // Basic functionalities
         // =====================
 
-        refresh: function() {
-            this.updateData();
-            this.render();
-        },
-
-        updateData: function () {
+        fetchDataAndRender: function () {
+            var self = this;
             this.commentsById = {};
 
             // Get comments
-            var commentsArray = this.options.getComments();
+            this.options.getComments(function(commentsArray) {
+                // Convert comments to custom data model
+                var commentModels = commentsArray.map(function(commentsJSON){
+                    return self.createCommentModel(commentsJSON)
+                });
 
-            // Convert comments to custom data model
-            var self = this;
-            var commentModels = commentsArray.map(function(commentsJSON){
-                return self.createCommentModel(commentsJSON)
+                // Sort comments by date (oldest first so that they can be appended to the data model
+                // without caring dependencies)
+                self.sortComments(commentModels, 'oldest');
+
+                $(commentModels).each(function(index, commentModel) {
+                    self.addCommentToDataModel(commentModel);
+                });
+
+                self.render();
+                self.options.refresh();
             });
 
-            // Sort comments by date (oldest first so that they can be appended to the data model
-            // without caring dependencies)
-            this.sortComments(commentModels, 'oldest');
-
-            var self = this;
-            $(commentModels).each(function(index, commentModel) {
-                self.addCommentToDataModel(commentModel);
-            });
         },
 
         createCommentModel: function(params) {
@@ -411,9 +410,10 @@
                     fullname: this.options.youText,
                     profile_picture_url: this.options.profilePictureURL,
                     created: new Date().getTime(),
-                    id: this.getComments().length + 1,
+                    id: this.getComments().length + 10,
                     parent: parseInt(textarea.attr('data-parent')) || null,
                     content: this.getTextareaContent(textarea),
+                    created_by_current_user: true,
                 }
                 
                 var commentModel = this.createCommentModel(data);
@@ -613,6 +613,9 @@
                 'data-id': commentModel.id,
                 class: 'comment'
             }).data('model', commentModel);
+
+            if(commentModel.createdByCurrentUser) commentEl.addClass('by-current-user');
+            if(commentModel.createdByAdmin) commentEl.addClass('by-admin');
 
             var commentWrapper = $('<div/>', {
                 class: 'comment-wrapper'

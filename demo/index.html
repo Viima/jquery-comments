@@ -137,8 +137,8 @@
                     profilePictureURL: 'https://app.viima.com/static/media/user_profiles/user-icon.png',
                     roundProfilePictures: true,
                     textareaRows: 1,
-                    getComments: function() {
-                        return commentsArray;
+                    getComments: function(callback) {
+                        callback(commentsArray);
                     },
                     postComment: function(commentModel) {
                       setTimeout(function() {
