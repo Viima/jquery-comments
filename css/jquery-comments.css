@@ -189,6 +189,10 @@
 	left: 0;
 }
 
+.jquery-comments ul#comment-list li.comment {
+	clear: both;
+}
+
 .jquery-comments ul#comment-list li.comment .comment-wrapper,
 .jquery-comments ul#comment-list li.toggle-all,
 .jquery-comments ul#comment-list li.comment .commenting-field {
@@ -260,8 +264,10 @@
 }
 
 .jquery-comments ul#comment-list li.comment .other-content .profile-picture {
-	height: 3em;
 	width: 3em;
+	height: 3em;
+	min-width: 30px;
+	min-height: 30px;
 }
 
 .jquery-comments ul#comment-list li.comment .child-comments:not(:empty) {
