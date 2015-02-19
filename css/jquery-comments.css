@@ -264,8 +264,8 @@
 	margin-left: 4.1em;	/* Profile picture width plus margin */
 }
 
-.jquery-comments ul#comment-list li.comment .child-comments:empty {
-	padding-top: 0;
+.jquery-comments ul#comment-list li.comment .child-comments:not(:empty) {
+	padding-bottom: .5em;
 }
 
 .jquery-comments ul#comment-list li.comment .child-comments li.toggle-all {
