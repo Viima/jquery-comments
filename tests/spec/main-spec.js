@@ -10,8 +10,8 @@ describe('Basic features', function() {
             roundProfilePictures: true,
             textareaRows: 1,
             textareaMaxRows: 4,
-            getComments: function() {
-                return commentsArray;
+            getComments: function(callback) {
+                callback(commentsArray);
             },
             postComment: function(commentJSON, successCallback, errorCallback) {
               setTimeout(function() {
@@ -29,15 +29,15 @@ describe('Basic features', function() {
 
     it('Should call the required functions upon refresh', function() {
         spyOn(comments, 'render').and.callThrough();
-        spyOn(comments, 'updateData').and.callThrough();
+        spyOn(comments, 'fetchDataAndRender').and.callThrough();
         spyOn(comments, 'createCommentModel').and.callThrough();
         spyOn(comments, 'addCommentToDataModel').and.callThrough();
         spyOn(comments, 'sortComments').and.callThrough();
 
-        comments.refresh();
+        comments.fetchDataAndRender();
 
         expect(comments.render.calls.count()).toEqual(1);
-        expect(comments.updateData.calls.count()).toEqual(1);
+        expect(comments.fetchDataAndRender.calls.count()).toEqual(1);
         expect(comments.createCommentModel.calls.count()).toEqual(9);
         expect(comments.addCommentToDataModel.calls.count()).toEqual(9);
         expect(comments.sortComments.calls.count()).toBeGreaterThan(1);
@@ -212,7 +212,7 @@ describe('Basic features', function() {
                 expect(replyField.find('.reply-to-badge').length).toBe(0);
 
                 // Check that the field is last child
-                var lastChild = mostPopularComment.children().last();
+                var lastChild = mostPopularComment.children().last().children().last();
                 expect(lastChild[0]).toBe(replyField[0]);
             }); 
 
@@ -233,7 +233,7 @@ describe('Basic features', function() {
                 expect(replyField.find('.reply-to-badge').val()).toBe('@Bryan Connery');
 
                 // Check that the field is last child
-                var lastChild = mostPopularComment.children().last();
+                var lastChild = mostPopularComment.children().last().children().last()
                 expect(lastChild[0]).toBe(replyField[0]);
             });
 
