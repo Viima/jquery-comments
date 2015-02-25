@@ -160,8 +160,8 @@ describe('Basic features', function() {
             mainTextarea.trigger('focus').focus();
             expect(controlRow.is(':visible')).toBe(true);
 
-            // Hide when clicking elsewhere
-            comments.$el.click();
+            // Hide when clicking close icon
+            mainCommentingField.find('.close').click();
             expect(controlRow.is(':visible')).toBe(false);
         });
 
@@ -186,8 +186,8 @@ describe('Basic features', function() {
             expect(sendButton.is(':visible')).toBe(true);
             expect(sendButton.hasClass('enabled')).toBe(false);
 
-            // Hide when clicking elsewhere
-            comments.$el.click();
+            // Hide when clicking close icon
+            mainCommentingField.find('.close').click();
             expect(sendButton.is(':visible')).toBe(false);
             expect(sendButton.hasClass('enabled')).toBe(false);
         });

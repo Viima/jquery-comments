@@ -44,7 +44,7 @@
             },
 
             getComments: function(callback) {callback()},
-            postComment: function() {},
+            postComment: function(commentJSON, success, error) {success(commentJSON)},
             refresh: function() {},
             timeFormatter: function(time) {
                 return new Date(time).toLocaleDateString(navigator.language);
@@ -57,14 +57,14 @@
             'click .navigation li' : 'navigationElementClicked',
 
             // Main comenting field
-            'focus .commenting-field.main .textarea': 'showMainControlRow',
-            'click' : 'hideMainControlRow',
-
+            'focus .commenting-field.main .textarea': 'showMainCommentingField',
+            'click .commenting-field.main .close' : 'hideMainCommentingField',
+            
             // All commenting fields
             'focus .commenting-field .textarea' : 'increaseTextareaHeight',
             'input .commenting-field .textarea' : 'increaseTextareaHeight textareaContentChanged',
-            'click .commenting-field .send' : 'sendButtonClicked',
-            'click .commenting-field .close' : 'closeButtonClicked',
+            'click .commenting-field .send.enabled' : 'postComment',
+            'click .commenting-field:not(.main) .close' : 'removeCommentingField',
 
             // Comment
             'click li.comment .child-comments .toggle-all': 'toggleReplies',
@@ -341,31 +341,22 @@
             this.currentSortKey = sortKey;
         },
 
-        showMainControlRow: function(ev) {
-            var textarea = $(ev.currentTarget);
-            textarea.siblings('.control-row').show();
-            textarea.parent().find('.close').show();
+        showMainCommentingField: function(ev) {
+            var mainTextarea = $(ev.currentTarget);
+            mainTextarea.siblings('.control-row').show();
+            mainTextarea.parent().find('.close').show();
         },
 
-        hideMainControlRow: function(ev) {
+        hideMainCommentingField: function(ev) {
+            var closeButton = $(ev.currentTarget);
+            var mainTextarea = this.$el.find('.commenting-field.main .textarea');
             var mainControlRow = this.$el.find('.commenting-field.main .control-row');
-            var sendButton = mainControlRow.find('.send');
 
-            // Check that tehere is nothing to comment
-            if(!sendButton.hasClass('enabled')) {            
-                var mainTextarea = this.$el.find('.commenting-field.main .textarea');
+            this.clearTextarea(mainTextarea);
+            this.adjustTextareaHeight(mainTextarea, false);
 
-                var clickSource = ev.target;
-                var sourceIsMainTextarea = clickSource == mainTextarea[0];
-                var sourceIsChildOfMainTextarea = $(clickSource).parents('.textarea').first()[0] == mainTextarea[0];
-
-                // Hide the main control row if the click didn't originate from the main textarea
-                if(!sourceIsMainTextarea && !sourceIsChildOfMainTextarea) {
-                    this.adjustTextareaHeight(mainTextarea, false);
-                    mainControlRow.hide();
-                    mainTextarea.parent().find('.close').hide();
-                }
-            }
+            mainControlRow.hide();
+            closeButton.hide();
         },
 
         increaseTextareaHeight: function(ev) {
@@ -400,44 +391,43 @@
             }
         },
 
-        sendButtonClicked: function(ev) {
+        postComment: function(ev) {
+            var self = this;
             var sendButton = $(ev.currentTarget);
             var commentingField = sendButton.parents('.commenting-field').first();
             var textarea = commentingField.find('.textarea');
 
-            if(sendButton.hasClass('enabled')) {
-                var data = {                    
-                    fullname: this.options.youText,
-                    profile_picture_url: this.options.profilePictureURL,
-                    created: new Date().getTime(),
-                    id: this.getComments().length + 10,
-                    parent: parseInt(textarea.attr('data-parent')) || null,
-                    content: this.getTextareaContent(textarea),
-                    created_by_current_user: true,
-                }
-                
-                var commentModel = this.createCommentModel(data);
-                this.addCommentToDataModel(commentModel);
-                this.addComment(commentModel);
+            // Disable send button while request is pending
+            sendButton.removeClass('enabled');
 
-                // Proper handling for textarea
-                if(commentingField.hasClass('main')) {
-                    this.clearTextarea(textarea);
-                } else {
-                    commentingField.remove();
-                }
-
-                this.options.postComment(commentModel);
+            // TODO: Reverse mapping
+            var commentJSON = {                    
+                fullname: this.options.youText,
+                profile_picture_url: this.options.profilePictureURL,
+                created: new Date().getTime(),
+                id: this.getComments().length + 1,
+                parent: parseInt(textarea.attr('data-parent')) || null,
+                content: this.getTextareaContent(textarea),
+                created_by_current_user: true,
             }
+            
+            var success = function(commentJSON) {
+                var commentModel = self.createCommentModel(commentJSON);
+                self.addCommentToDataModel(commentModel);
+                self.addComment(commentModel);
+                commentingField.find('.close').trigger('click');
+            }
+
+            var error = function() {
+                sendButton.addClass('enabled');
+            }
+
+            this.options.postComment(commentJSON, success, error);
         },
 
-        closeButtonClicked: function(ev) {
+        removeCommentingField: function(ev) {
             var commentingField = $(ev.currentTarget).parents('.commenting-field').first();
-            if(commentingField.hasClass('main')) {
-                this.clearTextarea(commentingField.find('.textarea'));
-            } else {
-                commentingField.remove();
-            }
+            commentingField.remove();
         },
 
         toggleReplies: function(ev) {
