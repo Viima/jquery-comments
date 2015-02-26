@@ -142,19 +142,9 @@
 
         },
 
-        createCommentModel: function(params) {
-            var commentModel = {
-                childs: [],
-            };
-
-            // Apply parameters to mapped fields
-            var invertedMappings = this.invertDictionary(this.options.fieldMappings);
-            for(var key in params) {
-                if(key in invertedMappings) {
-                    var internalKey = invertedMappings[key];
-                    commentModel[internalKey] = params[key];
-                }
-            }
+        createCommentModel: function(commentJSON) {
+            var commentModel = this.applyInternalMappings(commentJSON);
+            commentModel.childs = [];
             return commentModel;
         },
 
@@ -400,16 +390,20 @@
             // Disable send button while request is pending
             sendButton.removeClass('enabled');
 
-            // TODO: Reverse mapping
+            var time = new Date().getTime();
             var commentJSON = {                    
-                fullname: this.options.youText,
-                profile_picture_url: this.options.profilePictureURL,
-                created: new Date().getTime(),
-                id: this.getComments().length + 1,
+                id: 'c' +  (this.getComments().length + 1),   // Temporary id
                 parent: parseInt(textarea.attr('data-parent')) || null,
+                created: time,
+                modified: time,
                 content: this.getTextareaContent(textarea),
-                created_by_current_user: true,
+                fullname: this.options.youText,
+                profilePictureURL: this.options.profilePictureURL,
+                createdByCurrentUser: true,
             }
+
+            // Reverse mapping
+            commentJSON = this.applyExternalMappings(commentJSON);
             
             var success = function(commentJSON) {
                 var commentModel = self.createCommentModel(commentJSON);
@@ -779,16 +773,36 @@
             return ce.text().trim();
         },
 
-        invertDictionary: function(dict) {
+        applyInternalMappings: function(commentJSON) {
+
+            // Inverting field mappings
+            var invertedMappings = {};
+            var mappings = this.options.fieldMappings;
+            for (var prop in mappings) {
+                if(mappings.hasOwnProperty(prop)) {
+                    invertedMappings[mappings[prop]] = prop;
+                }
+            }
+
+            return this.applyMappings(invertedMappings, commentJSON);
+        },
+
+        applyExternalMappings: function(commentJSON) {
+            var mappings = this.options.fieldMappings;
+            return this.applyMappings(mappings, commentJSON);
+        },
+
+        applyMappings: function(mappings, commentJSON) {
             var result = {};
-            for (var prop in dict) {
-                if(dict.hasOwnProperty(prop)) {
-                    result[dict[prop]] = prop;
+
+            for(var key1 in commentJSON) {
+                if(key1 in mappings) {
+                    var key2 = mappings[key1];
+                    result[key2] = commentJSON[key1];
                 }
             }
             return result;
-        }
-
+        },
     }
 
     $.fn.comments = function(options) {
