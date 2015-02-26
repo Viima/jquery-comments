@@ -11,6 +11,8 @@
 
         options: {
             profilePictureURL: '',
+            spinnerImageURL: 'img/ajax-loader.gif',
+
             textareaPlaceholder: 'Leave a comment',
             popularText: 'Popular',
             newestText: 'Newest',
@@ -119,9 +121,12 @@
 
         fetchDataAndRender: function () {
             var self = this;
-            this.commentsById = {};
+
+            this.$el.empty();
+            this.createHTML();
 
             // Get comments
+            this.commentsById = {};
             this.options.getComments(function(commentsArray) {
                 // Convert comments to custom data model
                 var commentModels = commentsArray.map(function(commentsJSON){
@@ -137,9 +142,7 @@
                 });
 
                 self.render();
-                self.options.refresh();
             });
-
         },
 
         createCommentModel: function(commentJSON) {
@@ -167,8 +170,12 @@
         render: function() {
             var self = this;
 
-            this.$el.empty();
-            this.createHTML();
+            // Create new comment list
+            this.$el.find('#comment-list').remove();
+            var commentList = $('<ul/>', {
+                id: 'comment-list',
+            });
+
             this.currentSortKey = this.$el.find('.navigation li.active').data().sortKey;
 
             // Divide commments into main level comments and replies
@@ -184,25 +191,32 @@
 
             // Append main level comments
             $(mainLevelComments).each(function(index, commentModel) {
-                self.addComment(commentModel);
+                self.addComment(commentModel, commentList);
             });
 
             // Append replies in chronological order
             this.sortComments(replies, 'oldest');
             $(replies).each(function(index, commentModel) {
-                self.addComment(commentModel);
+                self.addComment(commentModel, commentList);
             });
 
             // Re-arrange the comments
             this.sortAndReArrangeComments(this.currentSortKey);
+
+            // Appned comment list to DOM and remove spinner
+            this.$el.find('> .spinner').remove();
+            this.$el.append(commentList);
+
+            this.options.refresh();
         },
 
-        addComment: function(commentModel) {
+        addComment: function(commentModel, commentList) {
+            commentList = commentList || this.$el.find('#comment-list');
             var commentEl = this.createCommentElement(commentModel);
 
             // Case: reply
             if(commentModel.parent) {
-                var directParentEl = this.$el.find('.comment[data-id="'+commentModel.parent+'"]');
+                var directParentEl = commentList.find('.comment[data-id="'+commentModel.parent+'"]');
 
                 // Force replies into one level only
                 var outerMostParent = directParentEl.parents('.comment').last();
@@ -217,8 +231,7 @@
 
             // Case: main level comment
             } else {
-                var mainCommentList = this.$el.find('#comment-list');
-                mainCommentList.prepend(commentEl);
+                commentList.prepend(commentEl);
             }
         },
 
@@ -498,11 +511,14 @@
             // Navigation bar
             this.$el.append(this.createNavigationElement());
 
-            // Comment list
-            var commentList = $('<ul/>', {
-                id: 'comment-list'
+
+            // Loading spinner
+            var spinner = $('<img/>', {
+                class: 'spinner',
+                src: this.options.spinnerImageURL,
             });
-            this.$el.append(commentList);
+
+            this.$el.append(spinner);
         },
 
         createProfilePictureElement: function(src) {

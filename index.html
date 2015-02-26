@@ -6,9 +6,9 @@
         <meta name=viewport content="width=device-width, initial-scale=1">
         <title>Jquery Comments Plugin</title>
         
-        <script type="text/javascript" src="../js/lib/jquery-1.9.0.min.js"></script>
-        <script type="text/javascript" src="../js/jquery-comments.js"></script>
-        <link rel="stylesheet" type="text/css" href="../css/jquery-comments.css">
+        <script type="text/javascript" src="js/lib/jquery-1.9.0.min.js"></script>
+        <script type="text/javascript" src="js/jquery-comments.js"></script>
+        <link rel="stylesheet" type="text/css" href="css/jquery-comments.css">
 
         <style type="text/css">
             body {
@@ -138,8 +138,16 @@
                     roundProfilePictures: true,
                     textareaRows: 1,
                     getComments: function(callback) {
-                        callback(commentsArray);
+                        setTimeout(function() {
+                          callback(commentsArray);
+                        }, 500)
                     },
+                    postComment: function(data, success, error) {
+                      setTimeout(function() {
+                        console.log(data)
+                        success(data)
+                      },200)
+                    }
                 });
             });
         </script>

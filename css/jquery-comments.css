@@ -19,6 +19,12 @@
 	color: #666;
 }
 
+.jquery-comments .spinner {
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+
 .jquery-comments ul {
 	list-style: none;
 	padding: 0;
