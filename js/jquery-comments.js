@@ -179,6 +179,7 @@
                 id: 'comment-list',
             });
 
+            // Get the sort key from UI
             this.currentSortKey = this.$el.find('.navigation li.active').data().sortKey;
 
             // Divide commments into main level comments and replies
@@ -193,6 +194,8 @@
             });
 
             // Append main level comments
+            this.sortComments(mainLevelComments, this.currentSortKey)
+            mainLevelComments.reverse();    // Reverse the order as they are prepended to DOM
             $(mainLevelComments).each(function(index, commentModel) {
                 self.addComment(commentModel, commentList);
             });
@@ -202,9 +205,6 @@
             $(replies).each(function(index, commentModel) {
                 self.addComment(commentModel, commentList);
             });
-
-            // Re-arrange the comments
-            this.sortAndReArrangeComments(this.currentSortKey);
 
             // Appned comment list to DOM and remove spinner
             this.$el.find('> .spinner').remove();

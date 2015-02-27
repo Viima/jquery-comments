@@ -49,6 +49,7 @@ describe('Basic features', function() {
         commentElements.each(function(index, commentEl) {
             checkCommentElementData($(commentEl));
         });
+        checkOrder($('ul#comment-list > li.comment'), [1,3,2]);
     });
 
     it('Should have appended the child comments under their outermost parent', function() {
