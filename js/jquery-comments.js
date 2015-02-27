@@ -43,7 +43,7 @@
                content: 'content',
                fullname: 'fullname',
                profilePictureURL: 'profile_picture_url',
-               createdByAdmin: 'created_by_staff',
+               createdByAdmin: 'created_by_admin',
                createdByCurrentUser: 'created_by_current_user',
                moderationPending: 'moderation_pending'
             },
@@ -87,8 +87,21 @@
 
             // Init options
             var self = this;
-            $(Object.keys(options)).each(function(index, key) {
-                self.options[key] = options[key];
+            $(Object.keys(options)).each(function(index1, key1) {
+                
+                var value = options[key1];
+
+                // Expand dictionary
+                if(value.constructor == Object) {
+                    $(Object.keys(value)).each(function(index2, key2) {
+                        self.options[key1][key2] = value[key2];
+                    });
+
+                // Override value
+                } else {
+                    self.options[key1] = value;
+                }
+
             });
 
             // Create CSS declarations for highlight color
