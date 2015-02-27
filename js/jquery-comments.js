@@ -13,7 +13,8 @@
             profilePictureURL: '',
             spinnerImageURL: 'img/ajax-loader.gif',
 
-            textareaPlaceholder: 'Leave a comment',
+            // Strings to be formatted (for example localization)
+            textareaPlaceholderText: 'Add a comment',
             popularText: 'Popular',
             newestText: 'Newest',
             oldestText: 'Oldest',
@@ -21,9 +22,11 @@
             likeText: 'Like',
             replyText: 'Reply',
             youText: 'You',
-
             viewAllRepliesText: 'View all __replyCount__ replies',
             hideRepliesText: 'Hide replies',
+            textFormatter: function(text) {
+                return text;
+            },
 
             highlightColor: '#1B7FCC',
             roundProfilePictures: false,
@@ -50,7 +53,7 @@
             refresh: function() {},
             timeFormatter: function(time) {
                 return new Date(time).toLocaleDateString(navigator.language);
-            }
+            },
         },
 
         events: {
@@ -246,7 +249,7 @@
                 hiddenReplies.addClass('hidden-reply');
 
                 // Show all replies if replies are expanded
-                if(toggleAllButton.find('span.text').text() == this.options.hideRepliesText) {
+                if(toggleAllButton.find('span.text').text() == this.options.textFormatter(this.options.hideRepliesText)) {
                     hiddenReplies.show();
                 }
 
@@ -554,7 +557,7 @@
             // Textarea
             var textarea = $('<div/>', {
                 class: 'textarea',
-                'data-placeholder': this.options.textareaPlaceholder,
+                'data-placeholder': this.options.textFormatter(this.options.textareaPlaceholderText),
                 contenteditable: true,
             });
 
@@ -569,7 +572,7 @@
             // Send button
             var sendButton = $('<span/>', {
                 class: 'send highlight-background',
-                text: this.options.sendText,
+                text: this.options.textFormatter(this.options.sendText),
             });
 
             controlRow.append(sendButton);
@@ -585,20 +588,20 @@
 
             // Popular
             var popular = $('<li/>', {
-                text: this.options.popularText,
+                text: this.options.textFormatter(this.options.popularText),
                 'data-sort-key': 'popularity',
                  class: 'active',
             });
             
             // Newest
             var newest = $('<li/>', {
-                text: this.options.newestText,
+                text: this.options.textFormatter(this.options.newestText),
                  'data-sort-key': 'newest',
             });
 
             // Oldest
             var oldest = $('<li/>', {
-                text: this.options.oldestText,
+                text: this.options.textFormatter(this.options.oldestText),
                  'data-sort-key': 'oldest',
             });
 
@@ -661,13 +664,13 @@
             // Like
             var like = $('<span/>', {
                 class: 'like',
-                text: this.options.likeText,
+                text: this.options.textFormatter(this.options.likeText),
             });
 
             // Reply
             var reply = $('<span/>', {
                 class: 'reply',
-                text: this.options.replyText,
+                text: this.options.textFormatter(this.options.replyText),
             })
 
             var otherContent = $('<div/>', {
@@ -734,19 +737,21 @@
             var caret = toggleAllButton.find('.caret');
 
             var showExpandingText = function() {
-                var text = self.options.viewAllRepliesText;
+                var text = self.options.textFormatter(self.options.viewAllRepliesText);
                 var replyCount = toggleAllButton.siblings('.comment').length;
                 text = text.replace('__replyCount__', replyCount);
                 textContainer.text(text);
             }
 
+            var hideRepliesText = this.options.textFormatter(this.options.hideRepliesText);
+
             if(toggle) {
 
                 // Toggle text
-                if(textContainer.text() == this.options.hideRepliesText) {
+                if(textContainer.text() == hideRepliesText) {
                     showExpandingText();
                 } else {
-                    textContainer.text(this.options.hideRepliesText);
+                    textContainer.text(hideRepliesText);
                 }
                 // Toggle direction of the caret
                 caret.toggleClass('up');
@@ -754,7 +759,7 @@
             } else {
 
                 // Update text if necessary
-                if(textContainer.text() != this.options.hideRepliesText) {
+                if(textContainer.text() != hideRepliesText) {
                     showExpandingText();
                 }
             }
