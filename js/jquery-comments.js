@@ -406,7 +406,7 @@
             var time = new Date().getTime();
             var commentJSON = {                    
                 id: 'c' +  (this.getComments().length + 1),   // Temporary id
-                parent: parseInt(textarea.attr('data-parent')) || null,
+                parent: textarea.attr('data-parent') || null,
                 created: time,
                 modified: time,
                 content: this.getTextareaContent(textarea),
