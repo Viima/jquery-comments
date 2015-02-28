@@ -83,6 +83,7 @@
         init: function(options, el) {
             this.$el = $(el);
             this.$el.addClass('jquery-comments');
+            this.undelegateEvents();
             this.delegateEvents();
 
             // Init options
@@ -101,16 +102,25 @@
                 } else {
                     self.options[key1] = value;
                 }
-
             });
 
             // Create CSS declarations for highlight color
             this.createCssDeclarations();
 
+            // Fetching data and rendering
             this.fetchDataAndRender();
         },
 
         delegateEvents: function() {
+            this.bindEvents(false);
+        },
+
+        undelegateEvents: function() {
+            this.bindEvents(true);
+        },
+
+        bindEvents: function(unbind) {
+            var bindFunction = unbind ? 'off' : 'on';
             for (var key in this.events) {
                 var eventName = key.split(' ')[0];
                 var selector = key.split(' ').slice(1).join(' ');
@@ -123,9 +133,9 @@
                     method = $.proxy(method, this);
 
                     if (selector == '') {
-                        this.$el.on(eventName, method);
+                        this.$el[bindFunction](eventName, method);
                     } else {
-                        this.$el.on(eventName, selector, method);
+                        this.$el[bindFunction](eventName, selector, method);
                     }
                 }
             }
@@ -713,6 +723,9 @@
 
         createCssDeclarations: function() {
 
+            // Do not recreate CSS declarations
+            if($('head style.jquery-comments').length > 0) return;
+
             // Navigation underline
             this.createCss('.jquery-comments ul.navigation li.active:after {background: '
                 + this.options.highlightColor  + ' !important;',
@@ -733,6 +746,7 @@
         createCss: function(css) {
             var styleEl = $('<style/>', {
                 type: 'text/css',
+                class: 'jquery-comments',
                 text: css,
             });
             $('head').append(styleEl);
@@ -845,7 +859,7 @@
     $.fn.comments = function(options) {
         return this.each(function() {
             var comments = Object.create(Comments);
-            comments.init(options, this);
+            comments.init(options || {}, this);
             $.data(this, 'comments', comments);
         });
     };
