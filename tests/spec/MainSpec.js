@@ -6,6 +6,7 @@ describe('Basic features', function() {
         var commentsContainer = $('<div/>');
 
         commentsContainer.comments({
+            spinnerImageURL: '../img/ajax-loader.gif',
             profilePictureURL: 'https://app.viima.com/static/media/user_profiles/user-icon.png',
             roundProfilePictures: true,
             textareaRows: 1,
@@ -16,7 +17,7 @@ describe('Basic features', function() {
             postComment: function(data, success, error) {
                 setTimeout(function() {
                     success(data)
-                }, 100);
+                }, 10);
             }
         });
 
@@ -195,12 +196,12 @@ describe('Basic features', function() {
     
         it('Should able to add a new main level comment', function() {
             var newCommentText = 'New main level comment';
-            var commentCount = comments.getComments().length;
             
             mainTextarea.trigger('focus').focus();
             mainTextarea.html(newCommentText).trigger('input');
             mainCommentingField.find('.send').trigger('click');
 
+            var commentCount = comments.getComments().length;
             wait(function() {
                 return comments.getComments().length == commentCount + 1;
             });
@@ -223,7 +224,7 @@ describe('Basic features', function() {
             });
         });
 
-        describe('Replying', function() {
+        describe('Reply field', function() {
 
             var mostPopularComment;
 
@@ -245,6 +246,31 @@ describe('Basic features', function() {
                 // Check that the field is last child
                 var lastChild = mostPopularComment.children().last().children().last();
                 expect(lastChild[0]).toBe(replyField[0]);
+
+                var replyText = 'This is a reply';
+                replyField.find('.textarea').html(replyText).trigger('input');
+                replyField.find('.send').trigger('click');
+
+                var commentCount = comments.getComments().length;
+                wait(function() {
+                    return comments.getComments().length == commentCount + 1;
+                });
+                run(function() {
+                    // New reply should always be placed last
+                    var commentEl = mostPopularComment.find('li.comment').last();
+                    var idOfNewComment = commentEl.data().id;
+
+                    expect(commentEl.find('.content').text()).toBe(replyText);
+                    expect(commentEl.hasClass('by-current-user')).toBe(true);
+                    checkCommentElementData(commentEl);
+
+                    // Check position
+                    checkOrder(mostPopularComment.find('li.comment'), [6,7,8,9,idOfNewComment]);
+
+                    var toggleAllText = mostPopularComment.find('li.toggle-all').text();
+                    expect(toggleAllText).toBe('View all 5 replies');
+                    expect(mostPopularComment.find('li.comment:visible').length).toBe(2);
+                });
             }); 
 
             it('Should close the reply field when clicking the close icon', function() {
@@ -266,6 +292,29 @@ describe('Basic features', function() {
                 // Check that the field is last child
                 var lastChild = mostPopularComment.children().last().children().last()
                 expect(lastChild[0]).toBe(replyField[0]);
+
+                var replyText = 'This is a re-reply';
+                replyField.find('.textarea').html(replyText).trigger('input');
+                replyField.find('.send').trigger('click');
+
+                var commentCount = comments.getComments().length;
+                wait(function() {
+                    return comments.getComments().length == commentCount + 1;
+                });
+                run(function() {
+                    // New reply should always be placed last
+                    var commentEl = mostPopularComment.find('li.comment').last();
+                    var idOfNewComment = commentEl.data().id;
+
+                    expect(commentEl.find('.name .reply-to').text().indexOf('Bryan Connery')).not.toBe(-1);
+                    expect(commentEl.find('.content').text()).toBe(replyText);
+                    expect(commentEl.hasClass('by-current-user')).toBe(true);
+                    checkCommentElementData(commentEl);
+
+                    var toggleAllText = mostPopularComment.find('li.toggle-all').text();
+                    expect(toggleAllText).toBe('View all 5 replies');
+                    expect(mostPopularComment.find('li.comment:visible').length).toBe(2);
+                });
             });
 
             it('Should be able to re-reply to a hidden reply', function() {
@@ -275,6 +324,29 @@ describe('Basic features', function() {
 
                 var replyField = mostPopularComment.find('.commenting-field');
                 expect(replyField.find('.reply-to-badge').val()).toBe('@Jack Hemsworth');
+
+                var replyText = 'This is a re-reply';
+                replyField.find('.textarea').html(replyText).trigger('input');
+                replyField.find('.send').trigger('click');
+
+                var commentCount = comments.getComments().length;
+                wait(function() {
+                    return comments.getComments().length == commentCount + 1;
+                });
+                run(function() {
+                    // New reply should always be placed last
+                    var commentEl = mostPopularComment.find('li.comment').last();
+                    var idOfNewComment = commentEl.data().id;
+
+                    expect(commentEl.find('.name .reply-to').text().indexOf('Jack Hemsworth')).not.toBe(-1);
+                    expect(commentEl.find('.content').text()).toBe(replyText);
+                    expect(commentEl.hasClass('by-current-user')).toBe(true);
+                    checkCommentElementData(commentEl);
+
+                    var toggleAllText = mostPopularComment.find('li.toggle-all').text();
+                    expect(toggleAllText).toBe('Hide replies');
+                    expect(mostPopularComment.find('li.comment:visible').length).toBe(5);
+                });
             });
 
             it('Should reply to original user when erasing the reply-to badge', function() {
@@ -286,6 +358,19 @@ describe('Basic features', function() {
 
                 textarea.empty().trigger('input');
                 expect(parseInt(textarea.attr('data-parent'))).toBe(1);
+
+                var replyText = 'This is a re-reply to original user';
+                replyField.find('.textarea').html(replyText).trigger('input');
+                replyField.find('.send').trigger('click');
+
+                var commentCount = comments.getComments().length;
+                wait(function() {
+                    return comments.getComments().length == commentCount + 1;
+                });
+                run(function() {
+                    var commentEl = mostPopularComment.find('li.comment').last();
+                    expect(commentEl.find('.name .reply-to').length).toBe(0);
+                });
             });
 
         });
