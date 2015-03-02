@@ -7,6 +7,11 @@
 .jquery-comments .textarea, .jquery-comments input, .jquery-comments select {
   margin: 0;
   vertical-align: top;
+  border-radius: 0;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  -ms-appearance: none;
+  appearance: none;
 }
 
 .jquery-comments [contentEditable=true]:empty:not(:focus):before{
@@ -86,6 +91,11 @@
 	margin-right: .5em;
 	font-size: inherit;
 	opacity: 0.5;
+
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }
 
 .jquery-comments .textarea-wrapper .close:hover {
