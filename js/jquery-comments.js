@@ -724,7 +724,7 @@
         createCssDeclarations: function() {
 
             // Do not recreate CSS declarations
-            if($('head style.jquery-comments').length > 0) return;
+            if($('head style.jquery-comments-css').length > 0) return;
 
             // Navigation underline
             this.createCss('.jquery-comments ul.navigation li.active:after {background: '
@@ -746,7 +746,7 @@
         createCss: function(css) {
             var styleEl = $('<style/>', {
                 type: 'text/css',
-                class: 'jquery-comments',
+                class: 'jquery-comments-css',
                 text: css,
             });
             $('head').append(styleEl);
