@@ -13,10 +13,10 @@ describe('Basic features', function() {
             getComments: function(callback) {
                 callback(commentsArray);
             },
-            postComment: function(commentJSON, successCallback, errorCallback) {
-              setTimeout(function() {
-                successCallback();
-              }, 100);
+            postComment: function(data, success, error) {
+                setTimeout(function() {
+                    success(data)
+                }, 100);
             }
         });
 
@@ -28,19 +28,19 @@ describe('Basic features', function() {
     });
 
     it('Should call the required functions upon refresh', function() {
-        spyOn(comments, 'render').and.callThrough();
-        spyOn(comments, 'fetchDataAndRender').and.callThrough();
-        spyOn(comments, 'createCommentModel').and.callThrough();
-        spyOn(comments, 'addCommentToDataModel').and.callThrough();
-        spyOn(comments, 'sortComments').and.callThrough();
+        spyOn(comments, 'render').andCallThrough();
+        spyOn(comments, 'fetchDataAndRender').andCallThrough();
+        spyOn(comments, 'createCommentModel').andCallThrough();
+        spyOn(comments, 'addCommentToDataModel').andCallThrough();
+        spyOn(comments, 'sortComments').andCallThrough();
 
         comments.fetchDataAndRender();
 
-        expect(comments.render.calls.count()).toEqual(1);
-        expect(comments.fetchDataAndRender.calls.count()).toEqual(1);
-        expect(comments.createCommentModel.calls.count()).toEqual(9);
-        expect(comments.addCommentToDataModel.calls.count()).toEqual(9);
-        expect(comments.sortComments.calls.count()).toBeGreaterThan(1);
+        expect(comments.render.calls.length).toEqual(1);
+        expect(comments.fetchDataAndRender.calls.length).toEqual(1);
+        expect(comments.createCommentModel.calls.length).toEqual(9);
+        expect(comments.addCommentToDataModel.calls.length).toEqual(9);
+        expect(comments.sortComments.calls.length).toBeGreaterThan(1);
     });
 
     it('Should have rendered the comments', function() {
@@ -60,15 +60,15 @@ describe('Basic features', function() {
     });
 
     it('Should sort the main level comments wihtout affecting the order of child comments', function() {
-        comments.sortAndReArrangeComments('popularity');
+        $('li[data-sort-key="popularity"]').click();
         checkOrder($('#comment-list > li.comment'), [1,3,2]);
         checkOrder($('li.comment[data-id=1] .child-comments > li.comment'), [6,7,8,9]);
 
-        comments.sortAndReArrangeComments('newest');
+        $('li[data-sort-key="newest"]').click();
         checkOrder($('#comment-list > li.comment'), [3,2,1]);
         checkOrder($('li.comment[data-id=1] .child-comments > li.comment'), [6,7,8,9]);
 
-        comments.sortAndReArrangeComments('oldest');
+        $('li[data-sort-key="oldest"]').click();
         checkOrder($('#comment-list > li.comment'), [1,2,3]);
         checkOrder($('li.comment[data-id=1] .child-comments > li.comment'), [6,7,8,9]);
     });
@@ -192,6 +192,36 @@ describe('Basic features', function() {
             expect(sendButton.is(':visible')).toBe(false);
             expect(sendButton.hasClass('enabled')).toBe(false);
         });
+    
+        it('Should able to add a new main level comment', function() {
+            var newCommentText = 'New main level comment';
+            var commentCount = comments.getComments().length;
+            
+            mainTextarea.trigger('focus').focus();
+            mainTextarea.html(newCommentText).trigger('input');
+            mainCommentingField.find('.send').trigger('click');
+
+            wait(function() {
+                return comments.getComments().length == commentCount + 1;
+            });
+
+            run(function() {
+                // New comment should always be placed first initially
+                var commentEl = $('li.comment').first();
+                var idOfNewComment = commentEl.data().id;
+
+                expect(commentEl.find('.content').text()).toBe(newCommentText);
+                expect(commentEl.hasClass('by-current-user')).toBe(true);
+                checkCommentElementData(commentEl);
+
+                // Check that sorting works also with the new comment
+                checkOrder($('#comment-list > li.comment'), [idOfNewComment, 1,3,2]);
+                $('li[data-sort-key="oldest"]').click();
+                checkOrder($('#comment-list > li.comment'), [1,2,3,idOfNewComment]);
+                $('li[data-sort-key="newest"]').click();
+                checkOrder($('#comment-list > li.comment'), [idOfNewComment,3,2,1]);
+            });
+        });
 
         describe('Replying', function() {
 
@@ -269,6 +299,18 @@ describe('Basic features', function() {
 
     // Helpers
     // =======
+
+    function wait(callback) {
+        $('.jquery-comments').hide();
+        waitsFor(callback);
+    }
+
+    function run(callback) {
+        runs(function() {
+            $('.jquery-comments').show();
+            callback();
+        });
+    }
 
     function checkCommentElementData(commentEl) {
         var nameContainer = commentEl.find('.name').first();
