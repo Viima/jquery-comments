@@ -436,7 +436,7 @@
                 created: time,
                 modified: time,
                 content: this.getTextareaContent(textarea),
-                fullname: this.options.youText,
+                fullname: this.options.textFormatter(this.options.youText),
                 profilePictureURL: this.options.profilePictureURL,
                 createdByCurrentUser: true,
             }
