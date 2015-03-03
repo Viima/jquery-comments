@@ -838,8 +838,7 @@
 
         getTextareaContent: function(textarea) {
             var ce = $('<pre/>').html(textarea.html());
-            ce.find('div').replaceWith(function() { return '\n' + this.innerHTML; });
-            ce.find('br').replaceWith(function() { return '\n' + this.innerHTML; });
+            ce.find('div, p, br').replaceWith(function() { return '\n' + this.innerHTML; });
             return ce.text().trim();
         },
 
