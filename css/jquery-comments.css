@@ -87,8 +87,8 @@
 	height: 1em;
 	right: 0;
 	position: absolute;
-	margin-top: .5em;
-	margin-right: .5em;
+	border: .5em solid rgba(0,0,0,0);
+	box-sizing: content-box;
 	font-size: inherit;
 	opacity: 0.5;
 
