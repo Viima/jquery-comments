@@ -57,6 +57,12 @@
         },
 
         events: {
+            // Listening changes in contenteditable fields (due to input event not working with IE)
+            'focus [contenteditable]' : 'saveEditableContent',
+            'keyup [contenteditable]' : 'checkEditableContentForChange',
+            'paste [contenteditable]' : 'checkEditableContentForChange',
+            'input [contenteditable]' : 'checkEditableContentForChange',
+            'blur [contenteditable]' : 'checkEditableContentForChange',
 
             // Navigation
             'click .navigation li' : 'navigationElementClicked',
@@ -67,7 +73,7 @@
             
             // All commenting fields
             'focus .commenting-field .textarea' : 'increaseTextareaHeight',
-            'input .commenting-field .textarea' : 'increaseTextareaHeight textareaContentChanged',
+            'change .commenting-field .textarea' : 'increaseTextareaHeight textareaContentChanged',
             'click .commenting-field .send.enabled' : 'postComment',
             'click .commenting-field:not(.main) .close' : 'removeCommentingField',
 
@@ -354,6 +360,19 @@
 
         // Event handlers
         // ==============
+
+        saveEditableContent: function(ev) {
+            var el = $(ev.currentTarget);
+            el.data('before', el.html());
+        },
+
+        checkEditableContentForChange: function(ev) {
+            var el = $(ev.currentTarget);
+            if (el.data('before') != el.html()) {
+                el.data('before', el.html());
+                el.trigger('change');
+            }
+        },
 
         navigationElementClicked: function(ev) {
             var navigationEl = $(ev.currentTarget);
