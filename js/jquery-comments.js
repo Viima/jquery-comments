@@ -414,6 +414,10 @@
 
         textareaContentChanged: function(ev) {
             var textarea = $(ev.currentTarget);
+
+            // Remove unnecessary linebreaks
+            textarea.find('br').remove();
+
             var content = textarea.text();
             var sendButton = textarea.siblings('.control-row').find('.send');
 
@@ -838,7 +842,7 @@
 
         getTextareaContent: function(textarea) {
             var ce = $('<pre/>').html(textarea.html());
-            ce.find('div, p, br').replaceWith(function() { return '\n' + this.innerHTML; });
+            ce.find('div, p').replaceWith(function() { return '\n' + this.innerHTML; });
             return ce.text().trim();
         },
 
