@@ -103,7 +103,7 @@
 }
 
 .jquery-comments .scrollable .textarea-wrapper .close {
-	margin-right: calc(.5em + 15px);	/* Because of scrollbar */
+	margin-right: 15px;	/* Because of scrollbar */
 }
 
 .jquery-comments .textarea-wrapper .close span {
