@@ -304,12 +304,8 @@
 	height: 2.4em;
 }
 
-.jquery-comments ul#comment-list li.comment .child-comments:not(:empty) {
-	padding-bottom: .5em;
-}
-
 .jquery-comments ul#comment-list li.comment .child-comments li.toggle-all {
-	padding-top: 0;
+	padding-top: .25em .5em;
 }
 
 .jquery-comments ul#comment-list li.comment .child-comments li.toggle-all span:first-child {
