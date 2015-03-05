@@ -506,7 +506,7 @@
             // Create the reply field (do not re-create)
             if(previousParentId != parentId) {            
                 var replyField = this.createCommentingFieldElement();
-                outermostParent.children().last().append(replyField);
+                outermostParent.find('.child-comments').append(replyField);
                 textarea = replyField.find('.textarea');
 
                 // Set the correct parent id to the field

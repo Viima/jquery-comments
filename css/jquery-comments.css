@@ -38,8 +38,8 @@
 
 .jquery-comments .profile-picture {
 	float: left;
-	width: 50px;
-	height: 50px;
+	width: 3.6em;
+	height: 3.6em;
 	max-width: 50px;
 	max-height: 50px;
 }
@@ -48,12 +48,15 @@
 	border-radius: 50%;
 }
 
+.jquery-comments .commenting-field.main .profile-picture {
+	margin-bottom: 1em;
+}
+
 .jquery-comments .textarea-wrapper {
 	overflow: hidden;
 	padding-left: 15px;
 	position: relative;
 }
-
 
 .jquery-comments .textarea-wrapper:before {
 	content: " ";
@@ -283,15 +286,22 @@
 	margin-right: 2em;
 }
 
-.jquery-comments ul#comment-list li.comment .other-content {
-	margin-left: calc(50px + .5em);	/* Profile picture width plus margin */
+.jquery-comments ul#comment-list > li.comment > .other-content:before {
+	content: "";
+	height: 1px;
+	float: left;
+
+	width: calc(3.6em + .5em);	/* Profile picture width plus margin */
+	max-width: calc(50px + .5em);	/* Profile picture max width plus margin */
+}
+
+.jquery-comments ul#comment-list > li.comment > .other-content > * {
+	overflow: hidden;
 }
 
 .jquery-comments ul#comment-list li.comment .other-content .profile-picture {
-	width: 3em;
-	height: 3em;
-	min-width: 30px;
-	min-height: 30px;
+	width: 2.4em;
+	height: 2.4em;
 }
 
 .jquery-comments ul#comment-list li.comment .child-comments:not(:empty) {
