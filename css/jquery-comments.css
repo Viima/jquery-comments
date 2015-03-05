@@ -102,7 +102,7 @@
 	opacity: 1;
 }
 
-.jquery-comments .scrollable .textarea-wrapper .close {
+.jquery-comments:not(.mobile) .scrollable .textarea-wrapper .close {
 	margin-right: 15px;	/* Because of scrollbar */
 }
 
@@ -141,7 +141,7 @@
 	padding: 0;
 }
 
-.jquery-comments .scrollable .textarea-wrapper .textarea {
+.jquery-comments:not(.mobile) .scrollable .textarea-wrapper .textarea {
 	padding-right: calc(2em + 15px);	/* Because of scrollbar */
 }
 
@@ -258,6 +258,10 @@
 .jquery-comments ul#comment-list li.comment .wrapper{
 	line-height: 1.3em;
 	overflow: hidden;
+}
+
+.jquery-comments.mobile ul#comment-list li.comment .child-comments li.comment .wrapper{
+	overflow: inherit;
 }
 
 .jquery-comments ul#comment-list li.comment .wrapper > span {
