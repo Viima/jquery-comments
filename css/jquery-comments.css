@@ -264,7 +264,7 @@
 }
 
 .jquery-comments.mobile ul#comment-list li.comment .child-comments li.comment .wrapper{
-	overflow: inherit;
+	overflow: visible;
 }
 
 .jquery-comments ul#comment-list li.comment .wrapper > span {
