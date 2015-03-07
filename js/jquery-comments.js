@@ -21,6 +21,7 @@
             sendText: 'Send',
             likeText: 'Like',
             replyText: 'Reply',
+            editText: 'Edit',
             youText: 'You',
             viewAllRepliesText: 'View all __replyCount__ replies',
             hideRepliesText: 'Hide replies',
@@ -79,7 +80,8 @@
 
             // Comment
             'click li.comment .child-comments .toggle-all': 'toggleReplies',
-            'click li.comment .reply': 'replyButtonClicked',
+            'click li.comment span.reply': 'replyButtonClicked',
+            'click li.comment span.edit': 'editButtonClicked',
         },
 
 
@@ -482,7 +484,13 @@
         },
 
         removeCommentingField: function(ev) {
-            var commentingField = $(ev.currentTarget).parents('.commenting-field').first();
+            var closeButton = $(ev.currentTarget);
+
+            // Remove edit class from comment if user was editing the comment
+            closeButton.parents('li.comment').first().removeClass('edit');
+
+            // Remove the field
+            var commentingField = closeButton.parents('.commenting-field').first();
             commentingField.remove();
         },
 
@@ -499,7 +507,7 @@
 
 
             // Remove existing field
-            var replyField = outermostParent.find('.commenting-field');
+            var replyField = outermostParent.find('.child-comments > .commenting-field');
             if(replyField.length) replyField.remove();
             var previousParentId = parseInt(replyField.find('.textarea').attr('data-parent'));
 
@@ -537,7 +545,16 @@
                 
                 textarea.focus();
             }
+        },
 
+        editButtonClicked: function(ev) {
+            var editButton = $(ev.currentTarget);
+            var commentEl = editButton.parents('li.comment').first();
+            commentEl.addClass('edit');
+
+            var editField = this.createCommentingFieldElement();
+            commentEl.find('.comment-wrapper').first().append(editField);
+            editField.find('.textarea').focus();
         },
 
 
@@ -720,7 +737,13 @@
             var reply = $('<span/>', {
                 class: 'reply',
                 text: this.options.textFormatter(this.options.replyText),
-            })
+            });
+
+            // Edit
+            var edit = $('<span/>', {
+                class: 'edit',
+                text: this.options.textFormatter(this.options.editText),
+            });
 
             // Child comments
             var childComments = $('<ul/>', {
@@ -728,7 +751,8 @@
             });
             
             wrapper.append(content);
-            wrapper.append(like).append(reply)
+            wrapper.append(like).append(reply);
+            if(commentModel.createdByCurrentUser) wrapper.append(edit);
             commentWrapper.append(profilePicture).append(time).append(name).append(wrapper);
 
             commentEl.append(commentWrapper);

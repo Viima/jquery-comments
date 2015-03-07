@@ -230,7 +230,7 @@
 	border-top: none;
 }
 
-.jquery-comments ul#comment-list li.comment .comment-wrapper .profile-picture {
+.jquery-comments ul#comment-list li.comment .comment-wrapper > .profile-picture {
 	margin-right: .5em;
 }
 
@@ -337,4 +337,14 @@
 
 .jquery-comments ul#comment-list li.comment .child-comments .hidden-reply {
 	display: none;
+}
+
+
+/* Editing comment */
+.jquery-comments ul#comment-list li.comment.edit .comment-wrapper > *:not(.commenting-field) {
+	display: none;
+}
+
+.jquery-comments ul#comment-list li.comment.edit .commenting-field {
+	padding: 0;	/* Parent element has the padding */
 }
