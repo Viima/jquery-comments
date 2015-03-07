@@ -296,13 +296,13 @@
 	max-width: calc(50px + .5em);	/* Profile picture max width plus margin */
 }
 
-.jquery-comments ul#comment-list li.comment .other-content .profile-picture {
+.jquery-comments ul#comment-list li.comment .child-comments .profile-picture {
 	width: 2.4em;
 	height: 2.4em;
 }
 
 .jquery-comments ul#comment-list li.comment .child-comments li.toggle-all {
-	padding-top: .25em .5em;
+	padding-top: 0;
 }
 
 .jquery-comments ul#comment-list li.comment .child-comments li.toggle-all span:first-child {
