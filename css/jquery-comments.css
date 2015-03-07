@@ -1,4 +1,3 @@
-
 .jquery-comments * {
 	box-sizing: border-box;
 	font-family: inherit;
@@ -224,6 +223,7 @@
 
 .jquery-comments ul#comment-list li.comment .comment-wrapper {
 	border-top: 1px solid #DDD;
+	overflow: hidden;
 }
 
 .jquery-comments ul#comment-list > li.comment:first-child > .comment-wrapper {
@@ -286,17 +286,14 @@
 	margin-right: 2em;
 }
 
-.jquery-comments ul#comment-list > li.comment > .other-content:before {
+/* Margin for second level content */
+.jquery-comments ul#comment-list li.comment .child-comments > *:before {
 	content: "";
 	height: 1px;
 	float: left;
 
 	width: calc(3.6em + .5em);	/* Profile picture width plus margin */
 	max-width: calc(50px + .5em);	/* Profile picture max width plus margin */
-}
-
-.jquery-comments ul#comment-list > li.comment > .other-content > * {
-	overflow: hidden;
 }
 
 .jquery-comments ul#comment-list li.comment .other-content .profile-picture {

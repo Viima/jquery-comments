@@ -722,10 +722,6 @@
                 text: this.options.textFormatter(this.options.replyText),
             })
 
-            var otherContent = $('<div/>', {
-                class: 'other-content',
-            });
-
             // Child comments
             var childComments = $('<ul/>', {
                 class: 'child-comments'
@@ -735,8 +731,8 @@
             wrapper.append(like).append(reply)
             commentWrapper.append(profilePicture).append(time).append(name).append(wrapper);
 
-            commentEl.append(commentWrapper).append(otherContent);
-            if(commentModel.parent == null) otherContent.append(childComments);
+            commentEl.append(commentWrapper);
+            if(commentModel.parent == null) commentEl.append(childComments);
             return commentEl;
         },
 
