@@ -23,6 +23,7 @@
             replyText: 'Reply',
             editText: 'Edit',
             youText: 'You',
+            saveText: 'Save',
             viewAllRepliesText: 'View all __replyCount__ replies',
             hideRepliesText: 'Hide replies',
             textFormatter: function(text) {
@@ -513,48 +514,32 @@
 
             // Create the reply field (do not re-create)
             if(previousParentId != parentId) {            
-                var replyField = this.createCommentingFieldElement();
+                var replyField = this.createCommentingFieldElement(parentId);
                 outermostParent.find('.child-comments').append(replyField);
-                textarea = replyField.find('.textarea');
 
-                // Set the correct parent id to the field
-                textarea.attr('data-parent', parentId);
-
-                // Append reply-to badge if necessary
-                var parentModel = this.commentsById[parentId];
-                if(parentModel.parent) {
-                    textarea.html('&nbsp;');    // Needed to set the cursor to correct place
-
-                    // Creating the reply-to badge
-                    var replyToBadge = $('<input/>', {
-                        class: 'reply-to-badge highlight-font',
-                        type: 'button'
-                    });
-                    var replyToName = '@' + parentModel.fullname;
-                    replyToBadge.val(replyToName);
-                    textarea.prepend(replyToBadge);
-
-                    // Move cursor to the end
-                    var range = document.createRange();
-                    var selection = window.getSelection();
-                    range.setStart(textarea[0], 2);
-                    range.collapse(true);
-                    selection.removeAllRanges();
-                    selection.addRange(range);
-                }
-                
-                textarea.focus();
+                // Move cursor to end
+                var textarea = replyField.find('.textarea');
+                this.moveCursorToEnd(textarea)
             }
         },
 
         editButtonClicked: function(ev) {
             var editButton = $(ev.currentTarget);
             var commentEl = editButton.parents('li.comment').first();
+            var commentModel = commentEl.data().model;
             commentEl.addClass('edit');
 
-            var editField = this.createCommentingFieldElement();
+            // Create the editing field
+            var saveText = this.options.textFormatter(this.options.saveText);
+            var editField = this.createCommentingFieldElement(commentModel.id, saveText);
             commentEl.find('.comment-wrapper').first().append(editField);
-            editField.find('.textarea').focus();
+            
+            // Append original content
+            var textarea = editField.find('.textarea');
+            textarea.append(commentModel.content);
+
+            // Move cursor to end
+            this.moveCursorToEnd(textarea)
         },
 
 
@@ -595,7 +580,7 @@
             return profilePicture;
         },
 
-        createCommentingFieldElement: function() {
+        createCommentingFieldElement: function(parentId, primaryButtonText) {
             var self = this;
 
             // Commenting field
@@ -633,14 +618,39 @@
             }).append($('<span class="left"/>')).append($('<span class="right"/>'));
 
             // Send button
+            var sendButtonText = primaryButtonText || this.options.textFormatter(this.options.sendText);
             var sendButton = $('<span/>', {
                 class: 'send highlight-background',
-                text: this.options.textFormatter(this.options.sendText),
+                text: sendButtonText,
             });
 
+            // Populate the element
             controlRow.append(sendButton);
             textareaWrapper.append(closeButton).append(textarea).append(controlRow);
             commentingField.append(profilePicture).append(textareaWrapper);
+
+
+            if(parentId) {
+                
+                // Set the parent id to the field if necessary
+                textarea.attr('data-parent', parentId)
+
+                // Append reply-to badge if necessary
+                var parentModel = this.commentsById[parentId];
+                if(parentModel.parent) {
+                    textarea.html('&nbsp;');    // Needed to set the cursor to correct place
+
+                    // Creating the reply-to badge
+                    var replyToBadge = $('<input/>', {
+                        class: 'reply-to-badge highlight-font',
+                        type: 'button'
+                    });
+                    var replyToName = '@' + parentModel.fullname;
+                    replyToBadge.val(replyToName);
+                    textarea.prepend(replyToBadge);
+                }
+            }
+
             return commentingField;
         },
 
@@ -864,6 +874,24 @@
             var ce = $('<pre/>').html(textarea.html());
             ce.find('div, p, br').replaceWith(function() { return '\n' + this.innerHTML; });
             return ce.text().trim();
+        },
+
+        moveCursorToEnd: function(el) {
+            el = $(el)[0];
+            el.focus();
+            if (typeof window.getSelection != 'undefined' && typeof document.createRange != 'undefined') {
+                var range = document.createRange();
+                range.selectNodeContents(el);
+                range.collapse(false);
+                var sel = window.getSelection();
+                sel.removeAllRanges();
+                sel.addRange(range);
+            } else if (typeof document.body.createTextRange != 'undefined') {
+                var textRange = document.body.createTextRange();
+                textRange.moveToElementText(el);
+                textRange.collapse(false);
+                textRange.select();
+            }
         },
 
         applyInternalMappings: function(commentJSON) {
