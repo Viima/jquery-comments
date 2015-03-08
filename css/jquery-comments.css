@@ -341,7 +341,7 @@
 
 
 /* Editing comment */
-.jquery-comments ul#comment-list li.comment.edit .comment-wrapper > *:not(.commenting-field) {
+.jquery-comments ul#comment-list li.comment.edit > .comment-wrapper > *:not(.commenting-field) {
 	display: none;
 }
 

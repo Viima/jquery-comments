@@ -248,7 +248,7 @@ describe('Basic features', function() {
                 expect(lastChild[0]).toBe(replyField[0]);
 
                 var replyText = 'This is a reply';
-                replyField.find('.textarea').html(replyText).trigger('input');
+                replyField.find('.textarea').append(replyText).trigger('input');
                 replyField.find('.send').trigger('click');
 
                 var commentCount = comments.getComments().length;
@@ -294,7 +294,7 @@ describe('Basic features', function() {
                 expect(lastChild[0]).toBe(replyField[0]);
 
                 var replyText = 'This is a re-reply';
-                replyField.find('.textarea').html(replyText).trigger('input');
+                replyField.find('.textarea').append(replyText).trigger('input');
                 replyField.find('.send').trigger('click');
 
                 var commentCount = comments.getComments().length;
@@ -326,7 +326,7 @@ describe('Basic features', function() {
                 expect(replyField.find('.reply-to-badge').val()).toBe('@Jack Hemsworth');
 
                 var replyText = 'This is a re-reply';
-                replyField.find('.textarea').html(replyText).trigger('input');
+                replyField.find('.textarea').append(replyText).trigger('input');
                 replyField.find('.send').trigger('click');
 
                 var commentCount = comments.getComments().length;
@@ -360,7 +360,7 @@ describe('Basic features', function() {
                 expect(parseInt(textarea.attr('data-parent'))).toBe(1);
 
                 var replyText = 'This is a re-reply to original user';
-                replyField.find('.textarea').html(replyText).trigger('input');
+                replyField.find('.textarea').append(replyText).trigger('input');
                 replyField.find('.send').trigger('click');
 
                 var commentCount = comments.getComments().length;
