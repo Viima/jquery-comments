@@ -282,6 +282,17 @@
 	word-break: break-word;
 }
 
+.jquery-comments ul#comment-list li.comment .wrapper .content .edited {
+	font-size: .9em;
+	margin-left: 1em;
+	font-style: italic;
+	color: #999;
+}
+
+.jquery-comments ul#comment-list li.comment .wrapper .content .edited:before {
+	content: " - ";
+}
+
 .jquery-comments ul#comment-list li.comment .wrapper > span:not(:last-child) {
 	margin-right: 2em;
 }

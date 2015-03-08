@@ -22,6 +22,7 @@
             likeText: 'Like',
             replyText: 'Reply',
             editText: 'Edit',
+            editedText: 'Edited',
             youText: 'You',
             saveText: 'Save',
             viewAllRepliesText: 'View all __replyCount__ replies',
@@ -795,6 +796,16 @@
                 class: 'content',
                 text: commentModel.content,
             });
+
+            // Edited timestamp
+            if(commentModel.modified && commentModel.modified != commentModel.created) {
+                var editedTime = this.options.timeFormatter(commentModel.modified);
+                var edited = $('<span/>', {
+                    class: 'edited',
+                    text: this.options.textFormatter(this.options.editedText) + ' ' + editedTime
+                });
+                content.append(edited);
+            }
 
             // Like
             var like = $('<span/>', {
