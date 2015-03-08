@@ -435,7 +435,14 @@
 
             // Update parent id if reply-to-badge was removed
             if(!textarea.find('.reply-to-badge').length) {
-                textarea.attr('data-parent', textarea.parents('li.comment').last().data('id'));
+
+                var parentId = textarea.parents('li.comment').last().data('id');
+                var commentId = textarea.attr('data-comment');
+                
+                // Make sure that comment and the parent of the comment are not the same (editing)
+                if(parentId != commentId) {
+                    textarea.attr('data-parent', parentId);
+                }
             }
 
             // Move close button if scrollbar is visible
@@ -517,10 +524,15 @@
             commentJSON = this.applyExternalMappings(commentJSON);
             
             var success = function(commentJSON) {
+                // The outermost parent can not be changed by editing the comment so the childs array
+                // of parent does not require an update
+
                 var commentModel = self.createCommentModel(commentJSON);
-                //TODO
-                // self.addCommentToDataModel(commentModel);
-                // self.addComment(commentModel);
+
+                // Delete childs array from new comment model since it doesn't need an update
+                delete commentModel['childs'];
+                $.extend(self.commentsById[commentModel.id], commentModel);
+
                 commentingField.find('.close').trigger('click');
             }
 
