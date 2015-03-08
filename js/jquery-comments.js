@@ -76,8 +76,9 @@
             // All commenting fields
             'focus .commenting-field .textarea' : 'increaseTextareaHeight',
             'change .commenting-field .textarea' : 'increaseTextareaHeight textareaContentChanged',
-            'click .commenting-field .send.enabled' : 'postComment',
             'click .commenting-field:not(.main) .close' : 'removeCommentingField',
+            'click .commenting-field .send.enabled' : 'postComment',
+            'click .commenting-field .update.enabled' : 'updateComment',
 
             // Comment
             'click li.comment .child-comments .toggle-all': 'toggleReplies',
@@ -422,13 +423,13 @@
         textareaContentChanged: function(ev) {
             var textarea = $(ev.currentTarget);
             var content = textarea.text();
-            var sendButton = textarea.siblings('.control-row').find('.send');
+            var saveButton = textarea.siblings('.control-row').find('.save');
 
-            // Check whether send button needs to be enabled
+            // Check whether save button needs to be enabled
             if(content.trim().length) {
-                sendButton.addClass('enabled');
+                saveButton.addClass('enabled');
             } else {
-                sendButton.removeClass('enabled');
+                saveButton.removeClass('enabled');
             }
 
             // Remove reply-to badge if necessary
@@ -444,6 +445,17 @@
             } else {
                 commentingField.removeClass('scrollable');
             }
+        },
+
+        removeCommentingField: function(ev) {
+            var closeButton = $(ev.currentTarget);
+
+            // Remove edit class from comment if user was editing the comment
+            closeButton.parents('li.comment').first().removeClass('edit');
+
+            // Remove the field
+            var commentingField = closeButton.parents('.commenting-field').first();
+            commentingField.remove();
         },
 
         postComment: function(ev) {
@@ -484,15 +496,8 @@
             this.options.postComment(commentJSON, success, error);
         },
 
-        removeCommentingField: function(ev) {
-            var closeButton = $(ev.currentTarget);
-
-            // Remove edit class from comment if user was editing the comment
-            closeButton.parents('li.comment').first().removeClass('edit');
-
-            // Remove the field
-            var commentingField = closeButton.parents('.commenting-field').first();
-            commentingField.remove();
+        updateComment: function(ev) {
+            
         },
 
         toggleReplies: function(ev) {
@@ -580,7 +585,7 @@
             return profilePicture;
         },
 
-        createCommentingFieldElement: function(parentId, primaryButtonText) {
+        createCommentingFieldElement: function(parentId, primaryAcitionIsUpdate) {
             var self = this;
 
             // Commenting field
@@ -617,15 +622,20 @@
                 class: 'close',
             }).append($('<span class="left"/>')).append($('<span class="right"/>'));
 
-            // Send button
-            var sendButtonText = primaryButtonText || this.options.textFormatter(this.options.sendText);
-            var sendButton = $('<span/>', {
-                class: 'send highlight-background',
-                text: sendButtonText,
+            // Save button
+            var saveButtonClass = primaryAcitionIsUpdate ? 'update' : 'send';
+            if(primaryAcitionIsUpdate) {
+                var saveButtonText = this.options.textFormatter(this.options.saveText);
+            } else {
+                var saveButtonText = this.options.textFormatter(this.options.sendText);
+            }
+            var saveButton = $('<span/>', {
+                class: saveButtonClass + ' save highlight-background',
+                text: saveButtonText,
             });
 
             // Populate the element
-            controlRow.append(sendButton);
+            controlRow.append(saveButton);
             textareaWrapper.append(closeButton).append(textarea).append(controlRow);
             commentingField.append(profilePicture).append(textareaWrapper);
 

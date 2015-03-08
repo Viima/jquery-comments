@@ -157,7 +157,7 @@
 	font-size: .8em;
 }
 
-.jquery-comments .textarea-wrapper span.send {
+.jquery-comments .textarea-wrapper span.save {
 	float: right;
 
 	color: #FFF;
@@ -169,12 +169,12 @@
 	opacity: .5;
 }
 
-.jquery-comments .textarea-wrapper span.send.enabled {
+.jquery-comments .textarea-wrapper span.save.enabled {
 	opacity: 1;
 	cursor: pointer;
 }
 
-.jquery-comments .textarea-wrapper span.send.enabled:hover {
+.jquery-comments .textarea-wrapper span.save.enabled:hover {
 	opacity: .9;
 }
 
