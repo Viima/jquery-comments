@@ -438,7 +438,7 @@
 
                 var parentId = textarea.parents('li.comment').last().data('id');
                 var commentId = textarea.attr('data-comment');
-                
+
                 // Make sure that comment and the parent of the comment are not the same (editing)
                 if(parentId != commentId) {
                     textarea.attr('data-parent', parentId);
@@ -533,7 +533,12 @@
                 delete commentModel['childs'];
                 $.extend(self.commentsById[commentModel.id], commentModel);
 
+                // Close the editing field
                 commentingField.find('.close').trigger('click');
+
+                // Re-render the comment
+                var commentEl = self.createCommentElement(commentModel);
+                self.$el.find('li.comment[data-id="'+commentModel.id+'"]').replaceWith(commentEl);
             }
 
             var error = function() {
@@ -584,7 +589,7 @@
             
             // Append original content
             var textarea = editField.find('.textarea');
-            textarea.append(commentModel.content);
+            textarea.append(this.convertTextToHTML(commentModel.content));
             textarea.attr('data-comment', commentModel.id);
 
             // Move cursor to end
@@ -928,6 +933,10 @@
             var ce = $('<pre/>').html(textarea.html());
             ce.find('div, p, br').replaceWith(function() { return '\n' + this.innerHTML; });
             return ce.text().trim();
+        },
+
+        convertTextToHTML: function(text) {
+            return text.replace(/(?:\r\n|\r|\n)/g, '<br />');
         },
 
         moveCursorToEnd: function(el) {
