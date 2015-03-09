@@ -396,7 +396,64 @@ describe('Basic features', function() {
                 expect(commentEl.find('.name .reply-to').length).toBe(0);
             });
         });
+    });
 
+    describe('Editing', function() {
+        var ownComment;
+        var editButton;
+
+        beforeEach(function() {
+            ownComment = $('li.comment[data-id=4]');
+            editButton = ownComment.find('span.edit');
+        });
+
+        it('Should show the edit button only for own comments', function() {
+            expect(editButton.length).toBe(1);
+            expect($('span.edit').length).toBe(1);
+        });
+
+        it('Should be able to open and close the edit field', function() {
+            var cloneOfOwnComment = ownComment.clone();
+            editButton.click();
+            expect(ownComment.hasClass('edit')).toBe(true);
+
+            // Check that the edit field exists
+            var editField = ownComment.find('.commenting-field');
+            var textarea = editField.find('.textarea');
+            expect(editField.is(':visible')).toBe(true);
+
+            // Check that other content is hidden
+            ownComment.find('.comment-wrapper > *:not(.commenting-field)').each(function(index, el) {
+                expect($(el).is(':visible')).toBe(false);
+            });
+
+            // Check the content
+            var contentFromModel = comments.convertTextToHTML(ownComment.data().model.content);
+            var contentFromUI = textarea.html();
+            expect(contentFromModel).toBe(contentFromUI);
+
+            // Closing the field
+            editField.find('.close').click();
+            expect(ownComment.hasClass('edit')).toBe(false);
+            expect(editField.is(':visible')).toBe(false);
+
+            // Check that other content is visible
+            ownComment.find('.comment-wrapper > *:not(.commenting-field)').each(function(index, el) {
+                expect($(el).is(':visible')).toBe(true);
+            });
+
+            // Check that the comment has not changed
+            expect(ownComment[0].outerHTML).toBe(cloneOfOwnComment[0].outerHTML);
+        });
+
+        xit('Should be able to edit own comment', function() {
+        });
+
+        xit('Should close the edit field when clicking the close icon', function() {
+        });
+
+        xit('Should not let the user save the comment if it hasn\' changed', function() {
+        });
     });
 
     afterEach(function() {

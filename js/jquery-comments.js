@@ -947,7 +947,7 @@
         },
 
         convertTextToHTML: function(text) {
-            return text.replace(/(?:\r\n|\r|\n)/g, '<br />');
+            return text.replace(/(?:\r\n|\r|\n)/g, '<br>');
         },
 
         moveCursorToEnd: function(el) {

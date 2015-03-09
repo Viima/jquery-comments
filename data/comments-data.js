@@ -40,7 +40,7 @@ var commentsArray = [
    "parent": 3,
    "created": "2015-01-04",
    "modified": "2015-01-04",
-   "content": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed posuere interdum sem. Quisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu.",
+   "content": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit.\nSed posuere interdum sem. Quisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu.",
    "fullname": "Todd Brown",
    "profile_picture_url": "https://app.viima.com/static/media/user_profiles/user-icon.png",
    "created_by_admin": false,
