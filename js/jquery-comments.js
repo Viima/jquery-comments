@@ -780,7 +780,7 @@
                 if(parent.parent) {
                     var replyTo = $('<span/>', {
                         class: 'reply-to',
-                        text: ' @' + parent.fullname,
+                        text: parent.fullname,
                     });
                     name.append(replyTo);
                 }

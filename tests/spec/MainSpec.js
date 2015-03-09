@@ -51,6 +51,14 @@ describe('Basic features', function() {
             checkCommentElementData($(commentEl));
         });
         checkOrder($('ul#comment-list > li.comment'), [1,3,2]);
+
+        // Check reply to -fields
+        expect($('li.comment[data-id=7] .name .reply-to').text()).toBe('Jack Hemsworth');
+        expect($('li.comment[data-id=9] .name .reply-to').text()).toBe('Chris White');
+        expect($('li.comment[data-id=5] .name .reply-to').text()).toBe('Todd Brown');
+
+        // Check edited timestamps
+        expect($('li.comment[data-id=9] .content .edited').text()).toBe('Edited 1/10/2015');
     });
 
     it('Should have appended the child comments under their outermost parent', function() {
@@ -404,7 +412,9 @@ describe('Basic features', function() {
         var profilePicture = commentEl.find('img.profile-picture').first().attr('src');
         var replyTo = nameContainer.find('.reply-to').text();
         var fullname = replyTo.length ? nameContainer.text().split(replyTo)[0] : nameContainer.text();
-        var content = commentEl.find('.content').first().text();
+
+        // Get content without edited timestamp
+        var content = commentEl.find('.content').first().clone().children().remove().end().text();
         var dateUI = new Date(commentEl.find('time').first().text());
 
         // Model that we are testing against
@@ -414,18 +424,6 @@ describe('Basic features', function() {
         expect(profilePicture).toBe(commentModel.profilePictureURL);
         expect(fullname).toBe(commentModel.fullname);
         expect(content).toBe(commentModel.content);
-
-        // Check reply to -field
-        if(commentModel.parent) {
-            var parent = comments.commentsById[commentModel.parent];
-            if(parent.parent) {
-                expect(replyTo.indexOf(parent.fullname)).not.toBe(-1);
-            } else {
-                expect(replyTo.length).toBe(0);
-            }
-        } else {
-            expect(replyTo.length).toBe(0);
-        }
 
         // Check time
         var modelCreatedDate = new Date(commentModel.created);
