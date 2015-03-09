@@ -57,8 +57,24 @@ describe('Basic features', function() {
         expect($('li.comment[data-id=9] .name .reply-to').text()).toBe('Chris White');
         expect($('li.comment[data-id=5] .name .reply-to').text()).toBe('Todd Brown');
 
+        // Check that other comments do not have the field
+        $('li.comment').each(function(index, el) {
+            var el = $(el);
+            if([7,9,5].indexOf(el.data().model.id) == -1) {
+                expect(el.find('.name').first().find('.reply-to').length).toBe(0);
+            }
+        });
+
         // Check edited timestamps
         expect($('li.comment[data-id=9] .content .edited').text()).toBe('Edited 1/10/2015');
+
+        // Check that other comments do not have the field
+        $('li.comment').each(function(index, el) {
+            var el = $(el);
+            if([9].indexOf(el.data().model.id) == -1) {
+                expect(el.find('.content').first().find('.edited').length).toBe(0);
+            }
+        });
     });
 
     it('Should have appended the child comments under their outermost parent', function() {
