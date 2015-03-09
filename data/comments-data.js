@@ -28,11 +28,11 @@ var commentsArray = [
    "parent": null,
    "created": "2015-01-03",
    "modified": "2015-01-03",
-   "content": "Sed posuere interdum sem. Quisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu. Sed arcu lectus auctor vitae, consectetuer et venenatis eget velit.",
+   "content": "Sed posuere interdum sem.\nQuisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu. Sed arcu lectus auctor vitae, consectetuer et venenatis eget velit.",
    "fullname": "Colin Cardwell",
    "profile_picture_url": "https://app.viima.com/static/media/user_profiles/user-icon.png",
    "created_by_admin": false,
-   "created_by_current_user": false,
+   "created_by_current_user": true,
    "moderation_pending": false
 },
 {  
@@ -40,11 +40,11 @@ var commentsArray = [
    "parent": 3,
    "created": "2015-01-04",
    "modified": "2015-01-04",
-   "content": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit.\nSed posuere interdum sem. Quisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu.",
+   "content": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed posuere interdum sem. Quisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu.",
    "fullname": "Todd Brown",
    "profile_picture_url": "https://app.viima.com/static/media/user_profiles/user-icon.png",
    "created_by_admin": false,
-   "created_by_current_user": true,
+   "created_by_current_user": false,
    "moderation_pending": false
 },
 {  

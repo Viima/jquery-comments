@@ -403,7 +403,7 @@ describe('Basic features', function() {
         var editButton;
 
         beforeEach(function() {
-            ownComment = $('li.comment[data-id=4]');
+            ownComment = $('li.comment[data-id=3]');
             editButton = ownComment.find('span.edit');
         });
 
@@ -414,6 +414,7 @@ describe('Basic features', function() {
 
         it('Should be able to open and close the edit field', function() {
             var cloneOfOwnComment = ownComment.clone();
+
             editButton.click();
             expect(ownComment.hasClass('edit')).toBe(true);
 
@@ -423,7 +424,7 @@ describe('Basic features', function() {
             expect(editField.is(':visible')).toBe(true);
 
             // Check that other content is hidden
-            ownComment.find('.comment-wrapper > *:not(.commenting-field)').each(function(index, el) {
+            ownComment.find('> .comment-wrapper > *:not(.commenting-field)').each(function(index, el) {
                 expect($(el).is(':visible')).toBe(false);
             });
 
@@ -438,7 +439,7 @@ describe('Basic features', function() {
             expect(editField.is(':visible')).toBe(false);
 
             // Check that other content is visible
-            ownComment.find('.comment-wrapper > *:not(.commenting-field)').each(function(index, el) {
+            ownComment.find('> .comment-wrapper > *:not(.commenting-field)').each(function(index, el) {
                 expect($(el).is(':visible')).toBe(true);
             });
 
@@ -449,7 +450,7 @@ describe('Basic features', function() {
         xit('Should be able to edit own comment', function() {
         });
 
-        xit('Should close the edit field when clicking the close icon', function() {
+        xit('Should be able to edit a new comment', function() {
         });
 
         xit('Should not let the user save the comment if it hasn\' changed', function() {
