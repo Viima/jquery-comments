@@ -218,7 +218,7 @@ describe('Basic features', function() {
         });
     
         it('Should able to add a new main level comment', function() {
-            var newCommentText = 'New main level comment';
+            var newCommentText = 'New main level comment\nwith a new line';
             
             mainTextarea.trigger('focus').focus();
             mainTextarea.html(newCommentText).trigger('input');
@@ -271,7 +271,7 @@ describe('Basic features', function() {
             var lastChild = mostPopularComment.find('.child-comments').children().last();
             expect(lastChild[0]).toBe(replyField[0]);
 
-            var replyText = 'This is a reply';
+            var replyText = 'This is a reply\nwith a new line';
             replyField.find('.textarea').append(replyText).trigger('input');
             replyField.find('.send').trigger('click');
 
@@ -317,7 +317,7 @@ describe('Basic features', function() {
             var lastChild = mostPopularComment.find('.child-comments').children().last();
             expect(lastChild[0]).toBe(replyField[0]);
 
-            var replyText = 'This is a re-reply';
+            var replyText = 'This is a re-reply\nwith a new line';
             replyField.find('.textarea').append(replyText).trigger('input');
             replyField.find('.send').trigger('click');
 
@@ -349,7 +349,7 @@ describe('Basic features', function() {
             var replyField = mostPopularComment.find('.commenting-field');
             expect(replyField.find('.reply-to-badge').val()).toBe('@Jack Hemsworth');
 
-            var replyText = 'This is a re-reply';
+            var replyText = 'This is a re-reply\nwith a new line';
             replyField.find('.textarea').append(replyText).trigger('input');
             replyField.find('.send').trigger('click');
 
