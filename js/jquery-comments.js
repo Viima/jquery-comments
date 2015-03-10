@@ -970,7 +970,11 @@
 
         moveCursorToEnd: function(el) {
             el = $(el)[0];
-            el.focus();
+
+            // Scroll to bottom
+            $(el).scrollTop(el.scrollHeight);
+
+            // Move cursor to end
             if (typeof window.getSelection != 'undefined' && typeof document.createRange != 'undefined') {
                 var range = document.createRange();
                 range.selectNodeContents(el);
@@ -984,7 +988,9 @@
                 textRange.collapse(false);
                 textRange.select();
             }
-            $(el).scrollTop(el.scrollHeight);
+
+            // Focus
+            el.focus();
         },
 
         applyInternalMappings: function(commentJSON) {
