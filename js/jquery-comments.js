@@ -537,9 +537,10 @@
                 // Close the editing field
                 commentingField.find('.close').trigger('click');
 
-                // Re-render the comment
-                var commentEl = self.createCommentElement(commentModel);
-                self.$el.find('li.comment[data-id="'+commentModel.id+'"]').replaceWith(commentEl);
+                // Re-render the comment wrapper without touching child comments
+                var commentWrapper = self.createCommentWrapperElement(commentModel);
+                var commentEl = self.$el.find('li.comment[data-id="'+commentModel.id+'"]');
+                commentEl.find('> .comment-wrapper').replaceWith(commentWrapper);
             }
 
             var error = function() {
@@ -753,6 +754,20 @@
             if(commentModel.createdByCurrentUser) commentEl.addClass('by-current-user');
             if(commentModel.createdByAdmin) commentEl.addClass('by-admin');
 
+            // Child comments
+            var childComments = $('<ul/>', {
+                class: 'child-comments'
+            });
+
+            // Comment wrapper
+            var commentWrapper = this.createCommentWrapperElement(commentModel);
+
+            commentEl.append(commentWrapper);
+            if(commentModel.parent == null) commentEl.append(childComments);
+            return commentEl;
+        },
+
+        createCommentWrapperElement: function(commentModel) {
             var commentWrapper = $('<div/>', {
                 class: 'comment-wrapper'
             });
@@ -824,20 +839,12 @@
                 class: 'edit',
                 text: this.options.textFormatter(this.options.editText),
             });
-
-            // Child comments
-            var childComments = $('<ul/>', {
-                class: 'child-comments'
-            });
             
             wrapper.append(content);
             wrapper.append(like).append(reply);
             if(commentModel.createdByCurrentUser) wrapper.append(edit);
             commentWrapper.append(profilePicture).append(time).append(name).append(wrapper);
-
-            commentEl.append(commentWrapper);
-            if(commentModel.parent == null) commentEl.append(childComments);
-            return commentEl;
+            return commentWrapper;
         },
 
 
