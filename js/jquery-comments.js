@@ -313,7 +313,6 @@
                 // Update the text of toggle all -button
                 this.setToggleAllButtonText(toggleAllButton, false);
             }
-
         },
 
         sortComments: function (comments, sortKey) {
@@ -421,15 +420,8 @@
 
         textareaContentChanged: function(ev) {
             var textarea = $(ev.currentTarget);
-            var content = textarea.text();
+            var content = this.getTextareaContent(textarea);
             var saveButton = textarea.siblings('.control-row').find('.save');
-
-            // Check whether save button needs to be enabled
-            if(content.trim().length) {
-                saveButton.addClass('enabled');
-            } else {
-                saveButton.removeClass('enabled');
-            }
 
             // Update parent id if reply-to-badge was removed
             if(!textarea.find('.reply-to-badge').length) {
@@ -449,6 +441,25 @@
                 commentingField.addClass('scrollable');
             } else {
                 commentingField.removeClass('scrollable');
+            }
+
+            // Check if content or parent has changed if editing
+            var contentOrParentChangedIfEditing = true;
+            if(commentId = textarea.attr('data-comment')) {
+                var contentChanged = content != this.commentsById[commentId].content;
+                var parentFromModel;
+                if(this.commentsById[commentId].parent) {
+                    parentFromModel = this.commentsById[commentId].parent.toString();
+                }
+                var parentChanged = textarea.attr('data-parent') != parentFromModel;
+                contentOrParentChangedIfEditing = contentChanged || parentChanged;
+            }
+
+            // Check whether save button needs to be enabled
+            if(content.length && contentOrParentChangedIfEditing) {
+                saveButton.addClass('enabled');
+            } else {
+                saveButton.removeClass('enabled');
             }
         },
 
@@ -947,7 +958,10 @@
         getTextareaContent: function(textarea) {
             var ce = $('<pre/>').html(textarea.html());
             ce.find('div, p, br').replaceWith(function() { return '\n' + this.innerHTML; });
-            return ce.text().trim();
+
+            // Trim leading spaces
+            var text = ce.text().replace(/^\s+/g, '');
+            return text;
         },
 
         convertTextToHTML: function(text) {
