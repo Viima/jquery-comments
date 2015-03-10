@@ -425,12 +425,19 @@
 
             // Update parent id if reply-to-badge was removed
             if(!textarea.find('.reply-to-badge').length) {
-
-                var parentId = textarea.parents('li.comment').last().data('id');
                 var commentId = textarea.attr('data-comment');
 
-                // Make sure that comment and the parent of the comment are not the same (editing)
-                if(parentId != commentId) {
+                // Case: editing comment
+                if(commentId) {
+                    var parentComments = textarea.parents('li.comment');
+                    if(parentComments.length > 1) {
+                        var parentId = parentComments.last().data('id');
+                        textarea.attr('data-parent', parentId);
+                    }
+
+                // Case: new comment
+                } else {
+                    var parentId = textarea.parents('li.comment').last().data('id');
                     textarea.attr('data-parent', parentId);
                 }
             }
@@ -599,8 +606,8 @@
             
             // Append original content
             var textarea = editField.find('.textarea');
-            textarea.append(this.convertTextToHTML(commentModel.content)).trigger('input');
             textarea.attr('data-comment', commentModel.id);
+            textarea.append(this.convertTextToHTML(commentModel.content)).trigger('input');
 
             // Move cursor to end
             this.moveCursorToEnd(textarea);
