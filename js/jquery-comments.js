@@ -364,9 +364,6 @@
             });
         },
 
-        editComment: function() {
-        },
-
 
         // Event handlers
         // ==============
