@@ -599,7 +599,7 @@
             
             // Append original content
             var textarea = editField.find('.textarea');
-            textarea.append(this.convertTextToHTML(commentModel.content));
+            textarea.append(this.convertTextToHTML(commentModel.content)).trigger('input');
             textarea.attr('data-comment', commentModel.id);
 
             // Move cursor to end
@@ -984,6 +984,7 @@
                 textRange.collapse(false);
                 textRange.select();
             }
+            $(el).scrollTop(el.scrollHeight);
         },
 
         applyInternalMappings: function(commentJSON) {
