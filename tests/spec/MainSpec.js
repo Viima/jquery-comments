@@ -447,7 +447,42 @@ describe('Basic features', function() {
             expect(ownComment[0].outerHTML).toBe(cloneOfOwnComment[0].outerHTML);
         });
 
-        xit('Should be able to edit own comment', function() {
+        it('Should be able to edit own comment', function() {
+            var cloneOfOwnComment = ownComment.clone();
+            var cloneOfOwnCommentModel = $.extend({},comments.commentsById[3]);
+
+            editButton.click();
+            var editField = ownComment.find('.commenting-field');
+            var textarea = editField.find('.textarea');
+
+            // Edit the comment
+            var modifiedContent = 'Modified content<br>with new line';
+            textarea.html(modifiedContent).trigger('input');
+
+            // Save the comment
+            editField.find('.save').click();
+            expect(editField.is(':visible')).toBe(false);
+
+            // Check the edited comment
+            var editedComment = $('li.comment[data-id=3]');
+            checkCommentElementData(editedComment);
+            expect(editedComment.find('.content .edited').text().length).not.toBe(0);
+
+            // Check that only fields content and modified have changed in comment model
+            var ownCommentModel = comments.commentsById[3];
+            $(Object.keys(ownCommentModel)).each(function(index, key) {
+                if(key == 'content' || key == 'modified') {
+                    expect(ownCommentModel[key]).not.toBe(cloneOfOwnCommentModel[key]);
+                } else {
+                    expect(ownCommentModel[key]).toBe(cloneOfOwnCommentModel[key]);
+                }
+            });
+
+            // Check that only content has changed in comment element
+            ownComment = $('li.comment[data-id=3]');
+            ownComment.find('.content').remove();
+            cloneOfOwnComment.find('.content').remove();
+            expect(ownComment[0].outerHTML).toBe(cloneOfOwnComment[0].outerHTML);
         });
 
         xit('Should be able to edit a new comment', function() {
