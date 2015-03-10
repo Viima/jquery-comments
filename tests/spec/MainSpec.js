@@ -20,7 +20,9 @@ describe('Basic features', function() {
                 }, 10);
             },
             updateComment: function(data, success, error) {
-                success(data)
+                setTimeout(function() {
+                    success(data)
+                }, 10);
             }
         });
 
@@ -462,15 +464,24 @@ describe('Basic features', function() {
             replyField.find('.textarea').append(replyText).trigger('input');
             replyField.find('.send').trigger('click');
 
+            // Create reply
             var commentCount = comments.getComments().length;
             wait(function() {
                 return comments.getComments().length == commentCount + 1;
             });
+
+            // Test editing the reply
             run(function() {
                 var reply = ownComment.find('.child-comments').children().last();
-                testEditingComment(reply.data().model.id);
+                var replyId = reply.data().model.id;
+                testEditingComment(replyId);
+            });
 
-                // Test changing the parent of the reply
+            // Test changing the parent of the reply
+            run(function() {
+                var reply = ownComment.find('.child-comments').children().last();
+                var replyId = reply.data().model.id;
+
                 reply.find('span.edit').click();
                 replyField = reply.find('.commenting-field');
                 var textarea = replyField.find('.textarea');
@@ -485,10 +496,19 @@ describe('Basic features', function() {
                 textarea.trigger('input');
                 expect(saveButton.hasClass('enabled')).toBe(true);
 
-                // Save button should be enabled
+                var replyModelBefore = $.extend({},comments.commentsById[replyId]);
+                expect(replyModelBefore.parent).toBe('5');
+
+                // Save the model
                 saveButton.click();
-                testEditingComment(reply.data().model.id);
+                wait(function() {
+                    return comments.commentsById[replyId].parent != '5';
+                });
+                run(function() {
+                    expect(comments.commentsById[replyId].parent).toBe('3');
+                });
             });
+
         });
 
         it('Should not let the user save the comment if it hasn\'t changed', function() {
@@ -579,33 +599,40 @@ describe('Basic features', function() {
         var textarea = editField.find('.textarea');
 
         // Edit the comment
-        var modifiedContent = '<br>appended contentwith new line';
+        var modifiedContent = '<br>appended content with new line';
         textarea.append(modifiedContent).trigger('input');
 
         // Save the comment
+        var originalContent = comments.commentsById[id].content;
         editField.find('.save').click();
-        expect(editField.is(':visible')).toBe(false);
-
-        // Check the edited comment
-        ownComment = $('li.comment[data-id='+id+']');
-        checkCommentElementData(ownComment);
-        expect(ownComment.find('.content .edited').text().length).not.toBe(0);
-
-        // Check that only fields content and modified have changed in comment model
-        var ownCommentModel = comments.commentsById[id];
-        $(Object.keys(ownCommentModel)).each(function(index, key) {
-            if(key == 'content' || key == 'modified') {
-                expect(ownCommentModel[key]).not.toBe(ownCommentModelBefore[key]);
-            } else {
-                expect(ownCommentModel[key]).toBe(ownCommentModelBefore[key]);
-            }
+        wait(function() {
+            return comments.commentsById[id].content != originalContent;
         });
 
-        // Check that only content has changed in comment element
-        //ownComment = ownComment.clone();
-        ownComment.find('.content').remove();
-        ownCommentBefore.find('.content').remove();
-        expect(ownComment[0].outerHTML).toBe(ownCommentBefore[0].outerHTML);
+        run(function() {
+            expect(editField.is(':visible')).toBe(false);
+
+            // Check the edited comment
+            ownComment = $('li.comment[data-id='+id+']');
+            checkCommentElementData(ownComment);
+            expect(ownComment.find('.content .edited').text().length).not.toBe(0);
+
+            // Check that only fields content and modified have changed in comment model
+            var ownCommentModel = comments.commentsById[id];
+            $(Object.keys(ownCommentModel)).each(function(index, key) {
+                if(key == 'content' || key == 'modified') {
+                    expect(ownCommentModel[key]).not.toBe(ownCommentModelBefore[key]);
+                } else {
+                    expect(ownCommentModel[key]).toBe(ownCommentModelBefore[key]);
+                }
+            });
+
+            // Check that only content has changed in comment element
+            //ownComment = ownComment.clone();
+            ownComment.find('.content').remove();
+            ownCommentBefore.find('.content').remove();
+            expect(ownComment[0].outerHTML).toBe(ownCommentBefore[0].outerHTML);
+        });
     }
 
 });
