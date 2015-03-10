@@ -600,8 +600,7 @@
             commentEl.addClass('edit');
 
             // Create the editing field
-            var saveText = this.options.textFormatter(this.options.saveText);
-            var editField = this.createCommentingFieldElement(commentModel.parent, saveText);
+            var editField = this.createCommentingFieldElement(commentModel.parent, true);
             commentEl.find('.comment-wrapper').first().append(editField);
             
             // Append original content
