@@ -628,7 +628,7 @@ describe('Basic features', function() {
             });
 
             // Check that only content has changed in comment element
-            //ownComment = ownComment.clone();
+            ownComment = ownComment.clone();
             ownComment.find('.content').remove();
             ownCommentBefore.find('.content').remove();
             expect(ownComment[0].outerHTML).toBe(ownCommentBefore[0].outerHTML);
