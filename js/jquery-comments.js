@@ -815,7 +815,9 @@
                     var replyTo = $('<span/>', {
                         class: 'reply-to',
                         text: parent.fullname,
-                    });
+                    }).prepend($('<i/>', {
+                        class: 'fa fa-share'
+                    }));
                     name.append(replyTo);
                 }
             }
@@ -841,27 +843,46 @@
                 content.append(edited);
             }
 
-            // Like
-            var like = $('<span/>', {
-                class: 'like',
-                text: this.options.textFormatter(this.options.likeText),
+            // Actions
+            var actions = $('<span/>', {
+                class: 'actions',
+            });
+
+            // Separator
+            var separator = $('<span/>', {
+                class: 'separator',
+                text: '·',
             });
 
             // Reply
             var reply = $('<span/>', {
-                class: 'reply',
+                class: 'action reply',
                 text: this.options.textFormatter(this.options.replyText),
             });
 
+            // Upvotes
+            var upvotes = $('<span/>', {
+                class: 'action upvote',
+            }).append($('<span/>', {
+                text: 0,
+                class: 'upvote-count'
+            })).append($('<i/>', {
+                class: 'fa fa-thumbs-up'
+            }));
+
             // Edit
             var edit = $('<span/>', {
-                class: 'edit',
+                class: 'action edit',
                 text: this.options.textFormatter(this.options.editText),
             });
-            
+
+            actions.append(reply);
+            actions.append(separator.clone());
+            actions.append(upvotes);
+
             wrapper.append(content);
-            wrapper.append(like).append(reply);
-            if(commentModel.createdByCurrentUser) wrapper.append(edit);
+            wrapper.append(actions);
+            if(commentModel.createdByCurrentUser) actions.append(separator.clone()).append(edit);
             commentWrapper.append(profilePicture).append(time).append(name).append(wrapper);
             return commentWrapper;
         },

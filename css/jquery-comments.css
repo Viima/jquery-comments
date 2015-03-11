@@ -255,8 +255,12 @@
 	color: #999;
 	font-size: .8em;
 	font-weight: normal;
-	margin-left: .5em;
 	vertical-align: top;
+}
+
+.jquery-comments ul#comment-list li.comment .name .reply-to i {
+	margin-left: .5em;
+	margin-right: .25em;
 }
 
 .jquery-comments ul#comment-list li.comment .wrapper{
@@ -268,16 +272,8 @@
 	overflow: visible;
 }
 
-.jquery-comments ul#comment-list li.comment .wrapper > span {
-	font-size: 0.9em;
-	color: #666;
-	cursor: pointer;
-}
 
-.jquery-comments ul#comment-list li.comment .wrapper > span.like {
-	display: none;
-}
-
+/* Content */
 .jquery-comments ul#comment-list li.comment .wrapper .content {
 	white-space: pre-line;
 	word-break: break-word;
@@ -289,21 +285,39 @@
 	color: #999;
 }
 
-.jquery-comments ul#comment-list li.comment .name .reply-to:before {
-	content: " @";
-	vertical-align: bottom;
-}
-
 .jquery-comments ul#comment-list li.comment .wrapper .content .edited:before {
 	content: " - ";
 }
 
-.jquery-comments ul#comment-list li.comment .wrapper > span:not(:last-child) {
-	margin-right: 2em;
+
+/* Actions */
+.jquery-comments.mobile ul#comment-list li.comment .wrapper .actions {
+	line-height: 1.5em;
+	font-size: 1em;
 }
 
-/* Margin for second level content */
-.jquery-comments ul#comment-list li.comment .child-comments > *:before {
+.jquery-comments ul#comment-list li.comment .wrapper .actions {
+	font-size: 0.9em;
+	color: #666;
+}
+
+.jquery-comments ul#comment-list li.comment .wrapper .actions .action {
+	cursor: pointer;
+	margin-left: 1em;
+	margin-right: 1em;
+}
+
+.jquery-comments ul#comment-list li.comment .wrapper .actions .action:first-child {
+	margin-left: 0;
+}
+
+.jquery-comments ul#comment-list li.comment .wrapper .actions .action.upvote i {
+	margin-left: .5em;
+}
+
+
+/* Child comments */
+.jquery-comments ul#comment-list li.comment .child-comments > *:before { /* Margin for second level content */
 	content: "";
 	height: 1px;
 	float: left;
