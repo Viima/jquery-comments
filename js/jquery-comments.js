@@ -14,7 +14,7 @@
             
             // Font awesome icon overrides
             spinnerIconURL: '',
-            likeIconURL: '',
+            upvoteIconURL: '',
             replyIconURL: '',
 
             // Strings to be formatted (for example localization)
@@ -23,19 +23,28 @@
             newestText: 'Newest',
             oldestText: 'Oldest',
             sendText: 'Send',
-            likeText: 'Like',
             replyText: 'Reply',
             editText: 'Edit',
             editedText: 'Edited',
             youText: 'You',
             saveText: 'Save',
+            removeText: 'Remove',
             viewAllRepliesText: 'View all __replyCount__ replies',
             hideRepliesText: 'Hide replies',
             textFormatter: function(text) {
                 return text;
             },
 
+            // Functionalities
+            enableReplying: true,
+            enableEditing: true,
+            enableUpvoting: true,
+            enableRemoving: true,
+
+            // Colors
             highlightColor: '#1B7FCC',
+            removeButtonColor: '#DA150B',
+
             roundProfilePictures: false,
             textareaRows: 2,
             textareaRowsOnFocus: 2,
@@ -703,6 +712,16 @@
             var saveButtonClass = primaryActionIsUpdate ? 'update' : 'send';
             if(primaryActionIsUpdate) {
                 var saveButtonText = this.options.textFormatter(this.options.saveText);
+
+                // Remove button
+                if(this.options.enableRemoving) {
+                    var removeButton = $('<span/>', {
+                        class: 'enabled remove',
+                        text: this.options.textFormatter(this.options.removeText)
+                    }).css('background-color', this.options.removeButtonColor);
+                    controlRow.append(removeButton);
+                }
+
             } else {
                 var saveButtonText = this.options.textFormatter(this.options.sendText);
             }
@@ -712,7 +731,7 @@
             });
 
             // Populate the element
-            controlRow.append(saveButton);
+            controlRow.prepend(saveButton);
             textareaWrapper.append(closeButton).append(textarea).append(controlRow);
             commentingField.append(profilePicture).append(textareaWrapper);
 
@@ -876,13 +895,13 @@
                 text: this.options.textFormatter(this.options.replyText),
             });
 
-            // Like icon
-            var likeIcon = $('<i/>', {
+            // Upvote icon
+            var upvoteIcon = $('<i/>', {
                 class: 'fa fa-thumbs-up'
             });
-            if(this.options.likeIconURL.length) {
-                likeIcon.css('background-image', 'url("'+this.options.likeIconURL+'")');
-                likeIcon.addClass('image');
+            if(this.options.upvoteIconURL.length) {
+                upvoteIcon.css('background-image', 'url("'+this.options.upvoteIconURL+'")');
+                upvoteIcon.addClass('image');
             }
 
             // Upvotes
@@ -891,7 +910,7 @@
             }).append($('<span/>', {
                 text: 0,
                 class: 'upvote-count'
-            })).append(likeIcon);
+            })).append(upvoteIcon);
 
             // Edit
             var edit = $('<span/>', {
@@ -899,13 +918,22 @@
                 text: this.options.textFormatter(this.options.editText),
             });
 
-            actions.append(reply);
-            actions.append(separator.clone());
-            actions.append(upvotes);
+            // Append buttons for actions that are enabled
+            if(this.options.enableReplying) actions.append(reply);
+            if(this.options.enableUpvoting) actions.append(upvotes);
+            if(this.options.enableEditing && commentModel.createdByCurrentUser){
+                actions.append(edit);
+            }
+
+            // Append separators between the actions
+            actions.children().each(function(index, actionEl) {
+                if(!$(actionEl).is(':last-child')) {
+                    $(actionEl).after(separator.clone());
+                }
+            });
 
             wrapper.append(content);
             wrapper.append(actions);
-            if(commentModel.createdByCurrentUser) actions.append(separator.clone()).append(edit);
             commentWrapper.append(profilePicture).append(time).append(name).append(wrapper);
             return commentWrapper;
         },

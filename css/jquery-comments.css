@@ -167,7 +167,7 @@
 	font-size: .8em;
 }
 
-.jquery-comments .textarea-wrapper span.save {
+.jquery-comments .textarea-wrapper .control-row > span {
 	float: right;
 
 	color: #FFF;
@@ -179,12 +179,16 @@
 	opacity: .5;
 }
 
-.jquery-comments .textarea-wrapper span.save.enabled {
+.jquery-comments .textarea-wrapper .control-row > span:not(:first-child) {
+	margin-right: .5em;
+}
+
+.jquery-comments .textarea-wrapper .control-row > span.enabled {
 	opacity: 1;
 	cursor: pointer;
 }
 
-.jquery-comments .textarea-wrapper span.save.enabled:hover {
+.jquery-comments .textarea-wrapper .control-row > span.enabled:hover {
 	opacity: .9;
 }
 
