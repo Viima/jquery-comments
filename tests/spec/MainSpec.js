@@ -19,9 +19,14 @@ describe('Basic features', function() {
                     success(data)
                 }, 10);
             },
-            updateComment: function(data, success, error) {
+            putComment: function(data, success, error) {
                 setTimeout(function() {
                     success(data)
+                }, 10);
+            },
+            deleteComment: function(data, success, error) {
+                setTimeout(function() {
+                    success()
                 }, 10);
             }
         });

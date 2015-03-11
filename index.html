@@ -38,12 +38,12 @@
                             callback(commentsArray);
                         }, 500);
                     },
-                    postComment: function(data, success, error) {
+                    putComment: function(data, success, error) {
                       setTimeout(function() {
                         success(data);
                       }, 200)
                     },
-                    removeComment: function(data, success, error) {
+                    deleteComment: function(data, success, error) {
                       setTimeout(function() {
                         success();
                       }, 200)

@@ -66,8 +66,8 @@
 
             getComments: function(callback) {callback()},
             postComment: function(commentJSON, success, error) {success(commentJSON)},
-            updateComment: function(commentJSON, success, error) {success(commentJSON)},
-            removeComment: function(commentJSON, success, error) {success()},
+            putComment: function(commentJSON, success, error) {success(commentJSON)},
+            deleteComment: function(commentJSON, success, error) {success()},
             refresh: function() {},
             timeFormatter: function(time) {
                 return new Date(time).toLocaleDateString();
@@ -96,8 +96,8 @@
 
             // Actions
             'click .commenting-field .send.enabled' : 'postComment',
-            'click .commenting-field .update.enabled' : 'updateComment',
-            'click .commenting-field .remove.enabled' : 'removeComment',
+            'click .commenting-field .update.enabled' : 'putComment',
+            'click .commenting-field .remove.enabled' : 'deleteComment',
 
             // Comment
             'click li.comment .child-comments .toggle-all': 'toggleReplies',
@@ -292,6 +292,27 @@
             } else {
                 commentList.prepend(commentEl);
             }
+        },
+
+        removeComment: function(commentId) {
+            var commentModel = self.commentsById[commentId];
+
+            // Update the data model
+            $(commentModel.childs).each(function(index, childId) {
+                delete self.commentsById[childId];
+            });
+            delete self.commentsById[commentId];
+
+            //TODO: removing reply that has a re-reply
+
+            var commentEl = self.$el.find('li.comment[data-id="'+commentId+'"]');
+            var parentEl = commentEl.parents('li.comment').last();
+
+            // Remove the element and it's childs
+            commentEl.remove();
+
+            // Update the toggle all button
+            self.updateToggleAllButton(parentEl);
         },
 
         updateToggleAllButton: function(parentEl) {
@@ -543,7 +564,7 @@
             this.options.postComment(commentJSON, success, error);
         },
 
-        updateComment: function(ev) {
+        putComment: function(ev) {
             var self = this;
             var saveButton = $(ev.currentTarget);
             var commentingField = saveButton.parents('.commenting-field').first();
@@ -586,10 +607,10 @@
                 saveButton.addClass('enabled');
             }
 
-            this.options.updateComment(commentJSON, success, error);
+            this.options.putComment(commentJSON, success, error);
         },
 
-        removeComment: function(ev) {
+        deleteComment: function(ev) {
             var self = this;
             var removeButton = $(ev.currentTarget);
             var textarea = removeButton.parents('.commenting-field').first().find('.textarea');
@@ -603,31 +624,14 @@
             commentJSON = this.applyExternalMappings(commentJSON);
 
             var success = function() {
-                var commentModel = self.commentsById[commentId];
-
-                // Update the data model
-                $(commentModel.childs).each(function(index, childId) {
-                    delete self.commentsById[childId];
-                });
-                delete self.commentsById[commentId];
-
-                //TODO: removing reply that has a re-reply
-
-                var commentEl = self.$el.find('li.comment[data-id="'+commentId+'"]');
-                var parentEl = commentEl.parents('li.comment').last();
-
-                // Remove the element and it's childs
-                commentEl.remove();
-
-                // Update the toggle all button
-                self.updateToggleAllButton(parentEl);
+                self.removeComment(commentId);
             }
 
             var error = function() {
                 removeButton.addClass('enabled');
             }
 
-            this.options.removeComment(commentJSON, success, error);
+            this.options.deleteComment(commentJSON, success, error);
         },
 
         toggleReplies: function(ev) {
