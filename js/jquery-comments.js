@@ -215,13 +215,9 @@
                 this.commentsById[commentModel.id] = commentModel;
 
                 // Update child array of the parent (append childs to the array of outer most parent)
-                if(commentModel.parent != null) {
-                    var parentId = commentModel.parent;
-                    do {
-                        var parentComment = this.commentsById[parentId];
-                        parentId = parentComment.parent;
-                    } while(parentComment.parent != null)
-                    parentComment.childs.push(commentModel.id);
+                if(commentModel.parent) {
+                    var outermostParent = this.getOutermostParent(commentModel.parent);
+                    outermostParent.childs.push(commentModel.id);
                 }
             }
         },
@@ -295,24 +291,33 @@
         },
 
         removeComment: function(commentId) {
-            var commentModel = self.commentsById[commentId];
+            var self = this;
+            var commentModel = this.commentsById[commentId];
 
-            // Update the data model
-            $(commentModel.childs).each(function(index, childId) {
-                delete self.commentsById[childId];
+            // Remove child comments recursively
+            var childComments = this.getChildComments(commentModel.id);            
+            $(childComments).each(function(index, childComment) {
+                self.removeComment(childComment.id);
             });
-            delete self.commentsById[commentId];
 
-            //TODO: removing reply that has a re-reply
+            // Update the child array of outermost parent
+            if(commentModel.parent) {
+                var outermostParent = this.getOutermostParent(commentModel.parent)
+                var indexToRemove = outermostParent.childs.indexOf(commentModel.id);
+                outermostParent.childs.splice(indexToRemove, 1);
+            }
 
-            var commentEl = self.$el.find('li.comment[data-id="'+commentId+'"]');
+            // Remove the comment from data model
+            delete this.commentsById[commentId];
+
+            var commentEl = this.$el.find('li.comment[data-id="'+commentId+'"]');
             var parentEl = commentEl.parents('li.comment').last();
 
-            // Remove the element and it's childs
+            // Remove the element
             commentEl.remove();
 
             // Update the toggle all button
-            self.updateToggleAllButton(parentEl);
+            this.updateToggleAllButton(parentEl);
         },
 
         updateToggleAllButton: function(parentEl) {
@@ -1036,6 +1041,19 @@
         getComments: function() {
             var self = this;
             return Object.keys(this.commentsById).map(function(id){return self.commentsById[id]});
+        },
+
+        getChildComments: function(parentId) {
+            return this.getComments().filter(function(comment){return comment.parent == parentId});
+        },
+
+        getOutermostParent: function(directParentId) {
+            var parentId = directParentId;
+            do {
+                var parentComment = this.commentsById[parentId];
+                parentId = parentComment.parent;
+            } while(parentComment.parent != null)
+            return parentComment;
         },
 
         setToggleAllButtonText: function(toggleAllButton, toggle) {
