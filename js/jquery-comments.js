@@ -10,8 +10,12 @@
         currentSortKey: '',
 
         options: {
-            profilePictureURL: '',
+            profilePictureURL: '', 
             spinnerImageURL: 'img/ajax-loader.gif',
+            
+            // Fontawesome icon overrides
+            likeIconURL: '',
+            replyIconURL: '',
 
             // Strings to be formatted (for example localization)
             textareaPlaceholderText: 'Add a comment',
@@ -815,9 +819,18 @@
                     var replyTo = $('<span/>', {
                         class: 'reply-to',
                         text: parent.fullname,
-                    }).prepend($('<i/>', {
+                    });
+
+                    // reply icon
+                    var replyIcon = $('<i/>', {
                         class: 'fa fa-share'
-                    }));
+                    });
+                    if(this.options.replyIconURL.length) {
+                        replyIcon.css('background-image', 'url("'+this.options.replyIconURL+'")');
+                        replyIcon.addClass('image');
+                    }
+
+                    replyTo.prepend(replyIcon);
                     name.append(replyTo);
                 }
             }
@@ -860,15 +873,22 @@
                 text: this.options.textFormatter(this.options.replyText),
             });
 
+            // Like icon
+            var likeIcon = $('<i/>', {
+                class: 'fa fa-thumbs-up'
+            });
+            if(this.options.likeIconURL.length) {
+                likeIcon.css('background-image', 'url("'+this.options.likeIconURL+'")');
+                likeIcon.addClass('image');
+            }
+
             // Upvotes
             var upvotes = $('<span/>', {
                 class: 'action upvote',
             }).append($('<span/>', {
                 text: 0,
                 class: 'upvote-count'
-            })).append($('<i/>', {
-                class: 'fa fa-thumbs-up'
-            }));
+            })).append(likeIcon);
 
             // Edit
             var edit = $('<span/>', {

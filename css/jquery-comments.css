@@ -19,8 +19,14 @@
     position: inherit;
 }
 
-.jquery-comments h3 {
-	color: #666;
+.jquery-comments i.fa {
+	width: 1em;
+	height: 1em;
+	background-size: cover;
+}
+
+.jquery-comments i.fa.image:before {
+	content: initial;
 }
 
 .jquery-comments .spinner {
