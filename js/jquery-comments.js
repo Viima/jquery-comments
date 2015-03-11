@@ -606,7 +606,12 @@
             // Append original content
             var textarea = editField.find('.textarea');
             textarea.attr('data-comment', commentModel.id);
-            textarea.append(this.convertTextToHTML(commentModel.content)).trigger('input');
+
+            // Escaping HTML
+            textarea.append(this.getTextareaContentAsEscapedHTML(commentModel.content));
+
+            // Trigger input so that the textarea will react to the new content
+            textarea.trigger('input');
 
             // Move cursor to end
             this.moveCursorToEnd(textarea);
@@ -970,8 +975,10 @@
             return text;
         },
 
-        convertTextToHTML: function(text) {
-            return text.replace(/(?:\r\n|\r|\n)/g, '<br>');
+        getTextareaContentAsEscapedHTML: function(html) {
+            // Escaping HTML except the new lines
+            var escaped = $('<pre/>').text(html).html();
+            return escaped.replace(/(?:\n)/g, '<br>');
         },
 
         moveCursorToEnd: function(el) {

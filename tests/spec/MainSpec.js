@@ -434,8 +434,8 @@ describe('Basic features', function() {
             });
 
             // Check the content
-            var contentFromModel = comments.convertTextToHTML(ownComment.data().model.content);
-            var contentFromUI = textarea.html();
+            var contentFromModel = ownComment.data().model.content;
+            var contentFromUI = comments.getTextareaContent(textarea);
             expect(contentFromModel).toBe(contentFromUI);
 
             // Closing the field
