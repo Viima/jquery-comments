@@ -42,8 +42,8 @@
             enableRemoving: true,
 
             // Colors
-            highlightColor: '#1B7FCC',
-            removeButtonColor: '#DA150B',
+            highlightColor: '#337AB7',
+            removeButtonColor: '#C9302C',
 
             roundProfilePictures: false,
             textareaRows: 2,
@@ -598,7 +598,7 @@
 
             // Disable send button while request is pending
             removeButton.removeClass('enabled');
-            
+
             // Reverse mapping
             commentJSON = this.applyExternalMappings(commentJSON);
 
