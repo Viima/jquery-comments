@@ -67,6 +67,7 @@
             getComments: function(callback) {callback()},
             postComment: function(commentJSON, success, error) {success(commentJSON)},
             updateComment: function(commentJSON, success, error) {success(commentJSON)},
+            removeComment: function(commentJSON, success, error) {success()},
             refresh: function() {},
             timeFormatter: function(time) {
                 return new Date(time).toLocaleDateString();
@@ -92,8 +93,11 @@
             'focus .commenting-field .textarea' : 'increaseTextareaHeight',
             'change .commenting-field .textarea' : 'increaseTextareaHeight textareaContentChanged',
             'click .commenting-field:not(.main) .close' : 'removeCommentingField',
+
+            // Actions
             'click .commenting-field .send.enabled' : 'postComment',
             'click .commenting-field .update.enabled' : 'updateComment',
+            'click .commenting-field .remove.enabled' : 'removeComment',
 
             // Comment
             'click li.comment .child-comments .toggle-all': 'toggleReplies',
@@ -296,14 +300,17 @@
             var toggleAllButton = childCommentsEl.find('li.toggle-all')
             childComments.removeClass('hidden-reply');
 
-            if(childComments.length > this.options.maxRepliesVisible) {
-                var hiddenReplies = childComments.slice(0, -this.options.maxRepliesVisible)
-                hiddenReplies.addClass('hidden-reply');
+            // Add identifying class for hidden replies so they can be toggled
+            var hiddenReplies = childComments.slice(0, -this.options.maxRepliesVisible)
+            hiddenReplies.addClass('hidden-reply');
 
-                // Show all replies if replies are expanded
-                if(toggleAllButton.find('span.text').text() == this.options.textFormatter(this.options.hideRepliesText)) {
-                    hiddenReplies.show();
-                }
+            // Show all replies if replies are expanded
+            if(toggleAllButton.find('span.text').text() == this.options.textFormatter(this.options.hideRepliesText)) {
+                hiddenReplies.addClass('visible');
+            }
+
+            // Make sure that toggle all button is present
+            if(childComments.length > this.options.maxRepliesVisible) {
 
                 // Append button to toggle all replies if necessary
                 if(!toggleAllButton.length) {
@@ -325,6 +332,10 @@
 
                 // Update the text of toggle all -button
                 this.setToggleAllButtonText(toggleAllButton, false);
+
+            // Make sure that toggle all button is not present
+            } else {
+                toggleAllButton.remove();
             }
         },
 
@@ -578,9 +589,50 @@
             this.options.updateComment(commentJSON, success, error);
         },
 
+        removeComment: function(ev) {
+            var self = this;
+            var removeButton = $(ev.currentTarget);
+            var textarea = removeButton.parents('.commenting-field').first().find('.textarea');
+            var commentJSON =  $.extend({}, this.commentsById[textarea.attr('data-comment')]);
+            var commentId = commentJSON.id;
+
+            // Disable send button while request is pending
+            removeButton.removeClass('enabled');
+            
+            // Reverse mapping
+            commentJSON = this.applyExternalMappings(commentJSON);
+
+            var success = function() {
+                var commentModel = self.commentsById[commentId];
+
+                // Update the data model
+                $(commentModel.childs).each(function(index, childId) {
+                    delete self.commentsById[childId];
+                });
+                delete self.commentsById[commentId];
+
+                //TODO: removing reply that has a re-reply
+
+                var commentEl = self.$el.find('li.comment[data-id="'+commentId+'"]');
+                var parentEl = commentEl.parents('li.comment').last();
+
+                // Remove the element and it's childs
+                commentEl.remove();
+
+                // Update the toggle all button
+                self.updateToggleAllButton(parentEl);
+            }
+
+            var error = function() {
+                removeButton.addClass('enabled');
+            }
+
+            this.options.removeComment(commentJSON, success, error);
+        },
+
         toggleReplies: function(ev) {
             var el = $(ev.currentTarget);
-            el.siblings('.hidden-reply').toggle();
+            el.siblings('.hidden-reply').toggleClass('visible');
             this.setToggleAllButtonText(el, true);
         },
 

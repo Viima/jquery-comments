@@ -26,7 +26,7 @@
 }
 
 .jquery-comments i.fa.image:before {
-	content: initial;
+	content: inherit;
 }
 
 .jquery-comments .spinner {
@@ -382,6 +382,9 @@
 	display: none;
 }
 
+.jquery-comments ul#comment-list li.comment .child-comments .visible {
+	display: inherit;
+}
 
 /* Editing comment */
 .jquery-comments ul#comment-list li.comment.edit > .comment-wrapper > *:not(.commenting-field) {

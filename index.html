@@ -36,11 +36,16 @@
                     getComments: function(callback) {
                         setTimeout(function() {
                             callback(commentsArray);
-                        }, 500)
+                        }, 500);
                     },
                     postComment: function(data, success, error) {
                       setTimeout(function() {
-                        success(data)
+                        success(data);
+                      }, 200)
+                    },
+                    removeComment: function(data, success, error) {
+                      setTimeout(function() {
+                        success();
                       }, 200)
                     }
                 });
