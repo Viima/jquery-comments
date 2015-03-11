@@ -33,6 +33,9 @@
 	display: block;
 	margin-left: auto;
 	margin-right: auto;
+	width: 2em;
+	height: 2em;
+	font-size: 2em;
 }
 
 .jquery-comments ul {

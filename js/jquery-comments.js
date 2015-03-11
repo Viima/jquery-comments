@@ -11,9 +11,9 @@
 
         options: {
             profilePictureURL: '', 
-            spinnerImageURL: 'img/ajax-loader.gif',
             
-            // Fontawesome icon overrides
+            // Font awesome icon overrides
+            spinnerIconURL: '',
             likeIconURL: '',
             replyIconURL: '',
 
@@ -643,10 +643,13 @@
 
 
             // Loading spinner
-            var spinner = $('<img/>', {
-                class: 'spinner',
-                src: this.options.spinnerImageURL,
+            var spinner = $('<i/>', {
+                class: 'fa fa-spinner fa-spin spinner',
             });
+            if(this.options.spinnerIconURL.length) {
+                spinner.css('background-image', 'url("'+this.options.spinnerIconURL+'")');
+                spinner.addClass('image');
+            }
 
             this.$el.append(spinner);
         },
