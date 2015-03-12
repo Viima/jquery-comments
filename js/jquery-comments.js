@@ -28,7 +28,7 @@
             editedText: 'Edited',
             youText: 'You',
             saveText: 'Save',
-            removeText: 'Remove',
+            deleteText: 'Delete',
             viewAllRepliesText: 'View all __replyCount__ replies',
             hideRepliesText: 'Hide replies',
             textFormatter: function(text) {
@@ -39,11 +39,11 @@
             enableReplying: true,
             enableEditing: true,
             enableUpvoting: true,
-            enableRemoving: true,
+            enableDeleting: true,
 
             // Colors
             highlightColor: '#337AB7',
-            removeButtonColor: '#C9302C',
+            deleteButtonColor: '#C9302C',
 
             roundProfilePictures: false,
             textareaRows: 2,
@@ -97,7 +97,7 @@
             // Actions
             'click .commenting-field .send.enabled' : 'postComment',
             'click .commenting-field .update.enabled' : 'putComment',
-            'click .commenting-field .remove.enabled' : 'deleteComment',
+            'click .commenting-field .delete.enabled' : 'deleteComment',
 
             // Comment
             'click li.comment .child-comments .toggle-all': 'toggleReplies',
@@ -617,13 +617,13 @@
 
         deleteComment: function(ev) {
             var self = this;
-            var removeButton = $(ev.currentTarget);
-            var textarea = removeButton.parents('.commenting-field').first().find('.textarea');
+            var deleteButton = $(ev.currentTarget);
+            var textarea = deleteButton.parents('.commenting-field').first().find('.textarea');
             var commentJSON =  $.extend({}, this.commentsById[textarea.attr('data-comment')]);
             var commentId = commentJSON.id;
 
             // Disable send button while request is pending
-            removeButton.removeClass('enabled');
+            deleteButton.removeClass('enabled');
 
             // Reverse mapping
             commentJSON = this.applyExternalMappings(commentJSON);
@@ -633,7 +633,7 @@
             }
 
             var error = function() {
-                removeButton.addClass('enabled');
+                deleteButton.addClass('enabled');
             }
 
             this.options.deleteComment(commentJSON, success, error);
@@ -774,13 +774,13 @@
             if(primaryActionIsUpdate) {
                 var saveButtonText = this.options.textFormatter(this.options.saveText);
 
-                // Remove button
-                if(this.options.enableRemoving) {
-                    var removeButton = $('<span/>', {
-                        class: 'enabled remove',
-                        text: this.options.textFormatter(this.options.removeText)
-                    }).css('background-color', this.options.removeButtonColor);
-                    controlRow.append(removeButton);
+                // Delete button
+                if(this.options.enableDeleting) {
+                    var deleteButton = $('<span/>', {
+                        class: 'enabled delete',
+                        text: this.options.textFormatter(this.options.deleteText)
+                    }).css('background-color', this.options.deleteButtonColor);
+                    controlRow.append(deleteButton);
                 }
 
             } else {
