@@ -40,6 +40,7 @@
             enableEditing: true,
             enableUpvoting: true,
             enableDeleting: true,
+            enableDeletingCommentWithReplies: true,
 
             // Colors
             highlightColor: '#337AB7',
@@ -674,7 +675,7 @@
             commentEl.addClass('edit');
 
             // Create the editing field
-            var editField = this.createCommentingFieldElement(commentModel.parent, true);
+            var editField = this.createCommentingFieldElement(commentModel.parent, commentModel.id);
             commentEl.find('.comment-wrapper').first().append(editField);
             
             // Append original content
@@ -732,7 +733,7 @@
             return profilePicture;
         },
 
-        createCommentingFieldElement: function(parentId, primaryActionIsUpdate) {
+        createCommentingFieldElement: function(parentId, existingCommentId) {
             var self = this;
 
             // Commenting field
@@ -769,23 +770,37 @@
                 class: 'close',
             }).append($('<span class="left"/>')).append($('<span class="right"/>'));
 
-            // Save button
-            var saveButtonClass = primaryActionIsUpdate ? 'update' : 'send';
-            if(primaryActionIsUpdate) {
+            // Save button text
+            if(existingCommentId) {
                 var saveButtonText = this.options.textFormatter(this.options.saveText);
 
-                // Delete button
+                // Append delete button if necessary
                 if(this.options.enableDeleting) {
-                    var deleteButton = $('<span/>', {
-                        class: 'enabled delete',
-                        text: this.options.textFormatter(this.options.deleteText)
-                    }).css('background-color', this.options.deleteButtonColor);
-                    controlRow.append(deleteButton);
+
+                    var isAllowedToDelete = true;
+
+                    // Check if comment with replies can be deleted
+                    if(!this.options.enableDeletingCommentWithReplies) {
+                        $(this.getComments()).each(function(index, comment) {
+                            if(comment.parent == existingCommentId) isAllowedToDelete = false;
+                        });
+                    }
+
+                    if(isAllowedToDelete) {
+                        var deleteButton = $('<span/>', {
+                            class: 'enabled delete',
+                            text: this.options.textFormatter(this.options.deleteText)
+                        }).css('background-color', this.options.deleteButtonColor);
+                        controlRow.append(deleteButton);
+                    }
                 }
 
             } else {
                 var saveButtonText = this.options.textFormatter(this.options.sendText);
             }
+
+            // Save button
+            var saveButtonClass = existingCommentId ? 'update' : 'send';
             var saveButton = $('<span/>', {
                 class: saveButtonClass + ' save highlight-background',
                 text: saveButtonText,
