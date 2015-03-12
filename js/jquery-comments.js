@@ -121,22 +121,15 @@
             if($.browser.mobile) this.$el.addClass('mobile');
 
             // Init options
-            var self = this;
-            $(Object.keys(options)).each(function(index1, key1) {
-                
-                var value = options[key1];
+            if(options.fieldMappings) {
+                options = $.extend({}, options);
+                $.extend(this.options.fieldMappings, options.fieldMappings);
 
-                // Expand dictionary
-                if(value.constructor == Object) {
-                    $(Object.keys(value)).each(function(index2, key2) {
-                        self.options[key1][key2] = value[key2];
-                    });
+                // Field mappings needs to be deleted so that the field won't get overidden
+                delete options['fieldMappings'];
+            }
+            $.extend(this.options, options);
 
-                // Override value
-                } else {
-                    self.options[key1] = value;
-                }
-            });
 
             // Create CSS declarations for highlight color
             this.createCssDeclarations();
