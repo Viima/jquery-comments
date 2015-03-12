@@ -29,7 +29,7 @@ var commentsArray = [
    "created": "2015-01-03",
    "modified": "2015-01-03",
    "content": "Sed posuere interdum sem.\nQuisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu. Sed arcu lectus auctor vitae, consectetuer et venenatis eget velit.",
-   "fullname": "Colin Cardwell",
+   "fullname": "You",
    "profile_picture_url": "https://app.viima.com/static/media/user_profiles/user-icon.png",
    "created_by_admin": false,
    "created_by_current_user": true,
@@ -73,21 +73,9 @@ var commentsArray = [
 },
 {  
    "id": 7,
-   "parent": 6,
+   "parent": 1,
    "created": "2015-01-07",
    "modified": "2015-01-07",
-   "content": "Sed posuere interdum sem. Quisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu.",
-   "fullname": "Chris White",
-   "profile_picture_url": "https://app.viima.com/static/media/user_profiles/user-icon.png",
-   "created_by_admin": false,
-   "created_by_current_user": false,
-   "moderation_pending": false
-},
-{  
-   "id": 8,
-   "parent": 1,
-   "created": "2015-01-08",
-   "modified": "2015-01-08",
    "content": "Sed posuere interdum sem. Quisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu. Sed arcu lectus auctor vitae, consectetuer et venenatis eget velit.",
    "fullname": "Administrator",
    "profile_picture_url": "https://app.viima.com/static/media/user_profiles/admin-user-icon.png",
@@ -96,8 +84,20 @@ var commentsArray = [
    "moderation_pending": false
 },
 {  
+   "id": 8,
+   "parent": 6,
+   "created": "2015-01-08",
+   "modified": "2015-01-08",
+   "content": "Sed posuere interdum sem. Quisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu.",
+   "fullname": "You",
+   "profile_picture_url": "https://app.viima.com/static/media/user_profiles/user-icon.png",
+   "created_by_admin": false,
+   "created_by_current_user": true,
+   "moderation_pending": false
+},
+{  
    "id": 9,
-   "parent": 7,
+   "parent": 8,
    "created": "2015-01-09",
    "modified": "2015-01-10",
    "content": "Quisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu. Sed arcu lectus auctor vitae, consectetuer et venenatis eget velit.",
@@ -105,6 +105,18 @@ var commentsArray = [
    "profile_picture_url": "https://app.viima.com/static/media/user_profiles/user-icon.png",
    "created_by_admin": false,
    "created_by_current_user": false,
+   "moderation_pending": false
+},
+{  
+   "id": 10,
+   "parent": 1,
+   "created": "2015-01-10",
+   "modified": "2015-01-10",
+   "content": "Quisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu. Sed arcu lectus auctor vitae, consectetuer et venenatis eget velit.",
+   "fullname": "You",
+   "profile_picture_url": "https://app.viima.com/static/media/user_profiles/user-icon.png",
+   "created_by_admin": false,
+   "created_by_current_user": true,
    "moderation_pending": false
 },
 ]

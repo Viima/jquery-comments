@@ -49,28 +49,28 @@ describe('Basic features', function() {
 
         expect(comments.render.calls.length).toEqual(1);
         expect(comments.fetchDataAndRender.calls.length).toEqual(1);
-        expect(comments.createCommentModel.calls.length).toEqual(9);
-        expect(comments.addCommentToDataModel.calls.length).toEqual(9);
+        expect(comments.createCommentModel.calls.length).toEqual(10);
+        expect(comments.addCommentToDataModel.calls.length).toEqual(10);
         expect(comments.sortComments.calls.length).toBeGreaterThan(1);
     });
 
     it('Should have rendered the comments', function() {
         var commentElements = $('li.comment');
-        expect(commentElements.length).toEqual(9);
+        expect(commentElements.length).toEqual(10);
         commentElements.each(function(index, commentEl) {
             checkCommentElementData($(commentEl));
         });
         checkOrder($('ul#comment-list > li.comment'), [1,3,2]);
 
         // Check reply to -fields
-        expect($('li.comment[data-id=7] .name .reply-to').text()).toBe('Jack Hemsworth');
-        expect($('li.comment[data-id=9] .name .reply-to').text()).toBe('Chris White');
+        expect($('li.comment[data-id=8] .name .reply-to').text()).toBe('Jack Hemsworth');
+        expect($('li.comment[data-id=9] .name .reply-to').text()).toBe('You');
         expect($('li.comment[data-id=5] .name .reply-to').text()).toBe('Todd Brown');
 
         // Check that other comments do not have the field
         $('li.comment').each(function(index, el) {
             var el = $(el);
-            if([7,9,5].indexOf(el.data().model.id) == -1) {
+            if([8,9,5].indexOf(el.data().model.id) == -1) {
                 expect(el.find('.name').first().find('.reply-to').length).toBe(0);
             }
         });
@@ -89,7 +89,7 @@ describe('Basic features', function() {
 
     it('Should have appended the child comments under their outermost parent', function() {
         expect($('#comment-list > li.comment').length).toBe(3);
-        checkOrder($('li.comment[data-id=1] .child-comments > li.comment'), [6,7,8,9]);
+        checkOrder($('li.comment[data-id=1] .child-comments > li.comment'), [6,7,8,9,10]);
         checkOrder($('li.comment[data-id=2] .child-comments > li.comment'), []);
         checkOrder($('li.comment[data-id=3] .child-comments > li.comment'), [4,5]);
     });
@@ -97,32 +97,32 @@ describe('Basic features', function() {
     it('Should sort the main level comments wihtout affecting the order of child comments', function() {
         $('li[data-sort-key="popularity"]').click();
         checkOrder($('#comment-list > li.comment'), [1,3,2]);
-        checkOrder($('li.comment[data-id=1] .child-comments > li.comment'), [6,7,8,9]);
+        checkOrder($('li.comment[data-id=1] .child-comments > li.comment'), [6,7,8,9,10]);
 
         $('li[data-sort-key="newest"]').click();
         checkOrder($('#comment-list > li.comment'), [3,2,1]);
-        checkOrder($('li.comment[data-id=1] .child-comments > li.comment'), [6,7,8,9]);
+        checkOrder($('li.comment[data-id=1] .child-comments > li.comment'), [6,7,8,9,10]);
 
         $('li[data-sort-key="oldest"]').click();
         checkOrder($('#comment-list > li.comment'), [1,2,3]);
-        checkOrder($('li.comment[data-id=1] .child-comments > li.comment'), [6,7,8,9]);
+        checkOrder($('li.comment[data-id=1] .child-comments > li.comment'), [6,7,8,9,10]);
     });
 
 
     it('Should be able to toggle all replies', function() {
         var toggleAll = $('li.comment[data-id=1]').find('.child-comments li.toggle-all');
         expect(toggleAll.length).toBe(1);
-        expect(toggleAll.text()).toBe('View all 4 replies');
+        expect(toggleAll.text()).toBe('View all 5 replies');
         expect($('li.comment[data-id=1] li.comment:visible').length).toBe(2);
 
         // Show all replies
         toggleAll.click();
         expect(toggleAll.text()).toBe('Hide replies');
-        expect($('li.comment[data-id=1] li.comment:visible').length).toBe(4);
+        expect($('li.comment[data-id=1] li.comment:visible').length).toBe(5);
 
         // Hide replies
         toggleAll.click();
-        expect(toggleAll.text()).toBe('View all 4 replies');
+        expect(toggleAll.text()).toBe('View all 5 replies');
         expect($('li.comment[data-id=1] li.comment:visible').length).toBe(2);
     });
 
@@ -299,10 +299,10 @@ describe('Basic features', function() {
                 checkCommentElementData(commentEl);
 
                 // Check position
-                checkOrder(mostPopularComment.find('li.comment'), [6,7,8,9,idOfNewComment]);
+                checkOrder(mostPopularComment.find('li.comment'), [6,7,8,9,10,idOfNewComment]);
 
                 var toggleAllText = mostPopularComment.find('li.toggle-all').text();
-                expect(toggleAllText).toBe('View all 5 replies');
+                expect(toggleAllText).toBe('View all 6 replies');
                 expect(mostPopularComment.find('li.comment:visible').length).toBe(2);
             });
         }); 
@@ -318,7 +318,7 @@ describe('Basic features', function() {
         });
 
         it('Should be able to re-reply', function() {
-            var childComment = mostPopularComment.find('.child-comments li.comment').last();
+            var childComment = mostPopularComment.find('.child-comments li.comment[data-id=9]');
             childComment.find('.reply').first().click();
             var replyField = mostPopularComment.find('.commenting-field');
             expect(replyField.find('.reply-to-badge').val()).toBe('@Bryan Connery');
@@ -346,7 +346,7 @@ describe('Basic features', function() {
                 checkCommentElementData(commentEl);
 
                 var toggleAllText = mostPopularComment.find('li.toggle-all').text();
-                expect(toggleAllText).toBe('View all 5 replies');
+                expect(toggleAllText).toBe('View all 6 replies');
                 expect(mostPopularComment.find('li.comment:visible').length).toBe(2);
             });
         });
@@ -379,7 +379,7 @@ describe('Basic features', function() {
 
                 var toggleAllText = mostPopularComment.find('li.toggle-all').text();
                 expect(toggleAllText).toBe('Hide replies');
-                expect(mostPopularComment.find('li.comment:visible').length).toBe(5);
+                expect(mostPopularComment.find('li.comment:visible').length).toBe(6);
             });
         });
 
@@ -419,7 +419,7 @@ describe('Basic features', function() {
 
         it('Should show the edit button only for own comments', function() {
             expect(editButton.length).toBe(1);
-            expect($('span.edit').length).toBe(1);
+            expect($('span.edit').length).toBe(3);
         });
 
         it('Should be able to open and close the edit field', function() {
@@ -457,7 +457,7 @@ describe('Basic features', function() {
             expect(ownComment[0].outerHTML).toBe(cloneOfOwnComment[0].outerHTML);
         });
 
-        it('Should be able to edit own comment', function() {
+        it('Should be able to edit a main level comment', function() {
             testEditingComment(ownComment.data().model.id);
         });
 
@@ -513,7 +513,6 @@ describe('Basic features', function() {
                     expect(comments.commentsById[replyId].parent).toBe('3');
                 });
             });
-
         });
 
         it('Should not let the user save the comment if it hasn\'t changed', function() {
@@ -533,6 +532,51 @@ describe('Basic features', function() {
             // Revert changes
             textarea.html(originalHTML).trigger('input');
             expect(saveButton.hasClass('enabled')).toBe(false);
+        });
+    });
+
+    describe('Deleting', function() {
+        var ownComment;
+        var editButton;
+
+        beforeEach(function() {
+            ownComment = $('li.comment[data-id=3]');
+            editButton = ownComment.find('span.edit');
+        });
+
+        it('Should show the delete button for own comments', function() {
+            editButton.click();
+            var deleteButton = ownComment.find('.delete');
+            expect(deleteButton.length).toBe(1);
+            expect(deleteButton.hasClass('enabled')).toBe(true);
+        });
+
+        it('Should be able to delete a main level comment', function() {
+            var commentId = ownComment.attr('data-id');
+            var childComments = comments.commentsById[commentId].childs.slice();
+            expect(childComments.length).toBe(2);
+            var commentCountBeforeDelete = comments.getComments().length;
+
+            editButton.click();
+            var deleteButton = ownComment.find('.delete');
+            deleteButton.click();
+
+            wait(function() {
+                return comments.getComments().length < commentCountBeforeDelete;
+            });
+            run(function() {
+                expect(comments.getComments().length).toBe(commentCountBeforeDelete - 3);
+
+                // Expect childs to be deleted
+                $(childComments).each(function(index, id) {
+                    expect(comments.commentsById[id]).toBe(undefined);
+                    expect($('li.comment[data-id="'+id+'"]').length).toBe(0);
+                });
+
+                // Except the main comment to be deleted
+                expect(comments.commentsById[commentId]).toBe(undefined);
+                expect($('li.comment[data-id="'+commentId+'"]').length).toBe(0);
+            });
         });
     });
 
