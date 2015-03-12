@@ -66,11 +66,12 @@ describe('Basic features', function() {
         expect($('li.comment[data-id=8] .name .reply-to').text()).toBe('Jack Hemsworth');
         expect($('li.comment[data-id=9] .name .reply-to').text()).toBe('You');
         expect($('li.comment[data-id=5] .name .reply-to').text()).toBe('Todd Brown');
+        expect($('li.comment[data-id=10] .name .reply-to').text()).toBe('Bryan Connery');
 
         // Check that other comments do not have the field
         $('li.comment').each(function(index, el) {
             var el = $(el);
-            if([8,9,5].indexOf(el.data().model.id) == -1) {
+            if([8,9,5,10].indexOf(el.data().model.id) == -1) {
                 expect(el.find('.name').first().find('.reply-to').length).toBe(0);
             }
         });
@@ -536,28 +537,29 @@ describe('Basic features', function() {
     });
 
     describe('Deleting', function() {
-        var ownComment;
-        var editButton;
-
-        beforeEach(function() {
-            ownComment = $('li.comment[data-id=3]');
-            editButton = ownComment.find('span.edit');
-        });
 
         it('Should show the delete button for own comments', function() {
+            var ownComment = $('li.comment[data-id=3]');
+            var editButton = ownComment.find('span.edit');
+
             editButton.click();
+
             var deleteButton = ownComment.find('.delete');
             expect(deleteButton.length).toBe(1);
             expect(deleteButton.hasClass('enabled')).toBe(true);
         });
 
         it('Should be able to delete a main level comment', function() {
-            var commentId = ownComment.attr('data-id');
+            var commentId = 3;
+            var ownComment = $('li.comment[data-id="'+commentId+'"]');
+
             var childComments = comments.commentsById[commentId].childs.slice();
             expect(childComments.length).toBe(2);
             var commentCountBeforeDelete = comments.getComments().length;
 
+            var editButton = ownComment.find('span.edit');
             editButton.click();
+
             var deleteButton = ownComment.find('.delete');
             deleteButton.click();
 
@@ -576,6 +578,79 @@ describe('Basic features', function() {
                 // Except the main comment to be deleted
                 expect(comments.commentsById[commentId]).toBe(undefined);
                 expect($('li.comment[data-id="'+commentId+'"]').length).toBe(0);
+            });
+        });
+
+        it('Should be able to delete a reply', function() {
+            var commentId = 10;
+            var ownComment = $('li.comment[data-id="'+commentId+'"]');
+            var commentCountBeforeDelete = comments.getComments().length;
+            var outermostParent = ownComment.parents('li.comment').last();
+            var toggleAllButton = outermostParent.find('.toggle-all');
+
+            // Check the child count
+            expect(toggleAllButton.text()).toBe('View all 5 replies');
+            expect(comments.commentsById[outermostParent.attr('data-id')].childs.length).toBe(5);
+
+            var editButton = ownComment.find('span.edit');
+            editButton.click();
+
+            var deleteButton = ownComment.find('.delete');
+            deleteButton.click();
+
+            wait(function() {
+                return comments.getComments().length < commentCountBeforeDelete;
+            });
+            run(function() {
+                expect(comments.getComments().length).toBe(commentCountBeforeDelete - 1);
+
+                // Except the main comment to be deleted
+                expect(comments.commentsById[commentId]).toBe(undefined);
+                expect($('li.comment[data-id="'+commentId+'"]').length).toBe(0);
+
+                // Check the child count
+                expect(toggleAllButton.text()).toBe('View all 4 replies');
+                expect(comments.commentsById[outermostParent.attr('data-id')].childs.length).toBe(4);
+            });
+        });
+
+        it('Should be able to delete a reply that has re-replies', function() {
+            var commentId = 8;
+            var reReplies = [9, 10];
+            var ownComment = $('li.comment[data-id="'+commentId+'"]');
+            var commentCountBeforeDelete = comments.getComments().length;
+            var outermostParent = ownComment.parents('li.comment').last();
+            var toggleAllButton = outermostParent.find('.toggle-all');
+
+            // Check the child count
+            expect(toggleAllButton.text()).toBe('View all 5 replies');
+            expect(comments.commentsById[outermostParent.attr('data-id')].childs.length).toBe(5);
+
+            var editButton = ownComment.find('span.edit');
+            editButton.click();
+
+            var deleteButton = ownComment.find('.delete');
+            deleteButton.click();
+
+            wait(function() {
+                return comments.getComments().length < commentCountBeforeDelete;
+            });
+            run(function() {
+                expect(comments.getComments().length).toBe(commentCountBeforeDelete - 3);
+
+                // Expect re-replies to be deleted
+                $(reReplies).each(function(index, id) {
+                    expect(comments.commentsById[id]).toBe(undefined);
+                    expect($('li.comment[data-id="'+id+'"]').length).toBe(0);
+                });
+
+                // Except the main comment to be deleted
+                expect(comments.commentsById[commentId]).toBe(undefined);
+                expect($('li.comment[data-id="'+commentId+'"]').length).toBe(0);
+
+                // Check the child count
+                expect(outermostParent.find('.toggle-all').length).toBe(0);
+                expect(comments.commentsById[outermostParent.attr('data-id')].childs.length).toBe(2);
             });
         });
     });
