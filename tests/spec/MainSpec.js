@@ -233,12 +233,13 @@ describe('Basic features', function() {
             
             mainTextarea.trigger('focus').focus();
             mainTextarea.html(newCommentText).trigger('input');
-            mainCommentingField.find('.send').trigger('click');
 
             var commentCount = comments.getComments().length;
             wait(function() {
                 return comments.getComments().length == commentCount + 1;
             });
+
+            mainCommentingField.find('.send').trigger('click');
 
             run(function() {
                 // New comment should always be placed first initially
@@ -284,12 +285,14 @@ describe('Basic features', function() {
 
             var replyText = 'This is a reply\nwith a new line';
             replyField.find('.textarea').append(replyText).trigger('input');
-            replyField.find('.send').trigger('click');
 
             var commentCount = comments.getComments().length;
             wait(function() {
                 return comments.getComments().length == commentCount + 1;
             });
+
+            replyField.find('.send').trigger('click');
+
             run(function() {
                 // New reply should always be placed last
                 var commentEl = mostPopularComment.find('li.comment').last();
@@ -330,12 +333,14 @@ describe('Basic features', function() {
 
             var replyText = 'This is a re-reply\nwith a new line';
             replyField.find('.textarea').append(replyText).trigger('input');
-            replyField.find('.send').trigger('click');
 
             var commentCount = comments.getComments().length;
             wait(function() {
                 return comments.getComments().length == commentCount + 1;
             });
+
+            replyField.find('.send').trigger('click');
+
             run(function() {
                 // New reply should always be placed last
                 var commentEl = mostPopularComment.find('li.comment').last();
@@ -362,12 +367,14 @@ describe('Basic features', function() {
 
             var replyText = 'This is a re-reply\nwith a new line';
             replyField.find('.textarea').append(replyText).trigger('input');
-            replyField.find('.send').trigger('click');
 
             var commentCount = comments.getComments().length;
             wait(function() {
                 return comments.getComments().length == commentCount + 1;
             });
+
+            replyField.find('.send').trigger('click');
+
             run(function() {
                 // New reply should always be placed last
                 var commentEl = mostPopularComment.find('li.comment').last();
@@ -396,12 +403,14 @@ describe('Basic features', function() {
 
             var replyText = 'This is a re-reply to original user';
             replyField.find('.textarea').append(replyText).trigger('input');
-            replyField.find('.send').trigger('click');
 
             var commentCount = comments.getComments().length;
             wait(function() {
                 return comments.getComments().length == commentCount + 1;
             });
+
+            replyField.find('.send').trigger('click');
+
             run(function() {
                 var commentEl = mostPopularComment.find('li.comment').last();
                 expect(commentEl.find('.name .reply-to').length).toBe(0);
@@ -468,13 +477,14 @@ describe('Basic features', function() {
 
             var replyField = ownComment.find('.commenting-field');
             replyField.find('.textarea').append(replyText).trigger('input');
-            replyField.find('.send').trigger('click');
 
             // Create reply
             var commentCount = comments.getComments().length;
             wait(function() {
                 return comments.getComments().length == commentCount + 1;
             });
+
+            replyField.find('.send').trigger('click');
 
             // Test editing the reply
             run(function() {
@@ -505,11 +515,13 @@ describe('Basic features', function() {
                 var replyModelBefore = $.extend({},comments.commentsById[replyId]);
                 expect(replyModelBefore.parent).toBe('5');
 
-                // Save the model
-                saveButton.click();
                 wait(function() {
                     return comments.commentsById[replyId].parent != '5';
                 });
+
+                // Save the model
+                saveButton.click();
+
                 run(function() {
                     expect(comments.commentsById[replyId].parent).toBe('3');
                 });
@@ -560,12 +572,13 @@ describe('Basic features', function() {
             var editButton = ownComment.find('span.edit');
             editButton.click();
 
-            var deleteButton = ownComment.find('.delete');
-            deleteButton.click();
-
             wait(function() {
                 return comments.getComments().length < commentCountBeforeDelete;
             });
+
+            var deleteButton = ownComment.find('.delete');
+            deleteButton.click();
+
             run(function() {
                 expect(comments.getComments().length).toBe(commentCountBeforeDelete - 3);
 
@@ -595,12 +608,13 @@ describe('Basic features', function() {
             var editButton = ownComment.find('span.edit');
             editButton.click();
 
-            var deleteButton = ownComment.find('.delete');
-            deleteButton.click();
-
             wait(function() {
                 return comments.getComments().length < commentCountBeforeDelete;
             });
+
+            var deleteButton = ownComment.find('.delete');
+            deleteButton.click();
+
             run(function() {
                 expect(comments.getComments().length).toBe(commentCountBeforeDelete - 1);
 
@@ -629,12 +643,13 @@ describe('Basic features', function() {
             var editButton = ownComment.find('span.edit');
             editButton.click();
 
-            var deleteButton = ownComment.find('.delete');
-            deleteButton.click();
-
             wait(function() {
                 return comments.getComments().length < commentCountBeforeDelete;
             });
+
+            var deleteButton = ownComment.find('.delete');
+            deleteButton.click();
+
             run(function() {
                 expect(comments.getComments().length).toBe(commentCountBeforeDelete - 3);
 
@@ -728,10 +743,11 @@ describe('Basic features', function() {
 
         // Save the comment
         var originalContent = comments.commentsById[id].content;
-        editField.find('.save').click();
         wait(function() {
             return comments.commentsById[id].content != originalContent;
         });
+
+        editField.find('.save').click();
 
         run(function() {
             expect(editField.is(':visible')).toBe(false);
