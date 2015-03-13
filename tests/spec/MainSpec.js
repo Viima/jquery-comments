@@ -11,8 +11,8 @@ describe('Basic features', function() {
             roundProfilePictures: true,
             textareaRows: 1,
             textareaMaxRows: 4,
-            getComments: function(callback) {
-                callback(commentsArray);
+            getComments: function(success, error) {
+                success(commentsArray);
             },
             postComment: function(data, success, error) {
                 setTimeout(function() {

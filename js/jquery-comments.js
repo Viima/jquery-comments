@@ -67,7 +67,7 @@
                userHasUpvoted: 'user_has_upvoted',
             },
 
-            getComments: function(callback) {callback()},
+            getComments: function(success, error) {success([])},
             postComment: function(commentJSON, success, error) {success(commentJSON)},
             putComment: function(commentJSON, success, error) {success(commentJSON)},
             deleteComment: function(commentJSON, success, error) {success()},
@@ -184,7 +184,8 @@
 
             // Get comments
             this.commentsById = {};
-            this.options.getComments(function(commentsArray) {
+
+            var success = function(commentsArray) {
                 // Convert comments to custom data model
                 var commentModels = commentsArray.map(function(commentsJSON){
                     return self.createCommentModel(commentsJSON)
@@ -199,7 +200,13 @@
                 });
 
                 self.render();
-            });
+            }
+
+            var error = function() {
+                //TODO: implement
+            }
+
+            this.options.getComments(success, error);
         },
 
         createCommentModel: function(commentJSON) {

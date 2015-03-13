@@ -33,9 +33,9 @@
                     profilePictureURL: 'https://app.viima.com/static/media/user_profiles/user-icon.png',
                     roundProfilePictures: true,
                     textareaRows: 1,
-                    getComments: function(callback) {
+                    getComments: function(success, error) {
                         setTimeout(function() {
-                            callback(commentsArray);
+                            success(commentsArray);
                         }, 500);
                     },
                     putComment: function(data, success, error) {
