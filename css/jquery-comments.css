@@ -304,8 +304,7 @@
 
 
 /* Actions */
-.jquery-comments.mobile ul#comment-list li.comment .wrapper .actions {
-	line-height: 1.5em;
+.jquery-comments.mobile ul#comment-list li.comment .actions {
 	font-size: 1em;
 }
 
@@ -315,9 +314,11 @@
 }
 
 .jquery-comments ul#comment-list li.comment .actions .action {
+	display: inline-block;
 	cursor: pointer;
 	margin-left: 1em;
 	margin-right: 1em;
+	line-height: 1.5em;
 }
 
 .jquery-comments ul#comment-list li.comment .actions .action:first-child {

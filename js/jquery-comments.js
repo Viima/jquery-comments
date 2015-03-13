@@ -107,7 +107,7 @@
             'click li.comment ul.child-comments .toggle-all': 'toggleReplies',
             'click li.comment span.reply': 'replyButtonClicked',
             'click li.comment span.edit': 'editButtonClicked',
-            'click li.comment span.upvote i' : 'upvoteComment',
+            'click li.comment span.upvote' : 'upvoteComment',
         },
 
 
