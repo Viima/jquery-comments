@@ -9,7 +9,9 @@ var commentsArray = [
    "profile_picture_url": "https://app.viima.com/static/media/user_profiles/user-icon.png",
    "created_by_admin": false,
    "created_by_current_user": false,
-   "moderation_pending": false
+   "moderation_pending": false,
+   "upvote_count": 3,
+   "user_has_upvoted": false
 },
 {  
    "id": 2,
@@ -21,7 +23,9 @@ var commentsArray = [
    "profile_picture_url": "https://app.viima.com/static/media/user_profiles/admin-user-icon.png",
    "created_by_admin": true,
    "created_by_current_user": false,
-   "moderation_pending": false
+   "moderation_pending": false,
+   "upvote_count": 2,
+   "user_has_upvoted": false
 },
 {  
    "id": 3,
@@ -33,7 +37,9 @@ var commentsArray = [
    "profile_picture_url": "https://app.viima.com/static/media/user_profiles/user-icon.png",
    "created_by_admin": false,
    "created_by_current_user": true,
-   "moderation_pending": false
+   "moderation_pending": false,
+   "upvote_count": 2,
+   "user_has_upvoted": true
 },
 {  
    "id": 4,
@@ -45,7 +51,9 @@ var commentsArray = [
    "profile_picture_url": "https://app.viima.com/static/media/user_profiles/user-icon.png",
    "created_by_admin": false,
    "created_by_current_user": false,
-   "moderation_pending": false
+   "moderation_pending": false,
+   "upvote_count": 0,
+   "user_has_upvoted": false
 },
 {  
    "id": 5,
@@ -57,7 +65,9 @@ var commentsArray = [
    "profile_picture_url": "https://app.viima.com/static/media/user_profiles/user-icon.png",
    "created_by_admin": false,
    "created_by_current_user": false,
-   "moderation_pending": false
+   "moderation_pending": false,
+   "upvote_count": 0,
+   "user_has_upvoted": false
 },
 {  
    "id": 6,
@@ -69,7 +79,9 @@ var commentsArray = [
    "profile_picture_url": "https://app.viima.com/static/media/user_profiles/user-icon.png",
    "created_by_admin": false,
    "created_by_current_user": false,
-   "moderation_pending": false
+   "moderation_pending": false,
+   "upvote_count": 1,
+   "user_has_upvoted": false
 },
 {  
    "id": 7,
@@ -81,7 +93,9 @@ var commentsArray = [
    "profile_picture_url": "https://app.viima.com/static/media/user_profiles/admin-user-icon.png",
    "created_by_admin": true,
    "created_by_current_user": false,
-   "moderation_pending": false
+   "moderation_pending": false,
+   "upvote_count": 0,
+   "user_has_upvoted": false
 },
 {  
    "id": 8,
@@ -93,7 +107,9 @@ var commentsArray = [
    "profile_picture_url": "https://app.viima.com/static/media/user_profiles/user-icon.png",
    "created_by_admin": false,
    "created_by_current_user": true,
-   "moderation_pending": false
+   "moderation_pending": false,
+   "upvote_count": 0,
+   "user_has_upvoted": false
 },
 {  
    "id": 9,
@@ -105,7 +121,9 @@ var commentsArray = [
    "profile_picture_url": "https://app.viima.com/static/media/user_profiles/user-icon.png",
    "created_by_admin": false,
    "created_by_current_user": false,
-   "moderation_pending": false
+   "moderation_pending": false,
+   "upvote_count": 0,
+   "user_has_upvoted": false
 },
 {  
    "id": 10,
@@ -117,6 +135,8 @@ var commentsArray = [
    "profile_picture_url": "https://app.viima.com/static/media/user_profiles/user-icon.png",
    "created_by_admin": false,
    "created_by_current_user": true,
-   "moderation_pending": false
+   "moderation_pending": false,
+   "upvote_count": 0,
+   "user_has_upvoted": false
 },
 ]

@@ -62,13 +62,16 @@
                profilePictureURL: 'profile_picture_url',
                createdByAdmin: 'created_by_admin',
                createdByCurrentUser: 'created_by_current_user',
-               moderationPending: 'moderation_pending'
+               moderationPending: 'moderation_pending',
+               upvoteCount: 'upvote_count',
+               userHasUpvoted: 'user_has_upvoted',
             },
 
             getComments: function(callback) {callback()},
             postComment: function(commentJSON, success, error) {success(commentJSON)},
             putComment: function(commentJSON, success, error) {success(commentJSON)},
             deleteComment: function(commentJSON, success, error) {success()},
+            upvoteComment: function(commentJSON, success, error) {success(commentJSON)},
             refresh: function() {},
             timeFormatter: function(time) {
                 return new Date(time).toLocaleDateString();
@@ -101,9 +104,10 @@
             'click .commenting-field .delete.enabled' : 'deleteComment',
 
             // Comment
-            'click li.comment .child-comments .toggle-all': 'toggleReplies',
+            'click li.comment ul.child-comments .toggle-all': 'toggleReplies',
             'click li.comment span.reply': 'replyButtonClicked',
             'click li.comment span.edit': 'editButtonClicked',
+            'click li.comment span.upvote i' : 'upvoteComment',
         },
 
 
@@ -336,7 +340,7 @@
                 if(!toggleAllButton.length) {
 
                     toggleAllButton = $('<li/>', {
-                        class: 'toggle-all highlight-font',
+                        class: 'toggle-all highlight-font-bold',
                     });
                     var toggleAllButtonText = $('<span/>', {
                         class: 'text'
@@ -596,10 +600,8 @@
                 // Close the editing field
                 commentingField.find('.close').trigger('click');
 
-                // Re-render the comment wrapper without touching child comments
-                var commentWrapper = self.createCommentWrapperElement(commentModel);
-                var commentEl = self.$el.find('li.comment[data-id="'+commentModel.id+'"]');
-                commentEl.find('> .comment-wrapper').replaceWith(commentWrapper);
+                // Re-render the comment
+                self.reRenderComment(commentModel);
             }
 
             var error = function() {
@@ -683,6 +685,23 @@
 
             // Move cursor to end
             this.moveCursorToEnd(textarea);
+        },
+
+        upvoteComment: function(ev) {
+            var commentEl = $(ev.currentTarget).parents('li.comment').first();
+            var commentModel = commentEl.data().model;
+
+            var upvoteCount = commentModel.upvoteCount;
+            if(commentModel.userHasUpvoted) {
+                upvoteCount--;
+            } else {
+                upvoteCount++;
+            }
+
+            commentModel.userHasUpvoted = !commentModel.userHasUpvoted;
+            commentModel.upvoteCount = upvoteCount;
+
+            this.reRenderComment(commentModel);
         },
 
 
@@ -817,7 +836,7 @@
 
                     // Creating the reply-to badge
                     var replyToBadge = $('<input/>', {
-                        class: 'reply-to-badge highlight-font',
+                        class: 'reply-to-badge highlight-font-bold',
                         type: 'button'
                     });
                     var replyToName = '@' + parentModel.fullname;
@@ -901,7 +920,7 @@
             });
 
             // Highlight name for admins
-            if(commentModel.createdByAdmin) name.addClass('highlight-font');
+            if(commentModel.createdByAdmin) name.addClass('highlight-font-bold');
 
             // Show reply-to name if parent of parent exists
             if(commentModel.parent) {
@@ -975,9 +994,9 @@
 
             // Upvotes
             var upvotes = $('<span/>', {
-                class: 'action upvote',
+                class: 'action upvote' + (commentModel.userHasUpvoted ? ' highlight-font' : ''),
             }).append($('<span/>', {
-                text: 0,
+                text: commentModel.upvoteCount,
                 class: 'upvote-count'
             })).append(upvoteIcon);
 
@@ -1007,6 +1026,12 @@
             return commentWrapper;
         },
 
+        reRenderComment: function(commentModel) {
+            var commentWrapper = this.createCommentWrapperElement(commentModel);
+            var commentEl = this.$el.find('li.comment[data-id="'+commentModel.id+'"]');
+            commentEl.find('> .comment-wrapper').replaceWith(commentWrapper);
+        },
+
 
         // Styling
         // =======
@@ -1028,6 +1053,9 @@
 
             // Font highlight
             this.createCss('.jquery-comments .highlight-font {color: '
+                + this.options.highlightColor + ' !important;'
+                +'}');
+            this.createCss('.jquery-comments .highlight-font-bold {color: '
                 + this.options.highlightColor + ' !important;'
                 + 'font-weight: bold;'
                 +'}');

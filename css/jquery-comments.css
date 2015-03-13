@@ -309,23 +309,39 @@
 	font-size: 1em;
 }
 
-.jquery-comments ul#comment-list li.comment .wrapper .actions {
+.jquery-comments ul#comment-list li.comment .actions {
 	font-size: 0.9em;
 	color: #666;
 }
 
-.jquery-comments ul#comment-list li.comment .wrapper .actions .action {
+.jquery-comments ul#comment-list li.comment .actions .action {
 	cursor: pointer;
 	margin-left: 1em;
 	margin-right: 1em;
 }
 
-.jquery-comments ul#comment-list li.comment .wrapper .actions .action:first-child {
+.jquery-comments ul#comment-list li.comment .actions .action:first-child {
 	margin-left: 0;
 }
 
-.jquery-comments ul#comment-list li.comment .wrapper .actions .action.upvote i {
-	margin-left: .5em;
+.jquery-comments ul#comment-list li.comment .actions .action.upvote {
+	cursor: inherit;
+}
+
+.jquery-comments ul#comment-list li.comment .actions .action.upvote .upvote-count {
+	margin-right: .5em;
+}
+
+.jquery-comments ul#comment-list li.comment .actions .action.upvote .upvote-count:empty {
+	display: none;
+}
+
+.jquery-comments ul#comment-list li.comment .actions .action.upvote i {
+	cursor: pointer;
+}
+
+.jquery-comments ul#comment-list li.comment .actions .action.upvote:not(.highlight-font) i:hover {
+	color: #333;
 }
 
 
