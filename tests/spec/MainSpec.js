@@ -28,6 +28,11 @@ describe('Basic features', function() {
                 setTimeout(function() {
                     success();
                 }, 10);
+            },
+            upvoteComment: function(data, success, error) {
+                setTimeout(function() {
+                    success(data);
+                }, 10);
             }
         });
 
@@ -667,6 +672,57 @@ describe('Basic features', function() {
                 expect(outermostParent.find('.toggle-all').length).toBe(0);
                 expect(comments.commentsById[outermostParent.attr('data-id')].childs.length).toBe(2);
             });
+        });
+    });
+
+    describe('Upvoting', function() {
+
+        it('Should be able to upvote a comment', function() {
+            var commentId = 1;
+            var commentEl = $('li.comment[data-id="'+commentId+'"]');
+            var commentModel = comments.commentsById[commentId];
+
+            // Check the status before upvoting
+            var upvoteEl = commentEl.find('.upvote').first();
+            expect(commentModel.userHasUpvoted).toBe(false);
+            expect(upvoteEl.hasClass('highlight-font')).toBe(false);
+
+            expect(commentModel.upvoteCount).toBe(3);
+            expect(upvoteEl.find('.upvote-count').text()).toBe('3');
+
+            upvoteEl.click();
+
+            // Check status after upvoting
+            upvoteEl = commentEl.find('.upvote').first();
+            expect(commentModel.userHasUpvoted).toBe(true);
+            expect(upvoteEl.hasClass('highlight-font')).toBe(true);
+
+            expect(commentModel.upvoteCount).toBe(4);
+            expect(upvoteEl.find('.upvote-count').text()).toBe('4');
+        });
+
+        it('Should be able to revoke an upvote', function() {
+            var commentId = 3;
+            var commentEl = $('li.comment[data-id="'+commentId+'"]');
+            var commentModel = comments.commentsById[commentId];
+
+            // Check the status before upvoting
+            var upvoteEl = commentEl.find('.upvote').first();
+            expect(commentModel.userHasUpvoted).toBe(true);
+            expect(upvoteEl.hasClass('highlight-font')).toBe(true);
+
+            expect(commentModel.upvoteCount).toBe(2);
+            expect(upvoteEl.find('.upvote-count').text()).toBe('2');
+
+            upvoteEl.click();
+
+            // Check status after upvoting
+            upvoteEl = commentEl.find('.upvote').first();
+            expect(commentModel.userHasUpvoted).toBe(false);
+            expect(upvoteEl.hasClass('highlight-font')).toBe(false);
+
+            expect(commentModel.upvoteCount).toBe(1);
+            expect(upvoteEl.find('.upvote-count').text()).toBe('1');
         });
     });
 
