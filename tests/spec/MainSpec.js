@@ -16,17 +16,17 @@ describe('Basic features', function() {
             },
             postComment: function(data, success, error) {
                 setTimeout(function() {
-                    success(data)
+                    success(data);
                 }, 10);
             },
             putComment: function(data, success, error) {
                 setTimeout(function() {
-                    success(data)
+                    success(data);
                 }, 10);
             },
             deleteComment: function(data, success, error) {
                 setTimeout(function() {
-                    success()
+                    success();
                 }, 10);
             }
         });
