@@ -601,7 +601,7 @@
                 commentingField.find('.close').trigger('click');
 
                 // Re-render the comment
-                self.reRenderComment(commentModel);
+                self.reRenderComment(commentModel.id);
             }
 
             var error = function() {
@@ -688,20 +688,42 @@
         },
 
         upvoteComment: function(ev) {
+            var self = this;
             var commentEl = $(ev.currentTarget).parents('li.comment').first();
             var commentModel = commentEl.data().model;
 
-            var upvoteCount = commentModel.upvoteCount;
+            // Check whther user upvoted the comment or revoked the upvote
+            var previousUpvoteCount = commentModel.upvoteCount;
+            var newUpvoteCount;
             if(commentModel.userHasUpvoted) {
-                upvoteCount--;
+                newUpvoteCount = previousUpvoteCount - 1;
             } else {
-                upvoteCount++;
+                newUpvoteCount = previousUpvoteCount + 1;
             }
 
+            // Show changes immediatelly
             commentModel.userHasUpvoted = !commentModel.userHasUpvoted;
-            commentModel.upvoteCount = upvoteCount;
+            commentModel.upvoteCount = newUpvoteCount;
+            this.reRenderComment(commentModel.id);
 
-            this.reRenderComment(commentModel);
+            // Reverse mapping
+            var commentJSON = $.extend({}, commentModel);
+            commentJSON = this.applyExternalMappings(commentJSON);
+
+            var success = function(commentJSON) {
+                var commentModel = self.createCommentModel(commentJSON);
+                self.reRenderComment(commentModel.id);
+            }
+
+            var error = function() {
+
+                // Revert changes
+                commentModel.userHasUpvoted = !commentModel.userHasUpvoted;
+                commentModel.upvoteCount = previousUpvoteCount;
+                self.reRenderComment(commentModel.id);
+            }
+
+            this.options.upvoteComment(commentJSON, success, error);
         },
 
 
@@ -1026,7 +1048,8 @@
             return commentWrapper;
         },
 
-        reRenderComment: function(commentModel) {
+        reRenderComment: function(id) {
+            var commentModel = this.commentsById[id];
             var commentWrapper = this.createCommentWrapperElement(commentModel);
             var commentEl = this.$el.find('li.comment[data-id="'+commentModel.id+'"]');
             commentEl.find('> .comment-wrapper').replaceWith(commentWrapper);
