@@ -711,7 +711,7 @@
             // Show changes immediatelly
             commentModel.userHasUpvoted = !commentModel.userHasUpvoted;
             commentModel.upvoteCount = newUpvoteCount;
-            this.reRenderComment(commentModel.id);
+            this.reRenderUpvotes(commentModel.id);
 
             // Reverse mapping
             var commentJSON = $.extend({}, commentModel);
@@ -719,7 +719,7 @@
 
             var success = function(commentJSON) {
                 var commentModel = self.createCommentModel(commentJSON);
-                self.reRenderComment(commentModel.id);
+                self.reRenderUpvotes(commentModel.id);
             }
 
             var error = function() {
@@ -727,7 +727,7 @@
                 // Revert changes
                 commentModel.userHasUpvoted = !commentModel.userHasUpvoted;
                 commentModel.upvoteCount = previousUpvoteCount;
-                self.reRenderComment(commentModel.id);
+                self.reRenderUpvotes(commentModel.id);
             }
 
             this.options.upvoteComment(commentJSON, success, error);
@@ -1022,12 +1022,7 @@
             }
 
             // Upvotes
-            var upvotes = $('<span/>', {
-                class: 'action upvote' + (commentModel.userHasUpvoted ? ' highlight-font' : ''),
-            }).append($('<span/>', {
-                text: commentModel.upvoteCount,
-                class: 'upvote-count'
-            })).append(upvoteIcon);
+            var upvotes = this.createUpvoteElement(commentModel);
 
             // Edit
             var edit = $('<span/>', {
@@ -1055,6 +1050,27 @@
             return commentWrapper;
         },
 
+        createUpvoteElement: function(commentModel) {
+            // Upvote icon
+            var upvoteIcon = $('<i/>', {
+                class: 'fa fa-thumbs-up'
+            });
+            if(this.options.upvoteIconURL.length) {
+                upvoteIcon.css('background-image', 'url("'+this.options.upvoteIconURL+'")');
+                upvoteIcon.addClass('image');
+            }
+
+            // Upvotes
+            var upvoteEl = $('<span/>', {
+                class: 'action upvote' + (commentModel.userHasUpvoted ? ' highlight-font' : ''),
+            }).append($('<span/>', {
+                text: commentModel.upvoteCount,
+                class: 'upvote-count'
+            })).append(upvoteIcon);
+
+            return upvoteEl;
+        },
+
         reRenderComment: function(id) {
             var commentModel = this.commentsById[id];
             var commentWrapper = this.createCommentWrapperElement(commentModel);
@@ -1062,6 +1078,12 @@
             commentEl.find('> .comment-wrapper').replaceWith(commentWrapper);
         },
 
+        reRenderUpvotes: function(id) {
+            var commentModel = this.commentsById[id];
+            var upvotes = this.createUpvoteElement(commentModel);
+            var commentEl = this.$el.find('li.comment[data-id="'+commentModel.id+'"]');
+            commentEl.find('.upvote').first().replaceWith(upvotes);
+        },
 
         // Styling
         // =======
