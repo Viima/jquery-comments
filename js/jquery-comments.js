@@ -988,7 +988,7 @@
             var content = $('<div/>', {
                 class: 'content',
                 text: commentModel.content,
-            });
+            }).html(this.linkify(this.escape(commentModel.content)));
 
             // Edited timestamp
             if(commentModel.modified && commentModel.modified != commentModel.created) {
@@ -1216,7 +1216,7 @@
 
         getTextareaContentAsEscapedHTML: function(html) {
             // Escaping HTML except the new lines
-            var escaped = $('<pre/>').text(html).html();
+            var escaped = this.escape(html);
             return escaped.replace(/(?:\n)/g, '<br>');
         },
 
@@ -1243,6 +1243,45 @@
 
             // Focus
             el.focus();
+        },
+
+        escape: function(inputText) {
+            return $('<pre/>').text(inputText).html();
+        },
+
+        linkify: function(inputText) {
+            var replacedText, replacePattern1, replacePattern2, replacePattern3;
+
+            // URLs starting with http://, https://, file:// or ftp://
+            replacePattern1 = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
+            replacedText = inputText.replace(replacePattern1, '<a href="$1" target="_blank">$1</a>');
+
+            // URLs starting with "www." (without // before it, or it'd re-link the ones done above).
+            replacePattern2 = /(^|[^\/f])(www\.[\S]+(\b|$))/gim;
+
+            replacedText = replacedText.replace(replacePattern2, '$1<a href="http://$2" target="_blank">$2</a>');
+
+            // Change email addresses to mailto:: links.
+            replacePattern3 = /(([a-zA-Z0-9\-\_\.])+@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim;
+            replacedText = replacedText.replace(replacePattern3, '<a href="mailto:$1">$1</a>');
+
+            // If there are hrefs in the original text, let's split
+            // the text up and only work on the parts that don't have urls yet.
+            var count = inputText.match(/<a href/g) || [];
+
+            if(count.length > 0){
+                // Keep delimiter when splitting
+                var splitInput = inputText.split(/(<\/a>)/g);
+                for (var i = 0 ; i < splitInput.length ; i++){
+                    if(splitInput[i].match(/<a href/g) == null){
+                        splitInput[i] = splitInput[i].replace(replacePattern1, '<a href="$1" target="_blank">$1</a>').replace(replacePattern2, '$1<a href="http://$2" target="_blank">$2</a>').replace(replacePattern3, '<a href="mailto:$1">$1</a>');
+                    }
+                }
+                var combinedReplacedText = splitInput.join('');
+                return combinedReplacedText;
+            } else {
+                return replacedText;
+            }
         },
 
         applyInternalMappings: function(commentJSON) {
