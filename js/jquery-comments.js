@@ -376,11 +376,16 @@
             // Sort by popularity
             if(sortKey == 'popularity') {
                 comments.sort(function(commentA, commentB) {
-                    var childsOfA = self.commentsById[commentA.id].childs.length;
-                    var childsOfB = self.commentsById[commentB.id].childs.length;
+                    var pointsOfA = commentA.childs.length;
+                    var pointsOfB = commentB.childs.length;
 
-                    if(childsOfB != childsOfA) {
-                        return childsOfB - childsOfA;
+                    if(self.options.enableUpvoting) {
+                        pointsOfA += commentA.upvoteCount;
+                        pointsOfB += commentB.upvoteCount;
+                    }
+
+                    if(pointsOfB != pointsOfA) {
+                        return pointsOfB - pointsOfA;
 
                     // Return newer if popularity is the same
                     } else {
@@ -699,7 +704,7 @@
             var commentEl = $(ev.currentTarget).parents('li.comment').first();
             var commentModel = commentEl.data().model;
 
-            // Check whther user upvoted the comment or revoked the upvote
+            // Check whether user upvoted the comment or revoked the upvote
             var previousUpvoteCount = commentModel.upvoteCount;
             var newUpvoteCount;
             if(commentModel.userHasUpvoted) {
