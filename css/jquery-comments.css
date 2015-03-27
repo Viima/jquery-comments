@@ -426,6 +426,6 @@
 	display: none;
 }
 
-.jquery-comments ul#comment-list li.comment.edit .commenting-field {
-	padding: 0;	/* Parent element has the padding */
+.jquery-comments ul#comment-list li.comment.edit > .comment-wrapper .commenting-field {
+	padding: 0 !important;	/* Parent element has the padding */
 }
