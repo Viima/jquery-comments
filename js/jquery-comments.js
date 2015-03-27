@@ -678,7 +678,7 @@
             // Remove existing field
             var replyField = outermostParent.find('.child-comments > .commenting-field');
             if(replyField.length) replyField.remove();
-            var previousParentId = parseInt(replyField.find('.textarea').attr('data-parent'));
+            var previousParentId = replyField.find('.textarea').attr('data-parent');
 
             // Create the reply field (do not re-create)
             if(previousParentId != parentId) {            
