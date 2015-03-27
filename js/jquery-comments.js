@@ -436,6 +436,8 @@
             if(ev.keyCode == 13 && (ev.metaKey || ev.ctrlKey)) {
                 var el = $(ev.currentTarget);
                 el.siblings('.control-row').find('.save').trigger('click');
+                ev.stopPropagation();
+                ev.preventDefault();
             }
         },
 
