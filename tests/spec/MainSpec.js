@@ -429,12 +429,12 @@ describe('Basic features', function() {
 
         beforeEach(function() {
             ownComment = $('li.comment[data-id=3]');
-            editButton = ownComment.find('span.edit');
+            editButton = ownComment.find('.edit');
         });
 
         it('Should show the edit button only for own comments', function() {
             expect(editButton.length).toBe(1);
-            expect($('span.edit').length).toBe(3);
+            expect($('.edit').length).toBe(3);
         });
 
         it('Should be able to open and close the edit field', function() {
@@ -503,7 +503,7 @@ describe('Basic features', function() {
                 var reply = ownComment.find('.child-comments').children().last();
                 var replyId = reply.data().model.id;
 
-                reply.find('span.edit').click();
+                reply.find('.edit').click();
                 replyField = reply.find('.commenting-field');
                 var textarea = replyField.find('.textarea');
                 var saveButton = replyField.find('.save');
@@ -557,7 +557,7 @@ describe('Basic features', function() {
 
         it('Should show the delete button for own comments', function() {
             var ownComment = $('li.comment[data-id=3]');
-            var editButton = ownComment.find('span.edit');
+            var editButton = ownComment.find('.edit');
 
             editButton.click();
 
@@ -574,7 +574,7 @@ describe('Basic features', function() {
             expect(childComments.length).toBe(2);
             var commentCountBeforeDelete = comments.getComments().length;
 
-            var editButton = ownComment.find('span.edit');
+            var editButton = ownComment.find('.edit');
             editButton.click();
 
             wait(function() {
@@ -610,7 +610,7 @@ describe('Basic features', function() {
             expect(toggleAllButton.text()).toBe('View all 5 replies');
             expect(comments.commentsById[outermostParent.attr('data-id')].childs.length).toBe(5);
 
-            var editButton = ownComment.find('span.edit');
+            var editButton = ownComment.find('.edit');
             editButton.click();
 
             wait(function() {
@@ -645,7 +645,7 @@ describe('Basic features', function() {
             expect(toggleAllButton.text()).toBe('View all 5 replies');
             expect(comments.commentsById[outermostParent.attr('data-id')].childs.length).toBe(5);
 
-            var editButton = ownComment.find('span.edit');
+            var editButton = ownComment.find('.edit');
             editButton.click();
 
             wait(function() {
@@ -784,7 +784,7 @@ describe('Basic features', function() {
 
     function testEditingComment(id) {
         var ownComment = $('li.comment[data-id='+id+']');
-        var editButton = ownComment.find('span.edit').first();
+        var editButton = ownComment.find('.edit').first();
 
         var ownCommentBefore = ownComment.clone();
         var ownCommentModelBefore = $.extend({},comments.commentsById[id]);

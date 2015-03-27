@@ -110,9 +110,9 @@
 
             // Comment
             'click li.comment ul.child-comments .toggle-all': 'toggleReplies',
-            'click li.comment span.reply': 'replyButtonClicked',
-            'click li.comment span.edit': 'editButtonClicked',
-            'click li.comment span.upvote' : 'upvoteComment',
+            'click li.comment button.reply': 'replyButtonClicked',
+            'click li.comment button.edit': 'editButtonClicked',
+            'click li.comment button.upvote' : 'upvoteComment',
         },
 
 
@@ -1043,7 +1043,7 @@
             });
 
             // Reply
-            var reply = $('<span/>', {
+            var reply = $('<button/>', {
                 class: 'action reply',
                 text: this.options.textFormatter(this.options.replyText),
             });
@@ -1061,7 +1061,7 @@
             var upvotes = this.createUpvoteElement(commentModel);
 
             // Edit
-            var edit = $('<span/>', {
+            var edit = $('<button/>', {
                 class: 'action edit',
                 text: this.options.textFormatter(this.options.editText),
             });
@@ -1097,7 +1097,7 @@
             }
 
             // Upvotes
-            var upvoteEl = $('<span/>', {
+            var upvoteEl = $('<button/>', {
                 class: 'action upvote' + (commentModel.userHasUpvoted ? ' highlight-font' : ''),
             }).append($('<span/>', {
                 text: commentModel.upvoteCount,

@@ -3,14 +3,23 @@
 	font-family: inherit;
 }
 
-.jquery-comments .textarea, .jquery-comments input, .jquery-comments select {
-  margin: 0;
-  vertical-align: top;
-  border-radius: 0;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  -ms-appearance: none;
-  appearance: none;
+.jquery-comments .textarea, .jquery-comments input, .jquery-comments button {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	-ms-appearance: none;
+	appearance: none;
+
+	vertical-align: top;
+	border-radius: 0;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	background: rgba(0, 0, 0, 0);
+}
+
+.jquery-comments button {
+	vertical-align: inherit;
 }
 
 .jquery-comments [contentEditable=true]:empty:not(:focus):before{
@@ -320,17 +329,14 @@
 	font-size: 1em;
 }
 
-.jquery-comments ul#comment-list li.comment .actions {
-	font-size: 0.9em;
-	color: #666;
-}
-
 .jquery-comments ul#comment-list li.comment .actions .action {
 	display: inline-block;
 	cursor: pointer;
 	margin-left: 1em;
 	margin-right: 1em;
 	line-height: 1.5em;
+	font-size: 0.9em;
+	color: #666;
 }
 
 .jquery-comments ul#comment-list li.comment .actions .action:first-child {
