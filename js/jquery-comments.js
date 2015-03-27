@@ -16,6 +16,7 @@
             spinnerIconURL: '',
             upvoteIconURL: '',
             replyIconURL: '',
+            noCommentsIconURL: '',
 
             // Strings to be formatted (for example localization)
             textareaPlaceholderText: 'Add a comment',
@@ -31,6 +32,7 @@
             deleteText: 'Delete',
             viewAllRepliesText: 'View all __replyCount__ replies',
             hideRepliesText: 'Hide replies',
+            noCommentsText: 'No comments',
             textFormatter: function(text) {
                 return text;
             },
@@ -264,8 +266,7 @@
             });
 
             // Appned comment list to DOM and remove spinner
-            this.$el.find('> .spinner').remove();
-            this.$el.append(commentList);
+            this.$el.find('> .spinner').replaceWith(commentList);
 
             this.options.refresh();
         },
@@ -767,8 +768,23 @@
                 spinner.css('background-image', 'url("'+this.options.spinnerIconURL+'")');
                 spinner.addClass('image');
             }
-
             this.$el.append(spinner);
+
+
+            // "No comments" placeholder
+            var noComments = $('<div/>', {
+                class: 'no-comments',
+                text: this.options.textFormatter(this.options.noCommentsText)
+            });
+            var noCommentsIcon = $('<i/>', {
+                class: 'fa fa-comments fa-2x',
+            });
+            if(this.options.noCommentsIconURL.length) {
+                noCommentsIcon.css('background-image', 'url("'+this.options.noCommentsIconURL+'")');
+                noCommentsIcon.addClass('image');
+            }
+            noComments.prepend($('<br/>')).prepend(noCommentsIcon);
+            this.$el.append(noComments);
         },
 
         createProfilePictureElement: function(src) {
