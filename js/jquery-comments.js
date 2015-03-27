@@ -548,7 +548,10 @@
             var closeButton = $(ev.currentTarget);
 
             // Remove edit class from comment if user was editing the comment
-            closeButton.parents('li.comment').first().removeClass('edit');
+            var textarea = closeButton.siblings('.textarea');
+            if(textarea.attr('data-comment')) {
+                closeButton.parents('li.comment').first().removeClass('edit');
+            }
 
             // Remove the field
             var commentingField = closeButton.parents('.commenting-field').first();
