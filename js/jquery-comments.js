@@ -81,6 +81,9 @@
         },
 
         events: {
+            // Save comment on keydown
+            'keydown [contenteditable]' : 'saveOnKeydown',
+
             // Listening changes in contenteditable fields (due to input event not working with IE)
             'focus [contenteditable]' : 'saveEditableContent',
             'keyup [contenteditable]' : 'checkEditableContentForChange',
@@ -427,6 +430,14 @@
 
         // Event handlers
         // ==============
+
+        saveOnKeydown: function(ev) {
+            // Save comment on cmd/ctrl + enter
+            if(ev.keyCode == 13 && (ev.metaKey || ev.ctrlKey)) {
+                var el = $(ev.currentTarget);
+                el.siblings('.control-row').find('.save').trigger('click');
+            }
+        },
 
         saveEditableContent: function(ev) {
             var el = $(ev.currentTarget);
