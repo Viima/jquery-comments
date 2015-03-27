@@ -561,6 +561,8 @@
                 fullname: this.options.textFormatter(this.options.youText),
                 profilePictureURL: this.options.profilePictureURL,
                 createdByCurrentUser: true,
+                upvoteCount: 0,
+                userHasUpvoted: false,
             }
 
             // Reverse mapping
