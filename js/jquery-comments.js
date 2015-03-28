@@ -95,7 +95,7 @@
             'click .navigation li' : 'navigationElementClicked',
 
             // Main comenting field
-            'focus .commenting-field.main .textarea': 'showMainCommentingField',
+            'click .commenting-field.main .textarea': 'showMainCommentingField',
             'click .commenting-field.main .close' : 'hideMainCommentingField',
             
             // All commenting fields
@@ -473,6 +473,7 @@
             var mainTextarea = $(ev.currentTarget);
             mainTextarea.siblings('.control-row').show();
             mainTextarea.parent().find('.close').show();
+            mainTextarea.focus();
         },
 
         hideMainCommentingField: function(ev) {
