@@ -926,7 +926,6 @@
             var popular = $('<li/>', {
                 text: this.options.textFormatter(this.options.popularText),
                 'data-sort-key': 'popularity',
-                 class: 'active',
             });
             
             // Newest
@@ -941,7 +940,11 @@
                  'data-sort-key': 'oldest',
             });
 
-            navigationEl.append(popular).append(newest).append(oldest);
+            var enableSortingByPopulairty = this.options.enableReplying || this.options.enableUpvoting;
+            if(enableSortingByPopulairty) navigationEl.append(popular);
+            navigationEl.append(newest).append(oldest);
+
+            navigationEl.children().first().addClass('active');
             return navigationEl;
         },
 
