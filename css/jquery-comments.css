@@ -107,6 +107,7 @@
 	width: 1em;
 	height: 1em;
 	right: 0;
+	z-index: 10;
 	position: absolute;
 	border: .5em solid rgba(0,0,0,0);
 	box-sizing: content-box;
