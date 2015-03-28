@@ -1233,7 +1233,9 @@
                 setRows(rowCount);
                 rowCount++;
                 var isAreaScrollable = textarea[0].scrollHeight > textarea.outerHeight();
-            } while(isAreaScrollable && rowCount <= this.options.textareaMaxRows);
+                var maxRowsUsed = this.options.textareaMaxRows == false ? 
+                    false : rowCount > this.options.textareaMaxRows;
+            } while(isAreaScrollable && !maxRowsUsed);
         },
 
         clearTextarea: function(textarea) {
