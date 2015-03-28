@@ -193,12 +193,12 @@ describe('Basic features', function() {
             expect(mainTextarea.outerHeight()).toBeLessThan(2*lineHeight);
         });
 
-        it('Should enable control row on focus', function() {
+        it('Should enable control row on click', function() {
             var controlRow = mainCommentingField.find('.control-row');;
 
             // Show on focus
             expect(controlRow.is(':visible')).toBe(false);
-            mainTextarea.trigger('focus').focus();
+            mainTextarea.trigger('click');
             expect(controlRow.is(':visible')).toBe(true);
 
             // Hide when clicking close icon
@@ -213,7 +213,7 @@ describe('Basic features', function() {
             expect(sendButton.hasClass('enabled')).toBe(false);
             
             // Show on focus
-            mainTextarea.trigger('focus').focus();
+            mainTextarea.trigger('click');
             expect(sendButton.is(':visible')).toBe(true);
             expect(sendButton.hasClass('enabled')).toBe(false);
 
