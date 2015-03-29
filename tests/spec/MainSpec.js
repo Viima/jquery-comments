@@ -82,7 +82,8 @@ describe('Basic features', function() {
         });
 
         // Check edited timestamps
-        expect($('li.comment[data-id=9] .content .edited').text()).toBe('Edited 1/10/2015');
+        var editedDateFromUI = new Date($('li.comment[data-id=9] .content .edited').attr('data-original'));
+        compareDates(editedDateFromUI, new Date('1/10/2015'));
 
         // Check that other comments do not have the field
         $('li.comment').each(function(index, el) {
@@ -756,7 +757,7 @@ describe('Basic features', function() {
 
         // Get content without edited timestamp
         var content = commentEl.find('.content').first().clone().children().remove().end().text();
-        var dateUI = new Date(commentEl.find('time').first().text());
+        var dateUI = new Date(commentEl.find('time').first().attr('data-original'));
 
         // Model that we are testing against
         var commentModel = commentEl.data().model;
@@ -768,9 +769,13 @@ describe('Basic features', function() {
 
         // Check time
         var modelCreatedDate = new Date(commentModel.created);
-        expect(dateUI.getDate()).toBe(modelCreatedDate.getDate());
-        expect(dateUI.getMonth()).toBe(modelCreatedDate.getMonth());
-        expect(dateUI.getFullYear()).toBe(modelCreatedDate.getFullYear());
+        compareDates(dateUI, modelCreatedDate);
+    }
+
+    function compareDates(dateA, dateB) {
+        expect(dateA.getDate()).toBe(dateB.getDate());
+        expect(dateA.getMonth()).toBe(dateB.getMonth());
+        expect(dateA.getFullYear()).toBe(dateB.getFullYear());
     }
 
     function getOrder(elements) {

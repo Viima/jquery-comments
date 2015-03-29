@@ -573,7 +573,7 @@
             // Disable send button while request is pending
             sendButton.removeClass('enabled');
 
-            var time = new Date().getTime();
+            var time = new Date().toISOString();
             var commentJSON = {
                 id: 'c' +  (this.getComments().length + 1),   // Temporary id
                 parent: textarea.attr('data-parent') || null,
@@ -988,7 +988,8 @@
 
             // Time
             var time = $('<time/>', {
-                text: this.options.timeFormatter(commentModel.created)
+                text: this.options.timeFormatter(commentModel.created),
+                'data-original': commentModel.created
             });
 
             // Name
@@ -1039,7 +1040,8 @@
                 var editedTime = this.options.timeFormatter(commentModel.modified);
                 var edited = $('<span/>', {
                     class: 'edited',
-                    text: this.options.textFormatter(this.options.editedText) + ' ' + editedTime
+                    text: this.options.textFormatter(this.options.editedText) + ' ' + editedTime,
+                    'data-original': commentModel.modified
                 });
                 content.append(edited);
             }
