@@ -208,7 +208,7 @@
             }
 
             var error = function() {
-                //TODO: implement
+                success([]);
             }
 
             this.options.getComments(success, error);
@@ -486,6 +486,7 @@
 
             mainControlRow.hide();
             closeButton.hide();
+            mainTextarea.blur();
         },
 
         increaseTextareaHeight: function(ev) {
