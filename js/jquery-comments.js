@@ -232,6 +232,10 @@
             }
         },
 
+        updateCommentModel: function(commentModel) {
+            $.extend(this.commentsById[commentModel.id], commentModel);
+        },
+
         render: function() {
             var self = this;
 
@@ -628,7 +632,7 @@
 
                 // Delete childs array from new comment model since it doesn't need an update
                 delete commentModel['childs'];
-                $.extend(self.commentsById[commentModel.id], commentModel);
+                self.updateCommentModel(commentModel);
 
                 // Close the editing field
                 commentingField.find('.close').trigger('click');
@@ -745,6 +749,7 @@
 
             var success = function(commentJSON) {
                 var commentModel = self.createCommentModel(commentJSON);
+                self.updateCommentModel(commentModel);
                 self.reRenderUpvotes(commentModel.id);
             }
 
