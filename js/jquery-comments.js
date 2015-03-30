@@ -1042,7 +1042,7 @@
             // Edited timestamp
             if(commentModel.modified && commentModel.modified != commentModel.created) {
                 var editedTime = this.options.timeFormatter(commentModel.modified);
-                var edited = $('<span/>', {
+                var edited = $('<time/>', {
                     class: 'edited',
                     text: this.options.textFormatter(this.options.editedText) + ' ' + editedTime,
                     'data-original': commentModel.modified
