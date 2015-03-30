@@ -151,7 +151,7 @@ describe('Basic features', function() {
             expect(mainTextarea.outerHeight()).toBeLessThan(2*lineHeight);
 
             // Should have 2 rows
-            mainTextarea.trigger('focus').focus();
+            mainTextarea.trigger('click');
             expect(mainTextarea.outerHeight()).toBeGreaterThan(2*lineHeight);
             expect(mainTextarea.outerHeight()).toBeLessThan(3*lineHeight);
 
@@ -197,7 +197,7 @@ describe('Basic features', function() {
         it('Should enable control row on click', function() {
             var controlRow = mainCommentingField.find('.control-row');;
 
-            // Show on focus
+            // Show on click
             expect(controlRow.is(':visible')).toBe(false);
             mainTextarea.trigger('click');
             expect(controlRow.is(':visible')).toBe(true);
@@ -213,7 +213,7 @@ describe('Basic features', function() {
             expect(sendButton.is(':visible')).toBe(false);
             expect(sendButton.hasClass('enabled')).toBe(false);
             
-            // Show on focus
+            // Show on click
             mainTextarea.trigger('click');
             expect(sendButton.is(':visible')).toBe(true);
             expect(sendButton.hasClass('enabled')).toBe(false);
@@ -236,8 +236,6 @@ describe('Basic features', function() {
     
         it('Should able to add a new main level comment', function() {
             var newCommentText = 'New main level comment\nwith a new line';
-            
-            mainTextarea.trigger('focus').focus();
             mainTextarea.html(newCommentText).trigger('input');
 
             var commentCount = comments.getComments().length;

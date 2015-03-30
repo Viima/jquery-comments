@@ -99,7 +99,7 @@
             'click .commenting-field.main .close' : 'hideMainCommentingField',
             
             // All commenting fields
-            'focus .commenting-field .textarea' : 'increaseTextareaHeight',
+            'click .commenting-field .textarea' : 'increaseTextareaHeight',
             'change .commenting-field .textarea' : 'increaseTextareaHeight textareaContentChanged',
             'click .commenting-field:not(.main) .close' : 'removeCommentingField',
 
@@ -717,9 +717,6 @@
             // Escaping HTML
             textarea.append(this.getTextareaContentAsEscapedHTML(commentModel.content));
 
-            // Trigger input so that the textarea will react to the new content
-            textarea.trigger('input');
-
             // Move cursor to end
             this.moveCursorToEnd(textarea);
         },
@@ -1274,6 +1271,9 @@
 
         moveCursorToEnd: function(el) {
             el = $(el)[0];
+
+            // Trigger input to adjust size
+            $(el).trigger('input');
 
             // Scroll to bottom
             $(el).scrollTop(el.scrollHeight);
