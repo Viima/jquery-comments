@@ -39,12 +39,8 @@
 }
 
 .jquery-comments .spinner {
-	display: block;
-	margin-left: auto;
-	margin-right: auto;
-	width: 2em;
-	height: 2em;
 	font-size: 2em;
+	text-align: center;
 	padding: 0;
 }
 

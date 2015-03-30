@@ -786,13 +786,17 @@
 
 
             // Loading spinner
-            var spinner = $('<i/>', {
-                class: 'fa fa-spinner fa-spin spinner',
+            var spinner = $('<div/>', {
+                class: 'spinner',
+            });
+            var spinnerIcon = $('<i/>', {
+                class: 'fa fa-spinner fa-spin',
             });
             if(this.options.spinnerIconURL.length) {
-                spinner.css('background-image', 'url("'+this.options.spinnerIconURL+'")');
-                spinner.addClass('image');
+                spinnerIcon.css('background-image', 'url("'+this.options.spinnerIconURL+'")');
+                spinnerIcon.addClass('image');
             }
+            spinner.html(spinnerIcon);
             this.$el.append(spinner);
 
 
