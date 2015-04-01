@@ -273,7 +273,8 @@
             });
 
             // Appned comment list to DOM and remove spinner
-            this.$el.find('> .spinner').replaceWith(commentList);
+            this.$el.find('> .spinner').remove();
+            this.$el.find('.no-comments').before(commentList);
 
             this.options.refresh();
         },
