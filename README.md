@@ -1,10 +1,10 @@
 # jquery-comments
-jquery-comments is a jQuery plugin to provide commenting features to any web application with an existing backend. It provides all the UI functionalities with callbacks where you define what you want to do with the data. The library is highly customizable and easy to integrate through various settings.
+jquery-comments is a jQuery plugin for implementing an out-of-the-box commenting solution to any web application with an existing backend. It provides all the UI functionalities and ties them to callbacks that let you easily define what you want to do with the data. The library is highly customizable and very easy to integrate thanks to a wide variety of settings.
 
 ![Screenshot of jquery-comments](screenshot.png?raw=true "Screenshot of jquery-comments")
 
 ###Features
-- Commenting, replying, editing, deleting and upvoting
+- Commenting, replying (nested comments), editing, deleting and upvoting
 - Enabling/disabling functionalities
 - Localization
 - Time formatting
