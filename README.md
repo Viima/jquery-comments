@@ -1,3 +1,15 @@
 # jquery-comments
 
-Version numbering follows [Semantic Versioning](http://semver.org/).
+<Desc + image>
+
+Demo
+
+Quick start
+
+Dependencies
+
+Documentation
+
+Maintainers
+
+Copyright and license
