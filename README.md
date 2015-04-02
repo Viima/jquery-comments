@@ -18,7 +18,7 @@ http://viima.github.io/jquery-comments/demo/
 
 ###Quick start
 **1) Add the following to your HTML file**
-```
+```html
 <link rel="stylesheet" type="text/css" href="css/jquery-comments.css">
 <link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 
@@ -27,7 +27,7 @@ http://viima.github.io/jquery-comments/demo/
 ```
 
 **2) Initialize the library**
-```
+```javascript
 $('#comments-container').comments({
     profilePictureURL: 'https://app.viima.com/static/media/user_profiles/user-icon.png',
     getComments: function(success, error) {
@@ -53,7 +53,7 @@ $('#comments-container').comments({
 });
 ```
 If you are not using Font Awesome for icons, you should replace the icons with custom images by overriding following options when initializing the library:
-```
+```javascript
 spinnerIconURL: 'img/spinner.gif',
 upvoteIconURL: 'img/upvote-icon.png',
 replyIconURL: 'img/reply-icon.png',
