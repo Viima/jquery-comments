@@ -10,6 +10,7 @@ jquery-comments is a jQuery based plugin to provide commenting features to any w
 - Time formatting
 - Field mappings
 - Callbacks
+- Fully responsive and mobile compatible
 - Miscellaneous settings
 
 ###Demo
@@ -30,20 +31,27 @@ http://viima.github.io/jquery-comments/demo/
 $('#comments-container').comments({
     profilePictureURL: 'https://app.viima.com/static/media/user_profiles/user-icon.png',
     getComments: function(success, error) {
-        success(commentsArray);
+        // Call the success function with array of comments as parameter
+        // after you have fetched the comments from your server
+        success(commentsArray);  // Call success or error function based on the response from server
     },
     putComment: function(commentJSON, success, error) {
-        success(commentJSON);
+        // Update the changed comment to your server here,
+        // commentJSON contains the model with changed fields
+        success(commentJSON);   // Call success or error function based on the response from server
     },
     deleteComment: function(commentJSON, success, error) {
-        success();
+        // Delete the comment from your server here,
+        // commentJSON contains the deleted model
+        success();  // Call success or error function based on the response from server
     },
     upvoteComment: function(commentJSON, success, error) {
-        success(commentJSON);
+        // Create an upvote to your server here
+        success(commentJSON);    // Call success or error function based on the response from server
     }
 });
 ```
-If you are not using Font Awesome for icons, you should override the icons with custom images by following options:
+If you are not using Font Awesome for icons, you should replace the icons with custom images by overriding following options when initializing the library:
 ```
 spinnerIconURL: 'img/spinner.gif',
 upvoteIconURL: 'img/upvote-icon.png',
@@ -61,7 +69,7 @@ http://viima.github.io/jquery-comments
 ###Maintainers
 - Joona Tykkyläinen, Viima Solutions Oy
 
-###Brwoser support
+###Browser support
 IE9+ and all modern browsers
 
 ###Copyright and license
