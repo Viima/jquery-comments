@@ -329,6 +329,11 @@
 	font-size: 1em;
 }
 
+.jquery-comments ul#comment-list li.comment .actions > * {
+	color: #999;
+	font-weight: bold;
+}
+
 .jquery-comments ul#comment-list li.comment .actions .action {
 	display: inline-block;
 	cursor: pointer;
@@ -336,7 +341,6 @@
 	margin-right: 1em;
 	line-height: 1.5em;
 	font-size: 0.9em;
-	color: #666;
 }
 
 .jquery-comments ul#comment-list li.comment .actions .action:first-child {
@@ -359,8 +363,9 @@
 	cursor: pointer;
 }
 
+.jquery-comments ul#comment-list li.comment .actions .action:not(.upvote):hover,
 .jquery-comments ul#comment-list li.comment .actions .action.upvote:not(.highlight-font) i:hover {
-	color: #333;
+	color: #666;
 }
 
 
