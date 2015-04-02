@@ -1,0 +1,436 @@
+.jquery-comments * {
+	box-sizing: border-box;
+	font-family: inherit;
+}
+
+.jquery-comments .textarea, .jquery-comments input, .jquery-comments button {
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	-ms-appearance: none;
+	appearance: none;
+
+	vertical-align: top;
+	border-radius: 0;
+	margin: 0;
+	padding: 0;
+	border: 0;
+	outline: 0;
+	background: rgba(0, 0, 0, 0);
+}
+
+.jquery-comments button {
+	vertical-align: inherit;
+}
+
+.jquery-comments [contentEditable=true]:empty:not(:focus):before{
+    content:attr(data-placeholder);
+    color: #CCC;
+    position: inherit;
+}
+
+.jquery-comments i.fa {
+	width: 1em;
+	height: 1em;
+	background-size: cover;
+}
+
+.jquery-comments i.fa.image:before {
+	content: "";
+}
+
+.jquery-comments .spinner {
+	font-size: 2em;
+	text-align: center;
+	padding: 0;
+}
+
+.jquery-comments ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.jquery-comments .profile-picture {
+	float: left;
+	width: 3.6em;
+	height: 3.6em;
+	max-width: 50px;
+	max-height: 50px;
+}
+
+.jquery-comments .profile-picture.round {
+	border-radius: 50%;
+}
+
+.jquery-comments .commenting-field.main .profile-picture {
+	margin-bottom: 1em;
+}
+
+.jquery-comments .textarea-wrapper {
+	overflow: hidden;
+	padding-left: 15px;
+	position: relative;
+}
+
+.jquery-comments .textarea-wrapper:before {
+	content: " ";
+	position: absolute;
+	border: 5px solid #D5D5D5;
+	left: 5px;
+	top: 0;
+	width: 10px;
+	height: 10px;
+	box-sizing: border-box;
+	border-bottom-color: rgba(0, 0, 0, 0);
+	border-left-color: rgba(0, 0, 0, 0);
+}
+
+.jquery-comments .textarea-wrapper:after {
+	content: " ";
+	position: absolute;
+	border: 7px solid #FFF;
+	left: 7px;
+	top: 1px;
+	width: 10px;
+	height: 10px;
+	box-sizing: border-box;
+	border-bottom-color: rgba(0, 0, 0, 0);
+	border-left-color: rgba(0, 0, 0, 0);
+}
+
+.jquery-comments .textarea-wrapper .close {
+	cursor: pointer;
+	width: 1em;
+	height: 1em;
+	right: 0;
+	z-index: 10;
+	position: absolute;
+	border: .5em solid rgba(0,0,0,0);
+	box-sizing: content-box;
+	font-size: inherit;
+	opacity: 0.5;
+
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+.jquery-comments .textarea-wrapper .close:hover {
+	opacity: 1;
+}
+
+.jquery-comments:not(.mobile) .scrollable .textarea-wrapper .close {
+	margin-right: 15px;	/* Because of scrollbar */
+}
+
+.jquery-comments .textarea-wrapper .close span {
+	background: #999;
+	width: 25%;
+	left: 37.5%;
+	height: 100%;
+	position: absolute;
+	-ms-transform: rotate(45deg);
+	-webkit-transform: rotate(45deg);
+	transform: rotate(45deg);
+}
+
+.jquery-comments .textarea-wrapper .close .right {
+	-ms-transform: rotate(-45deg);
+	-webkit-transform: rotate(-45deg);
+	transform: rotate(-45deg);
+}
+
+.jquery-comments .textarea-wrapper .textarea {
+	margin: 0;
+	outline: 0;
+	overflow-y: auto;
+	cursor: text;
+
+	border: 1px solid #CCC;;
+	background: #FFF;
+	font-size: 1em;
+	line-height: 1.45em;
+	padding: .25em .8em;
+	padding-right: 2em;
+}
+
+.jquery-comments .textarea-wrapper .textarea * {
+	margin: 0;
+	padding: 0;
+}
+
+.jquery-comments:not(.mobile) .scrollable .textarea-wrapper .textarea {
+	padding-right: calc(2em + 15px);	/* Because of scrollbar */
+}
+
+.jquery-comments .textarea-wrapper .textarea .reply-to-badge {
+	background: #EEE;
+	border: 1px solid #DDD;
+	margin-right: .5em;
+	vertical-align: baseline;
+	line-height: 1.4em;
+	padding: 0 .5em;
+	font-size: .8em;
+}
+
+.jquery-comments .textarea-wrapper .control-row > span {
+	float: right;
+
+	color: #FFF;
+	padding: 0 1em;
+	font-size: 1em;
+	line-height: 1.6em;
+	margin-top: .4em;
+	border: 1px solid rgba(0, 0, 0, 0);
+	opacity: .5;
+}
+
+.jquery-comments .textarea-wrapper .control-row > span:not(:first-child) {
+	margin-right: .5em;
+}
+
+.jquery-comments .textarea-wrapper .control-row > span.enabled {
+	opacity: 1;
+	cursor: pointer;
+}
+
+.jquery-comments .textarea-wrapper .control-row > span.enabled:hover {
+	opacity: .9;
+}
+
+.jquery-comments ul.navigation {
+	clear: both;
+
+	color: #CCC;
+	border-bottom: 2px solid #CCC;
+	margin-bottom: 1em;
+	line-height: 2em;
+	font-size: 1em;
+}
+
+.jquery-comments ul.navigation li {
+	display: inline-block;
+	position: relative;
+	padding: 0 1em;
+	cursor: pointer;
+	font-weight: bold;
+}
+
+.jquery-comments ul.navigation li.active, .jquery-comments ul.navigation li:hover {
+	color: #000;
+}
+
+.jquery-comments ul.navigation li.active:after {
+	content: " ";
+	display: block;
+	right: 0;
+	height: 2px;
+	background: #000;
+	position: absolute;
+	bottom: -2px;
+	left: 0;
+}
+
+.jquery-comments .no-comments {
+	display: none;
+
+	text-align: center;
+	font-size: 1.5em;
+	color: #CCC;
+}
+
+.jquery-comments ul#comment-list:empty ~ .no-comments {
+	display: inherit;
+}
+
+.jquery-comments ul#comment-list li.comment {
+	clear: both;
+}
+
+.jquery-comments ul#comment-list li.comment .comment-wrapper,
+.jquery-comments ul#comment-list li.toggle-all,
+.jquery-comments ul#comment-list li.comment .commenting-field {
+	padding: .5em;
+}
+
+.jquery-comments ul#comment-list li.comment .comment-wrapper {
+	border-top: 1px solid #DDD;
+	overflow: hidden;
+}
+
+.jquery-comments ul#comment-list > li.comment:first-child > .comment-wrapper {
+	border-top: none;
+}
+
+.jquery-comments ul#comment-list li.comment .comment-wrapper > .profile-picture {
+	margin-right: .5em;
+}
+
+.jquery-comments ul#comment-list li.comment time {
+	float: right;
+	line-height: 1.4em;
+	margin-left: .5em;
+	font-size: 0.8em;
+	color: #666;
+}
+
+.jquery-comments ul#comment-list li.comment .name {
+	line-height: 1.4em;
+	font-weight: bold;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.jquery-comments ul#comment-list li.comment .name .reply-to {
+	color: #999;
+	font-size: .8em;
+	font-weight: normal;
+	vertical-align: top;
+}
+
+.jquery-comments ul#comment-list li.comment .name .reply-to i {
+	margin-left: .5em;
+	margin-right: .25em;
+}
+
+.jquery-comments ul#comment-list li.comment .wrapper{
+	line-height: 1.3em;
+	overflow: hidden;
+}
+
+.jquery-comments.mobile ul#comment-list li.comment .child-comments li.comment .wrapper{
+	overflow: visible;
+}
+
+
+/* Content */
+.jquery-comments ul#comment-list li.comment .wrapper .content {
+	white-space: pre-line;
+	word-break: break-word;
+}
+
+.jquery-comments ul#comment-list li.comment .wrapper .content time.edited {
+	float: inherit;
+	margin: 0;
+	font-size: .9em;
+	font-style: italic;
+	color: #999;
+}
+
+.jquery-comments ul#comment-list li.comment .wrapper .content time.edited:before {
+	content: " - ";
+}
+
+
+/* Actions */
+.jquery-comments.mobile ul#comment-list li.comment .actions {
+	font-size: 1em;
+}
+
+.jquery-comments ul#comment-list li.comment .actions > * {
+	color: #999;
+	font-weight: bold;
+}
+
+.jquery-comments ul#comment-list li.comment .actions .action {
+	display: inline-block;
+	cursor: pointer;
+	margin-left: 1em;
+	margin-right: 1em;
+	line-height: 1.5em;
+	font-size: 0.9em;
+}
+
+.jquery-comments ul#comment-list li.comment .actions .action:first-child {
+	margin-left: 0;
+}
+
+.jquery-comments ul#comment-list li.comment .actions .action.upvote {
+	cursor: inherit;
+}
+
+.jquery-comments ul#comment-list li.comment .actions .action.upvote .upvote-count {
+	margin-right: .5em;
+}
+
+.jquery-comments ul#comment-list li.comment .actions .action.upvote .upvote-count:empty {
+	display: none;
+}
+
+.jquery-comments ul#comment-list li.comment .actions .action.upvote i {
+	cursor: pointer;
+}
+
+.jquery-comments ul#comment-list li.comment .actions .action:not(.upvote):hover,
+.jquery-comments ul#comment-list li.comment .actions .action.upvote:not(.highlight-font) i:hover {
+	color: #666;
+}
+
+
+/* Child comments */
+.jquery-comments ul#comment-list li.comment .child-comments > *:before { /* Margin for second level content */
+	content: "";
+	height: 1px;
+	float: left;
+
+	width: calc(3.6em + .5em);	/* Profile picture width plus margin */
+	max-width: calc(50px + .5em);	/* Profile picture max width plus margin */
+}
+
+.jquery-comments ul#comment-list li.comment .child-comments .profile-picture {
+	width: 2.4em;
+	height: 2.4em;
+}
+
+.jquery-comments ul#comment-list li.comment .child-comments li.toggle-all {
+	padding-top: 0;
+}
+
+.jquery-comments ul#comment-list li.comment .child-comments li.toggle-all span:first-child {
+	vertical-align: middle;
+}
+
+.jquery-comments ul#comment-list li.comment .child-comments li.toggle-all span:first-child:hover {
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+.jquery-comments ul#comment-list li.comment .child-comments li.toggle-all .caret {
+	display: inline-block;
+	vertical-align: middle;
+	width: 0;
+	height: 0;
+
+	margin-left: .5em;
+	border: .3em solid;
+	margin-top: .35em;
+
+	border-left-color: rgba(0, 0, 0, 0);
+	border-bottom-color: rgba(0, 0, 0, 0);
+	border-right-color: rgba(0, 0, 0, 0);
+}
+
+.jquery-comments ul#comment-list li.comment .child-comments li.toggle-all .caret.up {
+	border-top-color: rgba(0, 0, 0, 0);
+	border-bottom-color: inherit;
+	margin-top: -.2em;
+}
+
+.jquery-comments ul#comment-list li.comment .child-comments .hidden-reply {
+	display: none;
+}
+
+.jquery-comments ul#comment-list li.comment .child-comments .visible {
+	display: inherit;
+}
+
+/* Editing comment */
+.jquery-comments ul#comment-list li.comment.edit > .comment-wrapper > *:not(.commenting-field) {
+	display: none;
+}
+
+.jquery-comments ul#comment-list li.comment.edit > .comment-wrapper .commenting-field {
+	padding: 0 !important;	/* Parent element has the padding */
+}

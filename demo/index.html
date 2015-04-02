@@ -1,0 +1,64 @@
+<!doctype html>
+<html>
+    <head>
+        <meta charset=utf-8>
+        <meta name=description content="">
+        <meta name=viewport content="width=device-width, initial-scale=1">
+        <title>Jquery Comments Plugin</title>
+        
+        <!-- Styles -->
+        <link rel="stylesheet" type="text/css" href="css/jquery-comments.css">
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+
+        <!-- Data -->
+        <script type="text/javascript" src="data/comments-data.js"></script>
+
+        <!-- Libraries -->
+        <script type="text/javascript" src="js/lib/jquery-1.9.0.min.js"></script>
+        <script type="text/javascript" src="js/jquery-comments.js"></script>
+
+        <style type="text/css">
+            body {
+                padding: 20px;
+                margin: 0px;
+                font-size: 14px;
+                font-family: "Arial", Georgia, Serif;
+            }
+        </style>
+
+        <!-- Init jquery-comments -->
+        <script type="text/javascript">
+            $(function() {
+                $('#comments-container').comments({
+                    profilePictureURL: 'https://app.viima.com/static/media/user_profiles/user-icon.png',
+                    roundProfilePictures: true,
+                    textareaRows: 1,
+                    getComments: function(success, error) {
+                        setTimeout(function() {
+                            success(commentsArray);
+                        }, 500);
+                    },
+                    putComment: function(data, success, error) {
+                      setTimeout(function() {
+                        success(data);
+                      }, 200)
+                    },
+                    deleteComment: function(data, success, error) {
+                      setTimeout(function() {
+                        success();
+                      }, 200)
+                    },
+                    upvoteComment: function(data, success, error) {
+                      setTimeout(function() {
+                        success(data);
+                      }, 200)
+                    }
+                });
+            });
+        </script>
+
+    </head>
+    <body>
+		<div id="comments-container"></div>
+    </body>
+</html>
