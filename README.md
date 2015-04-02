@@ -17,10 +17,10 @@ jquery-comments is a jQuery plugin to provide commenting features to any web app
 http://viima.github.io/jquery-comments/demo/
 
 ###Quick start
-**1) Add the following to your HTML file:**
+**1) Add the following to your HTML file**
 ```
 <link rel="stylesheet" type="text/css" href="css/jquery-comments.css">
-<link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+<link rel="stylesheet" type="text/css" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
 
 <script type="text/javascript" src="js/lib/jquery-1.9.0.min.js"></script>
 <script type="text/javascript" src="js/jquery-comments.js"></script>
