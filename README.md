@@ -37,12 +37,12 @@ $('#comments-container').comments({
     },
     putComment: function(commentJSON, success, error) {
         // Update the changed comment to your server here,
-        // commentJSON contains the model with changed fields
+        // commentJSON represents the model with changed fields
         success(commentJSON);   // Call success or error function based on the response from server
     },
     deleteComment: function(commentJSON, success, error) {
         // Delete the comment from your server here,
-        // commentJSON contains the deleted model
+        // commentJSON represents the deleted model
         success();  // Call success or error function based on the response from server
     },
     upvoteComment: function(commentJSON, success, error) {
