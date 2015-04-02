@@ -1,5 +1,5 @@
 # jquery-comments
-jquery-comments is a jQuery based plugin to provide commenting features to any web application with an existing backend. It provides all the UI functionalities with callbacks where you define what you want to do with the data. The library is highly customizable and easy to integrate through various settings.
+jquery-comments is a jQuery plugin to provide commenting features to any web application with an existing backend. It provides all the UI functionalities with callbacks where you define what you want to do with the data. The library is highly customizable and easy to integrate through various settings.
 
 ![Screenshot of jquery-comments](screenshot.png?raw=true "Screenshot of jquery-comments")
 
@@ -68,7 +68,7 @@ noCommentsIconURL: 'img/no-comments-icon.png',
 http://viima.github.io/jquery-comments
 
 ###Maintainers
-- Joona Tykkyläinen, Viima Solutions Oy
+- [Joona Tykkyläinen](https://www.linkedin.com/in/joonatykkylainen), Viima Solutions Oy
 
 ###Browser support
 IE9+ and all modern browsers
