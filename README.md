@@ -31,22 +31,23 @@ http://viima.github.io/jquery-comments/demo/
 $('#comments-container').comments({
     profilePictureURL: 'https://app.viima.com/static/media/user_profiles/user-icon.png',
     getComments: function(success, error) {
-        // Call the success function with array of comments as parameter
-        // after you have fetched the comments from your server
+        // Do whatever magic is needed to fetch the comments from your server
         success(commentsArray);  // Call success or error function based on the response from server
     },
+    postComment: function(commentJSON, success, error) {
+        // Do whatever magic is needed to create a comment to your server
+        success(commentJSON);   // Call success or error function based on the response from server
+    },
     putComment: function(commentJSON, success, error) {
-        // Update the changed comment to your server here,
-        // commentJSON represents the model with changed fields
+        // Do whatever magic is needed to update the comment to your server
         success(commentJSON);   // Call success or error function based on the response from server
     },
     deleteComment: function(commentJSON, success, error) {
-        // Delete the comment from your server here,
-        // commentJSON represents the deleted model
+        // Do whatever magic is needed to delete the comment from your server
         success();  // Call success or error function based on the response from server
     },
     upvoteComment: function(commentJSON, success, error) {
-        // Create an upvote to your server here
+        // Do whatever magic is needed to create a upvote for the comment to your server
         success(commentJSON);    // Call success or error function based on the response from server
     }
 });
