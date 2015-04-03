@@ -236,6 +236,60 @@ $('#comments-container').comments({
 
 
 <tr>
+<td><code>fieldMappings</code></td>
+<td>
+<p>
+A <code>dictionary</code> that is used to map the fields between jquery-comments and the server. The keys of the dictionary represent field names used within the jquery-comments -library whereas the values represent the field names from your API. In callback functions the data is remapped to match with your API so you can use the comment data as such.
+</p>
+
+<label>FIELDS</label>  
+<pre class="prettyprint linemus">
+id                      // Required
+parent                  // Required if replying is enabled
+created                 // Required
+modified                // Required if editing is enabled
+content                 // Required
+fullname                // Required
+profilePictureURL       // Required
+createdByAdmin          // Optional
+createdByCurrentUser    // Required if editing is enabled
+upvoteCount             // Required if upvoting is enabled
+userHasUpvoted          // Required if upvoting is enabled
+</pre>
+
+<label>DEFAULT</label>  
+<pre class="prettyprint linemus">
+fieldMappings: {
+   id: 'id',
+   parent: 'parent',
+   created: 'created',
+   modified: 'modified',
+   content: 'content',
+   fullname: 'fullname',
+   profilePictureURL: 'profile_picture_url',
+   createdByAdmin: 'created_by_admin',
+   createdByCurrentUser: 'created_by_current_user',
+   upvoteCount: 'upvote_count',
+   userHasUpvoted: 'user_has_upvoted',
+}
+</pre>
+
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    fieldMappings: {
+       parent: 'comment_id',
+       modified: 'edited',
+       fullname: 'name',
+       profilePictureURL: 'user_image',
+       upvoteCount: 'upvotes',
+    }
+});
+</pre>
+</td>
+</tr>
+
+<tr>
 <td><code>getComments</code></td>
 <td>
 <p>
@@ -264,7 +318,6 @@ $('#comments-container').comments({
     }
 });
 </pre>
-
 </td>
 </tr>
 
