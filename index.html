@@ -281,7 +281,7 @@ $('#comments-container').comments({
 </tr>
 
 
-<tr><th colspan="2">Strings (In progress)</th></tr>
+<tr><th colspan="2">Strings</th></tr>
 
 <tr>
 <td><code>textareaPlaceholderText</code></td>
@@ -305,14 +305,14 @@ $('#comments-container').comments({
 <td><code>popularText</code></td>
 <td>
 <p>
-A <code>string</code> that TODO
+A <code>string</code> that is displayed on sorting button for most popular comments
 </p>
 <label>DEFAULT</label>  
-<code class="string">"TODO"</code>
+<code class="string">"Popular"</code>
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    popularText: TODO
+    popularText: 'Most popular'
 });
 </pre>
 </td>
@@ -323,14 +323,14 @@ $('#comments-container').comments({
 <td><code>newestText</code></td>
 <td>
 <p>
-A <code>string</code> that TODO
+A <code>string</code> that is displayed on sorting button for newest comments
 </p>
 <label>DEFAULT</label>  
-<code class="string">"TODO"</code>
+<code class="string">"Newest"</code>
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    newestText: TODO
+    newestText: 'New'
 });
 </pre>
 </td>
@@ -341,14 +341,14 @@ $('#comments-container').comments({
 <td><code>oldestText</code></td>
 <td>
 <p>
-A <code>string</code> that TODO
+A <code>string</code> that is displayed on sorting button for oldest comments
 </p>
 <label>DEFAULT</label>  
-<code class="string">"TODO"</code>
+<code class="string">"Oldest"</code>
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    oldestText: TODO
+    oldestText: 'Old'
 });
 </pre>
 </td>
@@ -359,14 +359,14 @@ $('#comments-container').comments({
 <td><code>sendText</code></td>
 <td>
 <p>
-A <code>string</code> that TODO
+A <code>string</code> that is displayed on send button
 </p>
 <label>DEFAULT</label>  
-<code class="string">"TODO"</code>
+<code class="string">"Send"</code>
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    sendText: TODO
+    sendText: 'Comment'
 });
 </pre>
 </td>
@@ -377,14 +377,14 @@ $('#comments-container').comments({
 <td><code>replyText</code></td>
 <td>
 <p>
-A <code>string</code> that TODO
+A <code>string</code> that is displayed on reply button
 </p>
 <label>DEFAULT</label>  
-<code class="string">"TODO"</code>
+<code class="string">"Reply"</code>
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    replyText: TODO
+    replyText: 'Answer'
 });
 </pre>
 </td>
@@ -395,50 +395,14 @@ $('#comments-container').comments({
 <td><code>editText</code></td>
 <td>
 <p>
-A <code>string</code> that TODO
+A <code>string</code> that is displayed on edit button
 </p>
 <label>DEFAULT</label>  
-<code class="string">"TODO"</code>
+<code class="string">"Edit"</code>
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    editText: TODO
-});
-</pre>
-</td>
-</tr>
-
-
-<tr>
-<td><code>editedText</code></td>
-<td>
-<p>
-A <code>string</code> that TODO
-</p>
-<label>DEFAULT</label>  
-<code class="string">"TODO"</code>
-<label class="example">EXAMPLE</label>  
-<pre class="prettyprint linemus">
-$('#comments-container').comments({
-    editedText: TODO
-});
-</pre>
-</td>
-</tr>
-
-
-<tr>
-<td><code>youText</code></td>
-<td>
-<p>
-A <code>string</code> that TODO
-</p>
-<label>DEFAULT</label>  
-<code class="string">"TODO"</code>
-<label class="example">EXAMPLE</label>  
-<pre class="prettyprint linemus">
-$('#comments-container').comments({
-    youText: TODO
+    editText: 'Modify'
 });
 </pre>
 </td>
@@ -449,14 +413,14 @@ $('#comments-container').comments({
 <td><code>saveText</code></td>
 <td>
 <p>
-A <code>string</code> that TODO
+A <code>string</code> that is displayed on save button
 </p>
 <label>DEFAULT</label>  
-<code class="string">"TODO"</code>
+<code class="string">"Save"</code>
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    saveText: TODO
+    saveText: 'Update'
 });
 </pre>
 </td>
@@ -467,14 +431,49 @@ $('#comments-container').comments({
 <td><code>deleteText</code></td>
 <td>
 <p>
-A <code>string</code> that TODO
+A <code>string</code> that is displayed on delete button
 </p>
 <label>DEFAULT</label>  
-<code class="string">"TODO"</code>
+<code class="string">"Delete"</code>
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    deleteText: TODO
+    deleteText: 'Remove'
+});
+</pre>
+</td>
+</tr>
+
+<tr>
+<td><code>editedText</code></td>
+<td>
+<p>
+A <code>string</code> that is displayed on edited timestamp
+</p>
+<label>DEFAULT</label>  
+<code class="string">"Edited"</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    editedText: 'Modified'
+});
+</pre>
+</td>
+</tr>
+
+
+<tr>
+<td><code>youText</code></td>
+<td>
+<p>
+A <code>string</code> that is displayed as a name of the user for new comments by default
+</p>
+<label>DEFAULT</label>  
+<code class="string">"You"</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    youText: 'Me'
 });
 </pre>
 </td>
@@ -485,14 +484,14 @@ $('#comments-container').comments({
 <td><code>viewAllRepliesText</code></td>
 <td>
 <p>
-A <code>string</code> that TODO
+A <code>string</code> that is displayed to show all replies when there are more replies than defined in <code>maxRepliesVisible</code> option. Variable <code>__replyCount__</code> is used as a placeholder for the reply count.
 </p>
 <label>DEFAULT</label>  
-<code class="string">"TODO"</code>
+<code class="string">"View all __replyCount__ replies"</code>
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    viewAllRepliesText: TODO
+    viewAllRepliesText: 'Show all replies (__replyCount__)'
 });
 </pre>
 </td>
@@ -503,14 +502,14 @@ $('#comments-container').comments({
 <td><code>hideRepliesText</code></td>
 <td>
 <p>
-A <code>string</code> that TODO
+A <code>string</code> that is displayed to hide replies that weren't visible initially
 </p>
 <label>DEFAULT</label>  
-<code class="string">"TODO"</code>
+<code class="string">"Hide replies"</code>
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    hideRepliesText: TODO
+    hideRepliesText: 'Hide'
 });
 </pre>
 </td>
@@ -521,14 +520,14 @@ $('#comments-container').comments({
 <td><code>noCommentsText</code></td>
 <td>
 <p>
-A <code>string</code> that TODO
+A <code>string</code> that is displayed if there are no comments to show
 </p>
 <label>DEFAULT</label>  
-<code class="string">"TODO"</code>
+<code class="string">"No comments"</code>
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    noCommentsText: TODO
+    noCommentsText: 'There are no comments'
 });
 </pre>
 </td>
@@ -650,7 +649,7 @@ $('#comments-container').comments({
 <td><code>enableDeletingCommentWithReplies</code></td>
 <td>
 <p>
-A <code>boolean</code> value determing whether user is allowed to delete a own comment that has replies (replies will also be deleted)
+A <code>boolean</code> value determing whether user is allowed to delete own comment that has replies (replies will be deleted as well)
 </p>
 <label>DEFAULT</label>  
 <code>true</code>
