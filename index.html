@@ -750,7 +750,54 @@ $('#comments-container').comments({
 </td>
 </tr>
 
-<tr><th colspan="2">Formatters (In progress)</th></tr>
+<tr><th colspan="2">Formatters</th></tr>
+
+<tr>
+<td><code>textFormatter</code></td>
+<td>
+<p>
+A callback <code>function</code> that is called for strings before inserting to DOM. Can be used for localization for instance.
+</p>
+<label>DEFAULT</label>  
+<pre class="prettyprint linemus">
+textFormatter: function(text) {
+    return text;
+}
+</pre>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    textFormatter: function(text) {
+        return i18n.translate(text);
+    }
+});
+</pre>
+</td>
+</tr>
+
+<tr>
+<td><code>timeFormatter</code></td>
+<td>
+<p>
+A callback <code>function</code> that is called for timestamps before inserting to DOM. Can be used for relative times for instance.
+</p>
+<label>DEFAULT</label>  
+<pre class="prettyprint linemus">
+timeFormatter: function(time) {
+    return new Date(time).toLocaleDateString();
+}
+</pre>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    timeFormatter: function(time) {
+        return moment(time).fromNow();
+    }
+});
+</pre>
+</td>
+</tr>
+
 <tr><th colspan="2">Miscellaneous (In progress)</th></tr>
 
 
