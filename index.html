@@ -717,13 +717,35 @@ $('#comments-container').comments({
 </tr>
 
 
-<tr><th colspan="2">Callbacks (In progress)</th></tr>
+<tr><th colspan="2">Callbacks</th></tr>
+
+
+<tr>
+<td><code>refresh</code></td>
+<td>
+<p>
+A callback <code>function</code> that is called after the comments have been rendered
+</p>
+<label>DEFAULT</label>  
+<pre class="prettyprint linemus">
+function() {}
+</pre>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    refresh: function() {
+        $('#comments-container').addClass('rendered');
+    }
+});
+</pre>
+</td>
+</tr>
 
 <tr>
 <td><code>getComments</code></td>
 <td>
 <p>
-A callback <code>function</code> that is used to fetch the comments array from the server. The callback provides both success and error callbacks which should be called based on the result from the server. The success callback takes the comment array as parameter.
+A callback <code>function</code> that is used to fetch the comments array from the server. The callback provides both <code>success</code> and <code>error</code> callbacks which should be called based on the result from the server. The success callback takes the comment array as a parameter.
 </p>
 <label>DEFAULT</label>  
 <pre class="prettyprint linemus">
@@ -743,6 +765,146 @@ $('#comments-container').comments({
             },
             error: error
         });
+    }
+});
+</pre>
+</td>
+</tr>
+
+<tr>
+<td><code>postComment</code></td>
+<td>
+<p>
+A callback <code>function</code> that is used to create a new comment to the server. The first parameter of the callback is <code>commentJSON</code> that contains the data of the new comment. The callback provides both <code>success</code> and <code>error</code> callbacks which should be called based on the result from the server. The success callback takes the created comment as a parameter.
+</p>
+<label>DEFAULT</label>  
+<pre class="prettyprint linemus">
+function(commentJSON, success, error) {
+    success(commentJSON);
+}
+</pre>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    postComment: function(commentJSON, success, error) {
+        $.ajax({
+            type: 'post',
+            url: '/api/comments/',
+            data: commentJSON,
+            success: function(comment) {
+                success(comment)
+            },
+            error: error
+        });
+    }
+});
+</pre>
+</td>
+</tr>
+
+
+<tr>
+<td><code>putComment</code></td>
+<td>
+<p>
+A callback <code>function</code> that is used to update an existing comment to the server. The first parameter of the callback is <code>commentJSON</code> that contains the data of the updated comment. The callback provides both <code>success</code> and <code>error</code> callbacks which should be called based on the result from the server. The success callback takes the updated comment as a parameter.
+</p>
+<label>DEFAULT</label>  
+<pre class="prettyprint linemus">
+function(commentJSON, success, error) {
+    success(commentJSON);
+}
+</pre>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    putComment: function(commentJSON, success, error) {
+        $.ajax({
+            type: 'put',
+            url: '/api/comments/' + commentJSON.id,
+            data: commentJSON,
+            success: function(comment) {
+                success(comment)
+            },
+            error: error
+        });
+    }
+});
+</pre>
+</td>
+</tr>
+
+
+<tr>
+<td><code>deleteComment</code></td>
+<td>
+<p>
+A callback <code>function</code> that is used to delete a comment from the server. The first parameter of the callback is <code>commentJSON</code> that contains the data of the comment to be deleted. The callback provides both <code>success</code> and <code>error</code> callbacks which should be called based on the result from the server.
+</p>
+<label>DEFAULT</label>  
+<pre class="prettyprint linemus">
+function(commentJSON, success, error) {
+    success();
+}
+</pre>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    deleteComment: function(commentJSON, success, error) {
+        $.ajax({
+            type: 'delete',
+            url: '/api/comments/' + commentJSON.id,
+            success: success,
+            error: error
+        });
+    }
+});
+</pre>
+</td>
+</tr>
+
+
+<tr>
+<td><code>upvoteComment</code></td>
+<td>
+<p>
+A callback <code>function</code> that is used to create or delete an upvote. The first parameter of the callback is <code>commentJSON</code> that contains the data of the upvoted comment. The callback provides both <code>success</code> and <code>error</code> callbacks which should be called based on the result from the server. The success callback takes the updated comment as a parameter.
+</p>
+<label>DEFAULT</label>  
+<pre class="prettyprint linemus">
+function(commentJSON, success, error) {
+    success(commentJSON);
+}
+</pre>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    upvoteComment: function(commentJSON, success, error) {
+        var commentURL = '/api/comments/' + commentJSON.id;
+        var upvotesURL = commentURL + '/upvotes/';
+
+        if(commentJSON.userHasUpvoted) {
+            $.ajax({
+                type: 'post',
+                url: upvotesURL,
+                data: {
+                    comment: commentJSON.id
+                },
+                success: function() {
+                    success(commentJSON)
+                },
+                error: error
+            });
+        } else {
+            $.ajax({
+                type: 'delete',
+                url: upvotesURL + upvoteId,
+                success: function() {
+                    success(commentJSON)
+                },
+                error: error
+            });
+        }
     }
 });
 </pre>
