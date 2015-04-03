@@ -537,7 +537,8 @@ $('#comments-container').comments({
 
 
 <tr><th colspan="2">Colors (In progress)</th></tr>
-<tr><th colspan="2">Functionalities (In progress)</th></tr>
+<tr><th colspan="2">Functionalities</th></tr>
+
 
 <tr>
 <td><code>enableReplying</code></td>
@@ -555,6 +556,79 @@ $('#comments-container').comments({
 </pre>
 </td>
 </tr>
+
+
+<tr>
+<td><code>enableEditing</code></td>
+<td>
+<p>
+A <code>boolean</code> value determing whether editing is enabled
+</p>
+<label>DEFAULT</label>  
+<code>true</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    enableEditing: false
+});
+</pre>
+</td>
+</tr>
+
+
+<tr>
+<td><code>enableUpvoting</code></td>
+<td>
+<p>
+A <code>boolean</code> value determing whether upvoting is enabled
+</p>
+<label>DEFAULT</label>  
+<code>true</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    enableUpvoting: false
+});
+</pre>
+</td>
+</tr>
+
+
+<tr>
+<td><code>enableDeleting</code></td>
+<td>
+<p>
+A <code>boolean</code> value determing whether deleting is enabled
+</p>
+<label>DEFAULT</label>  
+<code>true</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    enableDeleting: false
+});
+</pre>
+</td>
+</tr>
+
+
+<tr>
+<td><code>enableDeletingCommentWithReplies</code></td>
+<td>
+<p>
+A <code>boolean</code> value determing whether user is allowed to delete a own comment that has replies (replies will also be deleted)
+</p>
+<label>DEFAULT</label>  
+<code>true</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    enableDeletingCommentWithReplies: false
+});
+</pre>
+</td>
+</tr>
+
 
 <tr><th colspan="2">Field mappings</th></tr>
 
