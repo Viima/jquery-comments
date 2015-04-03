@@ -18,6 +18,7 @@
       ga('create', 'UA-41980270-4', 'auto');
       ga('send', 'pageview');
 
+      // Create sidebar dynamically
       $(function() {
         $('h3').each(function(index, el) {
             el = $(el);
@@ -29,13 +30,12 @@
 
             if(el.next().is('table')) {
                 var table = el.next();
-                table.find('tr').each(function(index, tr) {
-                    tr = $(tr);
+                table.find('th').each(function(index, th) {
+                    th = $(th);
                     var id2 = id + '-' + index;
-                    tr.attr('id', id2);
+                    th.attr('id', id2);
 
-                    var text = tr.find('td').first().text();
-                    var listEl2 = $('<a/>').html(text).addClass('level-2'); 
+                    var listEl2 = $('<a/>').html(th.text()).addClass('level-2'); 
                     listEl2.attr('href', '#' + id2);
                     $('.sidebar').append(listEl2);
                 });
@@ -71,6 +71,7 @@
 
         .content table {
             font-size: .9em;
+            text-align: left;
         }
 
         .content td {
@@ -188,16 +189,108 @@ noCommentsIconURL: 'img/no-comments-icon.png',
 <table>
 
 
+<tr><th colspan="2">Images</th></tr>
+
+<tr>
+<td><code>profilePictureURL</code></td>
+<td>
+<p>
+An <code>url</code> for profile picture of the current user
+</p>
+<label>DEFAULT</label>  
+<code class="string">""</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    profilePictureURL: '/user_profiles/user-icon.png'
+});
+</pre>
+</td>
+</tr>
+
+
+<tr>
+<td><code>spinnerIconURL</code></td>
+<td>
+<p>
+An <code>url</code> for spinner icon that is shown before comments have been fetched. Not required if Font Awesome is used.
+</p>
+<label>DEFAULT</label>  
+<code class="string">""</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    spinnerIconURL: '/img/spinner.gif'
+});
+</pre>
+</td>
+</tr>
+
+
+<tr>
+<td><code>upvoteIconURL</code></td>
+<td>
+<p>
+An <code>url</code> for upvote icon that is used as a button for upvoting. Not required if Font Awesome is used.
+</p>
+<label>DEFAULT</label>  
+<code class="string">""</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    upvoteIconURL: '/img/upvote-icon.png'
+});
+</pre>
+</td>
+</tr>
+
+
+<tr>
+<td><code>replyIconURL</code></td>
+<td>
+<p>
+An <code>url</code> for reply icon that is shown after the author of the comment if the comment is a reply. Not required if Font Awesome is used.
+</p>
+<label>DEFAULT</label>  
+<code class="string">""</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    replyIconURL: '/img/reply-icon.png'
+});
+</pre>
+</td>
+</tr>
+
+
+<tr>
+<td><code>noCommentsIconURL</code></td>
+<td>
+<p>
+An <code>url</code> for no-comments icon that is shown if there are no comments to show. Not required if Font Awesome is used.
+</p>
+<label>DEFAULT</label>  
+<code class="string">""</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    noCommentsIconURL: '/img/no-comments-icon.png'
+});
+</pre>
+</td>
+</tr>
+
+
+<tr><th colspan="2">Strings (In progress)</th></tr>
+
 <tr>
 <td><code>textareaPlaceholderText</code></td>
 <td>
 <p>
-A <code>string</code> displayed as a placeholder in commenting fields
+A <code>string</code> that is displayed as a placeholder in commenting fields
 </p>
-
 <label>DEFAULT</label>  
 <code class="string">"Add a comment"</code>
-
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
@@ -207,16 +300,253 @@ $('#comments-container').comments({
 </td>
 </tr>
 
+
+<tr>
+<td><code>popularText</code></td>
+<td>
+<p>
+A <code>string</code> that TODO
+</p>
+<label>DEFAULT</label>  
+<code class="string">"TODO"</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    popularText: TODO
+});
+</pre>
+</td>
+</tr>
+
+
+<tr>
+<td><code>newestText</code></td>
+<td>
+<p>
+A <code>string</code> that TODO
+</p>
+<label>DEFAULT</label>  
+<code class="string">"TODO"</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    newestText: TODO
+});
+</pre>
+</td>
+</tr>
+
+
+<tr>
+<td><code>oldestText</code></td>
+<td>
+<p>
+A <code>string</code> that TODO
+</p>
+<label>DEFAULT</label>  
+<code class="string">"TODO"</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    oldestText: TODO
+});
+</pre>
+</td>
+</tr>
+
+
+<tr>
+<td><code>sendText</code></td>
+<td>
+<p>
+A <code>string</code> that TODO
+</p>
+<label>DEFAULT</label>  
+<code class="string">"TODO"</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    sendText: TODO
+});
+</pre>
+</td>
+</tr>
+
+
+<tr>
+<td><code>replyText</code></td>
+<td>
+<p>
+A <code>string</code> that TODO
+</p>
+<label>DEFAULT</label>  
+<code class="string">"TODO"</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    replyText: TODO
+});
+</pre>
+</td>
+</tr>
+
+
+<tr>
+<td><code>editText</code></td>
+<td>
+<p>
+A <code>string</code> that TODO
+</p>
+<label>DEFAULT</label>  
+<code class="string">"TODO"</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    editText: TODO
+});
+</pre>
+</td>
+</tr>
+
+
+<tr>
+<td><code>editedText</code></td>
+<td>
+<p>
+A <code>string</code> that TODO
+</p>
+<label>DEFAULT</label>  
+<code class="string">"TODO"</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    editedText: TODO
+});
+</pre>
+</td>
+</tr>
+
+
+<tr>
+<td><code>youText</code></td>
+<td>
+<p>
+A <code>string</code> that TODO
+</p>
+<label>DEFAULT</label>  
+<code class="string">"TODO"</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    youText: TODO
+});
+</pre>
+</td>
+</tr>
+
+
+<tr>
+<td><code>saveText</code></td>
+<td>
+<p>
+A <code>string</code> that TODO
+</p>
+<label>DEFAULT</label>  
+<code class="string">"TODO"</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    saveText: TODO
+});
+</pre>
+</td>
+</tr>
+
+
+<tr>
+<td><code>deleteText</code></td>
+<td>
+<p>
+A <code>string</code> that TODO
+</p>
+<label>DEFAULT</label>  
+<code class="string">"TODO"</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    deleteText: TODO
+});
+</pre>
+</td>
+</tr>
+
+
+<tr>
+<td><code>viewAllRepliesText</code></td>
+<td>
+<p>
+A <code>string</code> that TODO
+</p>
+<label>DEFAULT</label>  
+<code class="string">"TODO"</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    viewAllRepliesText: TODO
+});
+</pre>
+</td>
+</tr>
+
+
+<tr>
+<td><code>hideRepliesText</code></td>
+<td>
+<p>
+A <code>string</code> that TODO
+</p>
+<label>DEFAULT</label>  
+<code class="string">"TODO"</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    hideRepliesText: TODO
+});
+</pre>
+</td>
+</tr>
+
+
+<tr>
+<td><code>noCommentsText</code></td>
+<td>
+<p>
+A <code>string</code> that TODO
+</p>
+<label>DEFAULT</label>  
+<code class="string">"TODO"</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    noCommentsText: TODO
+});
+</pre>
+</td>
+</tr>
+
+
+
+<tr><th colspan="2">Colors (In progress)</th></tr>
+<tr><th colspan="2">Functionalities (In progress)</th></tr>
+
 <tr>
 <td><code>enableReplying</code></td>
 <td>
 <p>
 A <code>boolean</code> value determing whether replying is enabled
 </p>
-
 <label>DEFAULT</label>  
 <code>true</code>
-
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
@@ -226,6 +556,7 @@ $('#comments-container').comments({
 </td>
 </tr>
 
+<tr><th colspan="2">Field mappings</th></tr>
 
 <tr>
 <td><code>fieldMappings</code></td>
@@ -233,7 +564,6 @@ $('#comments-container').comments({
 <p>
 A <code>dictionary</code> that is used to map the fields between jquery-comments and the server. The keys of the dictionary represent field names used within the jquery-comments whereas the values represent the field names from your API. In callback functions the data is remapped to match with your API so you can use the comment data as such.
 </p>
-
 <label>FIELDS</label>  
 <pre class="prettyprint linemus">
 id                      // Required
@@ -248,7 +578,6 @@ createdByCurrentUser    // Required if editing is enabled
 upvoteCount             // Required if upvoting is enabled
 userHasUpvoted          // Required if upvoting is enabled
 </pre>
-
 <label>DEFAULT</label>  
 <pre class="prettyprint linemus">
 fieldMappings: {
@@ -265,7 +594,6 @@ fieldMappings: {
    userHasUpvoted: 'user_has_upvoted',
 }
 </pre>
-
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
@@ -281,20 +609,21 @@ $('#comments-container').comments({
 </td>
 </tr>
 
+
+<tr><th colspan="2">Callbacks (In progress)</th></tr>
+
 <tr>
 <td><code>getComments</code></td>
 <td>
 <p>
 A callback <code>function</code> that is used to fetch the comments array from the server. The callback provides both success and error callbacks which should be called based on the result from the server. The success callback takes the comment array as parameter.
 </p>
-
 <label>DEFAULT</label>  
 <pre class="prettyprint linemus">
 function(success, error) {
     success([]);
 }
 </pre>
-
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
@@ -312,6 +641,9 @@ $('#comments-container').comments({
 </pre>
 </td>
 </tr>
+
+<tr><th colspan="2">Formatters (In progress)</th></tr>
+<tr><th colspan="2">Miscellaneous (In progress)</th></tr>
 
 
 </table>
