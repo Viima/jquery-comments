@@ -64,7 +64,6 @@
                profilePictureURL: 'profile_picture_url',
                createdByAdmin: 'created_by_admin',
                createdByCurrentUser: 'created_by_current_user',
-               moderationPending: 'moderation_pending',
                upvoteCount: 'upvote_count',
                userHasUpvoted: 'user_has_upvoted',
             },
