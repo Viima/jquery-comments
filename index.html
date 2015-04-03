@@ -759,7 +759,7 @@ A callback <code>function</code> that is called for strings before inserting to 
 </p>
 <label>DEFAULT</label>  
 <pre class="prettyprint linemus">
-textFormatter: function(text) {
+function(text) {
     return text;
 }
 </pre>
@@ -782,7 +782,7 @@ A callback <code>function</code> that is called for timestamps before inserting 
 </p>
 <label>DEFAULT</label>  
 <pre class="prettyprint linemus">
-timeFormatter: function(time) {
+function(time) {
     return new Date(time).toLocaleDateString();
 }
 </pre>
