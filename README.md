@@ -31,24 +31,16 @@ http://viima.github.io/jquery-comments/demo/
 $('#comments-container').comments({
     profilePictureURL: 'https://app.viima.com/static/media/user_profiles/user-icon.png',
     getComments: function(success, error) {
-        // Do whatever magic is needed to fetch the comments from your server
-        success(commentsArray);  // Call success or error function based on the response from server
-    },
-    postComment: function(commentJSON, success, error) {
-        // Do whatever magic is needed to create a comment to your server
-        success(commentJSON);   // Call success or error function based on the response from server
-    },
-    putComment: function(commentJSON, success, error) {
-        // Do whatever magic is needed to update the comment to your server
-        success(commentJSON);   // Call success or error function based on the response from server
-    },
-    deleteComment: function(commentJSON, success, error) {
-        // Do whatever magic is needed to delete the comment from your server
-        success();  // Call success or error function based on the response from server
-    },
-    upvoteComment: function(commentJSON, success, error) {
-        // Do whatever magic is needed to create a upvote for the comment to your server
-        success(commentJSON);    // Call success or error function based on the response from server
+        var commentsArray = [{
+            id: 1,
+            created: '2015-10-01',
+            content: 'Lorem ipsum dolort sit amet',
+            fullname: 'Simon Powell',
+            profile_picture_url: 'https://app.viima.com/static/media/user_profiles/user-icon.png',
+            upvote_count: 2,
+            user_has_upvoted: false
+        }];
+        success(commentsArray);
     }
 });
 ```
