@@ -1,27 +1,27 @@
 {
-    "name": "jquery-comments",
-    "title": "jquery-comments",
-    "version": "1.0.0",
-    "author": {
-        "name": "Joona Tykkylainen"
-    },
-    "description": "jQuery plugin for implementing an out-of-the-box commenting solution to any web application with an existing backend",
-    "license": "MIT",
-    "main": "js/jquery-comments.js",
-    "homepage": "https://www.viima.com/",
-    "keywords": [
-        "jquery",
-        "javascript",
-        "plugin",
-        "commenting",
-        "discussion",
-        "conversation"
-    ],
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/Viima/jquery-comments.git"
-    },
-    "dependencies": {
-        "jquery": ">=1.9.0"
-    }
+  "name": "jquery-comments",
+  "title": "jquery-comments",
+  "version": "1.0.1",
+  "author": {
+    "name": "Joona Tykkylainen"
+  },
+  "description": "jQuery plugin for implementing an out-of-the-box commenting solution to any web application with an existing backend",
+  "license": "MIT",
+  "main": "js/jquery-comments.js",
+  "homepage": "https://www.viima.com/",
+  "keywords": [
+    "jquery",
+    "javascript",
+    "plugin",
+    "commenting",
+    "discussion",
+    "conversation"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Viima/jquery-comments.git"
+  },
+  "dependencies": {
+    "jquery": ">=1.9.0"
+  }
 }
