@@ -3,7 +3,8 @@ jquery-comments is a jQuery plugin for implementing an out-of-the-box commenting
 
 ![Screenshot of jquery-comments](screenshot.png?raw=true "Screenshot of jquery-comments")
 
-###Features
+Features
+--------
 - Commenting, replying (nested comments), editing, deleting and upvoting
 - Enabling/disabling functionalities
 - Localization
@@ -13,10 +14,12 @@ jquery-comments is a jQuery plugin for implementing an out-of-the-box commenting
 - Fully responsive and mobile compatible
 - Miscellaneous settings
 
-###Demo
+Demo
+----
 http://viima.github.io/jquery-comments/demo/
 
-###Quick start
+Quick start
+-----------
 **1) Add the following to your HTML file**
 ```html
 <link rel="stylesheet" type="text/css" href="css/jquery-comments.css">
@@ -52,18 +55,23 @@ replyIconURL: 'img/reply-icon.png',
 noCommentsIconURL: 'img/no-comments-icon.png',
 ```
 
-###Dependencies
+Dependencies
+------------
 - jQuery >= 1.9.0
 - Font Awesome (optional)
 
-###Documentation
+Documentation
+-------------
 http://viima.github.io/jquery-comments
 
-###Maintainers
+Maintainers
+-----------
 - [Joona Tykkyläinen](https://www.linkedin.com/in/joonatykkylainen), Viima Solutions Oy
 
-###Browser support
+Browser support
+---------------
 IE9+ and all modern browsers
 
-###Copyright and license
+Copyright and license
+---------------------
 Code and documentation copyright 2015 [Viima Solutions Oy](https://www.viima.com/). Code released under [the MIT license](https://github.com/Viima/jquery-comments/blob/master/LICENSE).
