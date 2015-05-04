@@ -1149,8 +1149,8 @@
 
         createCssDeclarations: function() {
 
-            // Do not recreate CSS declarations
-            if($('head style.jquery-comments-css').length > 0) return;
+            // Remove previous css-declarations
+            $('head style.jquery-comments-css').remove();
 
             // Navigation underline
             this.createCss('.jquery-comments ul.navigation li.active:after {background: '
