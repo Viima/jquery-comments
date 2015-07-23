@@ -17,8 +17,8 @@
         currentSortKey: '',
 
         options: {
-            profilePictureURL: '', 
-            
+            profilePictureURL: '',
+
             // Font awesome icon overrides
             spinnerIconURL: '',
             upvoteIconURL: '',
@@ -103,7 +103,7 @@
             // Main comenting field
             'click .commenting-field.main .textarea': 'showMainCommentingField',
             'click .commenting-field.main .close' : 'hideMainCommentingField',
-            
+
             // All commenting fields
             'click .commenting-field .textarea' : 'increaseTextareaHeight',
             'change .commenting-field .textarea' : 'increaseTextareaHeight textareaContentChanged',
@@ -426,7 +426,6 @@
 
         sortAndReArrangeComments: function(sortKey) {
             var commentList = this.$el.find('#comment-list');
-            
             // Get main level comments
             var mainLevelComments = this.getComments().filter(function(commentModel){return !commentModel.parent});
             this.sortComments(mainLevelComments, sortKey);
@@ -539,7 +538,7 @@
 
             // Check if content or parent has changed if editing
             var contentOrParentChangedIfEditing = true;
-            if(commentId = textarea.attr('data-comment')) {
+            if(commentId == textarea.attr('data-comment')) {
                 var contentChanged = content != this.commentsById[commentId].content;
                 var parentFromModel;
                 if(this.commentsById[commentId].parent) {
@@ -596,7 +595,6 @@
 
             // Reverse mapping
             commentJSON = this.applyExternalMappings(commentJSON);
-            
             var success = function(commentJSON) {
                 var commentModel = self.createCommentModel(commentJSON);
                 self.addCommentToDataModel(commentModel);
@@ -630,7 +628,6 @@
 
             // Reverse mapping
             commentJSON = this.applyExternalMappings(commentJSON);
-            
             var success = function(commentJSON) {
                 // The outermost parent can not be changed by editing the comment so the childs array
                 // of parent does not require an update
@@ -716,7 +713,6 @@
             // Create the editing field
             var editField = this.createCommentingFieldElement(commentModel.parent, commentModel.id);
             commentEl.find('.comment-wrapper').first().append(editField);
-            
             // Append original content
             var textarea = editField.find('.textarea');
             textarea.attr('data-comment', commentModel.id);
@@ -859,7 +855,6 @@
 
             // Setting the initial height for the textarea
             this.adjustTextareaHeight(textarea, false);
-            
             // Close button
             var closeButton = $('<span/>', {
                 class: 'close',
@@ -906,9 +901,8 @@
             textareaWrapper.append(closeButton).append(textarea).append(controlRow);
             commentingField.append(profilePicture).append(textareaWrapper);
 
-
             if(parentId) {
-                
+
                 // Set the parent id to the field if necessary
                 textarea.attr('data-parent', parentId)
 
@@ -941,7 +935,6 @@
                 text: this.options.textFormatter(this.options.popularText),
                 'data-sort-key': 'popularity',
             });
-            
             // Newest
             var newest = $('<li/>', {
                 text: this.options.textFormatter(this.options.newestText),
@@ -1252,7 +1245,7 @@
                 setRows(rowCount);
                 rowCount++;
                 var isAreaScrollable = textarea[0].scrollHeight > textarea.outerHeight();
-                var maxRowsUsed = this.options.textareaMaxRows == false ? 
+                var maxRowsUsed = this.options.textareaMaxRows == false ?
                     false : rowCount > this.options.textareaMaxRows;
             } while(isAreaScrollable && !maxRowsUsed);
         },
