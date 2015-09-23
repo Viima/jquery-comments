@@ -65,7 +65,7 @@ describe('Basic features', function() {
         commentElements.each(function(index, commentEl) {
             checkCommentElementData($(commentEl));
         });
-        checkOrder($('ul#comment-list > li.comment'), [1,3,2]);
+        checkOrder($('ul#comment-list > li.comment'), [3,2,1]);
 
         // Check reply to -fields
         expect($('li.comment[data-id=8] .name .reply-to').text()).toBe('Jack Hemsworth');
@@ -255,7 +255,8 @@ describe('Basic features', function() {
                 checkCommentElementData(commentEl);
 
                 // Check that sorting works also with the new comment
-                checkOrder($('#comment-list > li.comment'), [idOfNewComment, 1,3,2]);
+                $('li[data-sort-key="popularity"]').click();
+                checkOrder($('#comment-list > li.comment'), [1,3,2,idOfNewComment]);
                 $('li[data-sort-key="oldest"]').click();
                 checkOrder($('#comment-list > li.comment'), [1,2,3,idOfNewComment]);
                 $('li[data-sort-key="newest"]').click();
