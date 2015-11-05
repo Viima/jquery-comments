@@ -62,17 +62,17 @@
             maxRepliesVisible: 2,
 
             fieldMappings: {
-               id: 'id',
-               parent: 'parent',
-               created: 'created',
-               modified: 'modified',
-               content: 'content',
-               fullname: 'fullname',
-               profilePictureURL: 'profile_picture_url',
-               createdByAdmin: 'created_by_admin',
-               createdByCurrentUser: 'created_by_current_user',
-               upvoteCount: 'upvote_count',
-               userHasUpvoted: 'user_has_upvoted',
+                id: 'id',
+                parent: 'parent',
+                created: 'created',
+                modified: 'modified',
+                content: 'content',
+                fullname: 'fullname',
+                profilePictureURL: 'profile_picture_url',
+                createdByAdmin: 'created_by_admin',
+                createdByCurrentUser: 'created_by_current_user',
+                upvoteCount: 'upvote_count',
+                userHasUpvoted: 'user_has_upvoted'
             },
 
             getComments: function(success, error) {success([])},
@@ -83,7 +83,7 @@
             refresh: function() {},
             timeFormatter: function(time) {
                 return new Date(time).toLocaleDateString();
-            },
+            }
         },
 
         events: {
@@ -118,7 +118,7 @@
             'click li.comment ul.child-comments .toggle-all': 'toggleReplies',
             'click li.comment button.reply': 'replyButtonClicked',
             'click li.comment button.edit': 'editButtonClicked',
-            'click li.comment button.upvote' : 'upvoteComment',
+            'click li.comment button.upvote' : 'upvoteComment'
         },
 
 
@@ -248,7 +248,7 @@
             // Create new comment list
             this.$el.find('#comment-list').remove();
             var commentList = $('<ul/>', {
-                id: 'comment-list',
+                id: 'comment-list'
             });
 
             // Get the sort key from UI
@@ -268,13 +268,13 @@
             // Append main level comments
             this.sortComments(mainLevelComments, this.currentSortKey);
             mainLevelComments.reverse();    // Reverse the order as they are prepended to DOM
-            $(mainLevelComments).each(function(index, commentModel) {
+            $(mainLevelComments).each(function(index, commentModel) {
                 self.addComment(commentModel, commentList);
             });
 
             // Append replies in chronological order
             this.sortComments(replies, 'oldest');
-            $(replies).each(function(index, commentModel) {
+            $(replies).each(function(index, commentModel) {
                 self.addComment(commentModel, commentList);
             });
 
@@ -304,7 +304,7 @@
                 // Update toggle all -button
                 this.updateToggleAllButton(outerMostParent);
 
-            // Case: main level comment
+                // Case: main level comment
             } else {
                 commentList.prepend(commentEl);
             }
@@ -315,7 +315,7 @@
             var commentModel = this.commentsById[commentId];
 
             // Remove child comments recursively
-            var childComments = this.getChildComments(commentModel.id);            
+            var childComments = this.getChildComments(commentModel.id);
             $(childComments).each(function(index, childComment) {
                 self.removeComment(childComment.id);
             });
@@ -362,13 +362,13 @@
                 if(!toggleAllButton.length) {
 
                     toggleAllButton = $('<li/>', {
-                        class: 'toggle-all highlight-font-bold',
+                        'class': 'toggle-all highlight-font-bold'
                     });
                     var toggleAllButtonText = $('<span/>', {
-                        class: 'text'
+                        'class': 'text'
                     });
                     var caret = $('<span/>', {
-                        class: 'caret',
+                        'class': 'caret'
                     });
 
                     // Append toggle button to DOM
@@ -379,7 +379,7 @@
                 // Update the text of toggle all -button
                 this.setToggleAllButtonText(toggleAllButton, false);
 
-            // Make sure that toggle all button is not present
+                // Make sure that toggle all button is not present
             } else {
                 toggleAllButton.remove();
             }
@@ -402,7 +402,7 @@
                     if(pointsOfB != pointsOfA) {
                         return pointsOfB - pointsOfA;
 
-                    // Return newer if popularity is the same
+                        // Return newer if popularity is the same
                     } else {
                         var createdA = new Date(commentA.created).getTime();
                         var createdB = new Date(commentB.created).getTime();
@@ -410,7 +410,7 @@
                     }
                 });
 
-            // Sort by date
+                // Sort by date
             } else {
                 comments.sort(function(commentA, commentB) {
                     var createdA = new Date(commentA.created).getTime();
@@ -426,7 +426,7 @@
 
         sortAndReArrangeComments: function(sortKey) {
             var commentList = this.$el.find('#comment-list');
-            
+
             // Get main level comments
             var mainLevelComments = this.getComments().filter(function(commentModel){return !commentModel.parent});
             this.sortComments(mainLevelComments, sortKey);
@@ -522,7 +522,7 @@
                         textarea.attr('data-parent', parentId);
                     }
 
-                // Case: new comment
+                    // Case: new comment
                 } else {
                     var parentId = textarea.parents('li.comment').last().data('id');
                     textarea.attr('data-parent', parentId);
@@ -591,12 +591,12 @@
                 profilePictureURL: this.options.profilePictureURL,
                 createdByCurrentUser: true,
                 upvoteCount: 0,
-                userHasUpvoted: false,
+                userHasUpvoted: false
             };
 
             // Reverse mapping
             commentJSON = this.applyExternalMappings(commentJSON);
-            
+
             var success = function(commentJSON) {
                 var commentModel = self.createCommentModel(commentJSON);
                 self.addCommentToDataModel(commentModel);
@@ -625,12 +625,12 @@
             $.extend(commentJSON, {
                 parent: textarea.attr('data-parent') || null,
                 content: this.getTextareaContent(textarea),
-                modified: new Date().getTime(),
+                modified: new Date().getTime()
             });
 
             // Reverse mapping
             commentJSON = this.applyExternalMappings(commentJSON);
-            
+
             var success = function(commentJSON) {
                 // The outermost parent can not be changed by editing the comment so the childs array
                 // of parent does not require an update
@@ -697,7 +697,7 @@
             var previousParentId = replyField.find('.textarea').attr('data-parent');
 
             // Create the reply field (do not re-create)
-            if(previousParentId != parentId) {            
+            if(previousParentId != parentId) {
                 replyField = this.createCommentingFieldElement(parentId);
                 outermostParent.find('.child-comments').append(replyField);
 
@@ -716,7 +716,7 @@
             // Create the editing field
             var editField = this.createCommentingFieldElement(commentModel.parent, commentModel.id);
             commentEl.find('.comment-wrapper').first().append(editField);
-            
+
             // Append original content
             var textarea = editField.find('.textarea');
             textarea.attr('data-comment', commentModel.id);
@@ -791,10 +791,10 @@
 
             // Loading spinner
             var spinner = $('<div/>', {
-                class: 'spinner',
+                'class': 'spinner'
             });
             var spinnerIcon = $('<i/>', {
-                class: 'fa fa-spinner fa-spin',
+                'class': 'fa fa-spinner fa-spin'
             });
             if(this.options.spinnerIconURL.length) {
                 spinnerIcon.css('background-image', 'url("'+this.options.spinnerIconURL+'")');
@@ -806,11 +806,11 @@
 
             // "No comments" placeholder
             var noComments = $('<div/>', {
-                class: 'no-comments',
+                'class': 'no-comments',
                 text: this.options.textFormatter(this.options.noCommentsText)
             });
             var noCommentsIcon = $('<i/>', {
-                class: 'fa fa-comments fa-2x',
+                'class': 'fa fa-comments fa-2x'
             });
             if(this.options.noCommentsIconURL.length) {
                 noCommentsIcon.css('background-image', 'url("'+this.options.noCommentsIconURL+'")');
@@ -823,7 +823,7 @@
         createProfilePictureElement: function(src) {
             var profilePicture = $('<img/>', {
                 src: src,
-                class: 'profile-picture' + (this.options.roundProfilePictures ? ' round' : '')
+                'class': 'profile-picture' + (this.options.roundProfilePictures ? ' round' : '')
             });
             return profilePicture;
         },
@@ -833,7 +833,7 @@
 
             // Commenting field
             var commentingField = $('<div/>', {
-                class: 'commenting-field',
+                'class': 'commenting-field'
             });
 
             // Profile picture
@@ -842,27 +842,27 @@
 
             // New comment
             var textareaWrapper = $('<div/>', {
-                class: 'textarea-wrapper',
+                'class': 'textarea-wrapper'
             });
-        
+
             // Control row
             var controlRow = $('<div/>', {
-                class: 'control-row',
+                'class': 'control-row'
             });
 
             // Textarea
             var textarea = $('<div/>', {
-                class: 'textarea',
+                'class': 'textarea',
                 'data-placeholder': this.options.textFormatter(this.options.textareaPlaceholderText),
-                contenteditable: true,
+                contenteditable: true
             });
 
             // Setting the initial height for the textarea
             this.adjustTextareaHeight(textarea, false);
-            
+
             // Close button
             var closeButton = $('<span/>', {
-                class: 'close',
+                'class': 'close'
             }).append($('<span class="left"/>')).append($('<span class="right"/>'));
 
             // Save button text
@@ -883,7 +883,7 @@
 
                     if(isAllowedToDelete) {
                         var deleteButton = $('<span/>', {
-                            class: 'enabled delete',
+                            'class': 'enabled delete',
                             text: this.options.textFormatter(this.options.deleteText)
                         }).css('background-color', this.options.deleteButtonColor);
                         controlRow.append(deleteButton);
@@ -897,8 +897,8 @@
             // Save button
             var saveButtonClass = existingCommentId ? 'update' : 'send';
             var saveButton = $('<span/>', {
-                class: saveButtonClass + ' save highlight-background',
-                text: saveButtonText,
+                'class': saveButtonClass + ' save highlight-background',
+                text: saveButtonText
             });
 
             // Populate the element
@@ -908,7 +908,7 @@
 
 
             if(parentId) {
-                
+
                 // Set the parent id to the field if necessary
                 textarea.attr('data-parent', parentId);
 
@@ -919,7 +919,7 @@
 
                     // Creating the reply-to badge
                     var replyToBadge = $('<input/>', {
-                        class: 'reply-to-badge highlight-font-bold',
+                        'class': 'reply-to-badge highlight-font-bold',
                         type: 'button'
                     });
                     var replyToName = '@' + parentModel.fullname;
@@ -933,25 +933,25 @@
 
         createNavigationElement: function() {
             var navigationEl = $('<ul/>', {
-                class: 'navigation'
+                'class': 'navigation'
             });
-            
+
             // Newest
             var newest = $('<li/>', {
                 text: this.options.textFormatter(this.options.newestText),
-                 'data-sort-key': 'newest',
+                'data-sort-key': 'newest'
             });
 
             // Oldest
             var oldest = $('<li/>', {
                 text: this.options.textFormatter(this.options.oldestText),
-                 'data-sort-key': 'oldest',
+                'data-sort-key': 'oldest'
             });
 
             // Popular
             var popular = $('<li/>', {
                 text: this.options.textFormatter(this.options.popularText),
-                'data-sort-key': 'popularity',
+                'data-sort-key': 'popularity'
             });
 
             navigationEl.append(newest).append(oldest);
@@ -967,7 +967,7 @@
             // Comment container element
             var commentEl = $('<li/>', {
                 'data-id': commentModel.id,
-                class: 'comment',
+                'class': 'comment'
             }).data('model', commentModel);
 
             if(commentModel.createdByCurrentUser) commentEl.addClass('by-current-user');
@@ -975,7 +975,7 @@
 
             // Child comments
             var childComments = $('<ul/>', {
-                class: 'child-comments'
+                'class': 'child-comments'
             });
 
             // Comment wrapper
@@ -988,7 +988,7 @@
 
         createCommentWrapperElement: function(commentModel) {
             var commentWrapper = $('<div/>', {
-                class: 'comment-wrapper'
+                'class': 'comment-wrapper'
             });
 
             // Profile picture
@@ -1002,8 +1002,8 @@
 
             // Name
             var name = $('<div/>', {
-                class: 'name',
-                text: commentModel.fullname,
+                'class': 'name',
+                text: commentModel.fullname
             });
 
             // Highlight name for admins
@@ -1014,13 +1014,13 @@
                 var parent = this.commentsById[commentModel.parent];
                 if(parent.parent) {
                     var replyTo = $('<span/>', {
-                        class: 'reply-to',
-                        text: parent.fullname,
+                        'class': 'reply-to',
+                        text: parent.fullname
                     });
 
                     // reply icon
                     var replyIcon = $('<i/>', {
-                        class: 'fa fa-share'
+                        'class': 'fa fa-share'
                     });
                     if(this.options.replyIconURL.length) {
                         replyIcon.css('background-image', 'url("'+this.options.replyIconURL+'")');
@@ -1034,20 +1034,20 @@
 
             // Wrapper
             var wrapper = $('<div/>', {
-                class: 'wrapper',
+                'class': 'wrapper'
             });
 
             // Content
             var content = $('<div/>', {
-                class: 'content',
-                text: commentModel.content,
+                'class': 'content',
+                text: commentModel.content
             }).html(this.linkify(this.escape(commentModel.content)));
 
             // Edited timestamp
             if(commentModel.modified && commentModel.modified != commentModel.created) {
                 var editedTime = this.options.timeFormatter(commentModel.modified);
                 var edited = $('<time/>', {
-                    class: 'edited',
+                    'class': 'edited',
                     text: this.options.textFormatter(this.options.editedText) + ' ' + editedTime,
                     'data-original': commentModel.modified
                 });
@@ -1056,24 +1056,24 @@
 
             // Actions
             var actions = $('<span/>', {
-                class: 'actions',
+                'class': 'actions'
             });
 
             // Separator
             var separator = $('<span/>', {
-                class: 'separator',
-                text: '·',
+                'class': 'separator',
+                text: '·'
             });
 
             // Reply
             var reply = $('<button/>', {
-                class: 'action reply',
-                text: this.options.textFormatter(this.options.replyText),
+                'class': 'action reply',
+                text: this.options.textFormatter(this.options.replyText)
             });
 
             // Upvote icon
             var upvoteIcon = $('<i/>', {
-                class: 'fa fa-thumbs-up'
+                'class': 'fa fa-thumbs-up'
             });
             if(this.options.upvoteIconURL.length) {
                 upvoteIcon.css('background-image', 'url("'+this.options.upvoteIconURL+'")');
@@ -1085,8 +1085,8 @@
 
             // Edit
             var edit = $('<button/>', {
-                class: 'action edit',
-                text: this.options.textFormatter(this.options.editText),
+                'class': 'action edit',
+                text: this.options.textFormatter(this.options.editText)
             });
 
             // Append buttons for actions that are enabled
@@ -1112,7 +1112,7 @@
         createUpvoteElement: function(commentModel) {
             // Upvote icon
             var upvoteIcon = $('<i/>', {
-                class: 'fa fa-thumbs-up'
+                'class': 'fa fa-thumbs-up'
             });
             if(this.options.upvoteIconURL.length) {
                 upvoteIcon.css('background-image', 'url("'+this.options.upvoteIconURL+'")');
@@ -1121,10 +1121,10 @@
 
             // Upvotes
             var upvoteEl = $('<button/>', {
-                class: 'action upvote' + (commentModel.userHasUpvoted ? ' highlight-font' : ''),
+                'class': 'action upvote' + (commentModel.userHasUpvoted ? ' highlight-font' : '')
             }).append($('<span/>', {
                 text: commentModel.upvoteCount,
-                class: 'upvote-count'
+                'class': 'upvote-count'
             })).append(upvoteIcon);
 
             return upvoteEl;
@@ -1175,8 +1175,8 @@
         createCss: function(css) {
             var styleEl = $('<style/>', {
                 type: 'text/css',
-                class: 'jquery-comments-css',
-                text: css,
+                'class': 'jquery-comments-css',
+                text: css
             });
             $('head').append(styleEl);
         },
@@ -1252,7 +1252,7 @@
                 setRows(rowCount);
                 rowCount++;
                 var isAreaScrollable = textarea[0].scrollHeight > textarea.outerHeight();
-                var maxRowsUsed = this.options.textareaMaxRows == false ? 
+                var maxRowsUsed = this.options.textareaMaxRows == false ?
                     false : rowCount > this.options.textareaMaxRows;
             } while(isAreaScrollable && !maxRowsUsed);
         },
@@ -1371,7 +1371,7 @@
                 }
             }
             return result;
-        },
+        }
 
     };
 
