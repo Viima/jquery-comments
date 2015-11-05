@@ -17,8 +17,8 @@
         currentSortKey: '',
 
         options: {
-            profilePictureURL: '', 
-            
+            profilePictureURL: '',
+
             // Font awesome icon overrides
             spinnerIconURL: '',
             upvoteIconURL: '',
@@ -103,7 +103,7 @@
             // Main comenting field
             'click .commenting-field.main .textarea': 'showMainCommentingField',
             'click .commenting-field.main .close' : 'hideMainCommentingField',
-            
+
             // All commenting fields
             'click .commenting-field .textarea' : 'increaseTextareaHeight',
             'change .commenting-field .textarea' : 'increaseTextareaHeight textareaContentChanged',
@@ -211,11 +211,11 @@
                 });
 
                 self.render();
-            }
+            };
 
             var error = function() {
                 success([]);
-            }
+            };
 
             this.options.getComments(success, error);
         },
@@ -266,7 +266,7 @@
             });
 
             // Append main level comments
-            this.sortComments(mainLevelComments, this.currentSortKey)
+            this.sortComments(mainLevelComments, this.currentSortKey);
             mainLevelComments.reverse();    // Reverse the order as they are prepended to DOM
             $(mainLevelComments).each(function(index, commentModel) {
                 self.addComment(commentModel, commentList);
@@ -299,7 +299,7 @@
 
                 // Append element to DOM
                 var childCommentsEl = outerMostParent.find('.child-comments');
-                childCommentsEl.append(commentEl)
+                childCommentsEl.append(commentEl);
 
                 // Update toggle all -button
                 this.updateToggleAllButton(outerMostParent);
@@ -322,7 +322,7 @@
 
             // Update the child array of outermost parent
             if(commentModel.parent) {
-                var outermostParent = this.getOutermostParent(commentModel.parent)
+                var outermostParent = this.getOutermostParent(commentModel.parent);
                 var indexToRemove = outermostParent.childs.indexOf(commentModel.id);
                 outermostParent.childs.splice(indexToRemove, 1);
             }
@@ -343,11 +343,11 @@
         updateToggleAllButton: function(parentEl) {
             var childCommentsEl = parentEl.find('.child-comments');
             var childComments = childCommentsEl.find('.comment');
-            var toggleAllButton = childCommentsEl.find('li.toggle-all')
+            var toggleAllButton = childCommentsEl.find('li.toggle-all');
             childComments.removeClass('hidden-reply');
 
             // Add identifying class for hidden replies so they can be toggled
-            var hiddenReplies = childComments.slice(0, -this.options.maxRepliesVisible)
+            var hiddenReplies = childComments.slice(0, -this.options.maxRepliesVisible);
             hiddenReplies.addClass('hidden-reply');
 
             // Show all replies if replies are expanded
@@ -372,7 +372,7 @@
                     });
 
                     // Append toggle button to DOM
-                    toggleAllButton.append(toggleAllButtonText).append(caret)
+                    toggleAllButton.append(toggleAllButtonText).append(caret);
                     childCommentsEl.prepend(toggleAllButton);
                 }
 
@@ -592,7 +592,7 @@
                 createdByCurrentUser: true,
                 upvoteCount: 0,
                 userHasUpvoted: false,
-            }
+            };
 
             // Reverse mapping
             commentJSON = this.applyExternalMappings(commentJSON);
@@ -602,11 +602,11 @@
                 self.addCommentToDataModel(commentModel);
                 self.addComment(commentModel);
                 commentingField.find('.close').trigger('click');
-            }
+            };
 
             var error = function() {
                 sendButton.addClass('enabled');
-            }
+            };
 
             this.options.postComment(commentJSON, success, error);
         },
@@ -646,11 +646,11 @@
 
                 // Re-render the comment
                 self.reRenderComment(commentModel.id);
-            }
+            };
 
             var error = function() {
                 saveButton.addClass('enabled');
-            }
+            };
 
             this.options.putComment(commentJSON, success, error);
         },
@@ -670,11 +670,11 @@
 
             var success = function() {
                 self.removeComment(commentId);
-            }
+            };
 
             var error = function() {
                 deleteButton.addClass('enabled');
-            }
+            };
 
             this.options.deleteComment(commentJSON, success, error);
         },
@@ -698,7 +698,7 @@
 
             // Create the reply field (do not re-create)
             if(previousParentId != parentId) {            
-                var replyField = this.createCommentingFieldElement(parentId);
+                replyField = this.createCommentingFieldElement(parentId);
                 outermostParent.find('.child-comments').append(replyField);
 
                 // Move cursor to end
@@ -755,7 +755,7 @@
                 var commentModel = self.createCommentModel(commentJSON);
                 self.updateCommentModel(commentModel);
                 self.reRenderUpvotes(commentModel.id);
-            }
+            };
 
             var error = function() {
 
@@ -763,7 +763,7 @@
                 commentModel.userHasUpvoted = !commentModel.userHasUpvoted;
                 commentModel.upvoteCount = previousUpvoteCount;
                 self.reRenderUpvotes(commentModel.id);
-            }
+            };
 
             this.options.upvoteComment(commentJSON, success, error);
         },
@@ -910,7 +910,7 @@
             if(parentId) {
                 
                 // Set the parent id to the field if necessary
-                textarea.attr('data-parent', parentId)
+                textarea.attr('data-parent', parentId);
 
                 // Append reply-to badge if necessary
                 var parentModel = this.commentsById[parentId];
@@ -1199,7 +1199,7 @@
             do {
                 var parentComment = this.commentsById[parentId];
                 parentId = parentComment.parent;
-            } while(parentComment.parent != null)
+            } while(parentComment.parent != null);
             return parentComment;
         },
 
@@ -1213,7 +1213,7 @@
                 var replyCount = toggleAllButton.siblings('.comment').length;
                 text = text.replace('__replyCount__', replyCount);
                 textContainer.text(text);
-            }
+            };
 
             var hideRepliesText = this.options.textFormatter(this.options.hideRepliesText);
 
@@ -1244,9 +1244,9 @@
             var setRows = function(rows) {
                 var height = textareaBaseHeight + (rows - 1) * lineHeight;
                 textarea.css('height', height + 'em');
-            }
+            };
 
-            var textarea = $(textarea);
+            textarea = $(textarea);
             var rowCount = focus == true ? this.options.textareaRowsOnFocus : this.options.textareaRows;
             do {
                 setRows(rowCount);
@@ -1373,7 +1373,7 @@
             return result;
         },
 
-    }
+    };
 
     $.fn.comments = function(options) {
         return this.each(function() {
