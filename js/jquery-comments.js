@@ -169,15 +169,18 @@
                 var methodNames = this.events[key].split(' ');
 
                 for(var index in methodNames) {
-                    var method = this[methodNames[index]];
+                    if(methodNames.hasOwnProperty(index))
+                    {
+                        var method = this[methodNames[index]];
 
-                    // Keep the context
-                    method = $.proxy(method, this);
+                        // Keep the context
+                        method = $.proxy(method, this);
 
-                    if (selector == '') {
-                        this.$el[bindFunction](eventName, method);
-                    } else {
-                        this.$el[bindFunction](eventName, selector, method);
+                        if (selector == '') {
+                            this.$el[bindFunction](eventName, method);
+                        } else {
+                            this.$el[bindFunction](eventName, selector, method);
+                        }
                     }
                 }
             }
