@@ -169,8 +169,7 @@
                 var methodNames = this.events[key].split(' ');
 
                 for(var index in methodNames) {
-                    if(methodNames.hasOwnProperty(index))
-                    {
+                    if(methodNames.hasOwnProperty(index)) {
                         var method = this[methodNames[index]];
 
                         // Keep the context
@@ -307,7 +306,7 @@
                 // Update toggle all -button
                 this.updateToggleAllButton(outerMostParent);
 
-                // Case: main level comment
+            // Case: main level comment
             } else {
                 commentList.prepend(commentEl);
             }
@@ -382,7 +381,7 @@
                 // Update the text of toggle all -button
                 this.setToggleAllButtonText(toggleAllButton, false);
 
-                // Make sure that toggle all button is not present
+            // Make sure that toggle all button is not present
             } else {
                 toggleAllButton.remove();
             }
@@ -405,15 +404,15 @@
                     if(pointsOfB != pointsOfA) {
                         return pointsOfB - pointsOfA;
 
-                        // Return newer if popularity is the same
                     } else {
+                        // Return newer if popularity is the same
                         var createdA = new Date(commentA.created).getTime();
                         var createdB = new Date(commentB.created).getTime();
                         return createdB - createdA;
                     }
                 });
 
-                // Sort by date
+            // Sort by date
             } else {
                 comments.sort(function(commentA, commentB) {
                     var createdA = new Date(commentA.created).getTime();
@@ -525,7 +524,7 @@
                         textarea.attr('data-parent', parentId);
                     }
 
-                    // Case: new comment
+                // Case: new comment
                 } else {
                     var parentId = textarea.parents('li.comment').last().data('id');
                     textarea.attr('data-parent', parentId);
