@@ -50,6 +50,8 @@
             enableUpvoting: true,
             enableDeleting: true,
             enableDeletingCommentWithReplies: true,
+            enableNavigation: true,
+            defaultNavigationSortKey: 'popularity',
 
             // Colors
             highlightColor: '#337AB7',
@@ -145,6 +147,8 @@
             }
             $.extend(this.options, options);
 
+            // Set initial sort key
+            this.currentSortKey = this.options.defaultNavigationSortKey;
 
             // Create CSS declarations for highlight color
             this.createCssDeclarations();
@@ -252,9 +256,6 @@
             var commentList = $('<ul/>', {
                 id: 'comment-list'
             });
-
-            // Get the sort key from UI
-            this.currentSortKey = this.$el.find('.navigation li.active').data().sortKey;
 
             // Divide commments into main level comments and replies
             var mainLevelComments = [];
@@ -788,8 +789,9 @@
             mainCommentingField.find('.close').hide();
 
             // Navigation bar
-            this.$el.append(this.createNavigationElement());
-
+            if (this.options.enableNavigation) {
+                this.$el.append(this.createNavigationElement());
+            }
 
             // Loading spinner
             var spinner = $('<div/>', {
@@ -957,10 +959,13 @@
             });
 
             navigationEl.append(newest).append(oldest);
-            var enableSortingByPopulairty = this.options.enableReplying || this.options.enableUpvoting;
-            if(enableSortingByPopulairty) navigationEl.append(popular);
+            var enableSortingByPopularity = this.options.enableReplying || this.options.enableUpvoting;
+            if(enableSortingByPopularity)
+                navigationEl.append(popular)
+            else if (this.currentSortKey == 'popularity')
+                this.currentSortKey = 'newest'; // sort by popularity not valid at this point
 
-            navigationEl.children().first().addClass('active');
+            navigationEl.find('[data-sort-key=' + this.currentSortKey + ']').addClass('active');
             return navigationEl;
         },
 
