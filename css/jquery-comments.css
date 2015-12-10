@@ -195,6 +195,10 @@
 	cursor: pointer;
 }
 
+.jquery-comments .textarea-wrapper .control-row > span:not(.enabled) {
+	pointer-events: none;
+}
+
 .jquery-comments .textarea-wrapper .control-row > span.enabled:hover {
 	opacity: .9;
 }
