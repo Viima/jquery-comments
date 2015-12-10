@@ -49,6 +49,7 @@
             spinnerIconURL: '',
             upvoteIconURL: '',
             replyIconURL: '',
+            uploadIconURL: '',
             noCommentsIconURL: '',
 
             // Strings to be formatted (for example localization)
@@ -75,6 +76,7 @@
             enableEditing: true,
             enableUpvoting: true,
             enableDeleting: true,
+            enableUploading: true,
             enableDeletingCommentWithReplies: true,
             enableNavigation: true,
             defaultNavigationSortKey: 'newest',
@@ -922,6 +924,25 @@
 
             } else {
                 var saveButtonText = this.options.textFormatter(this.options.sendText);
+
+                // Add upload button if the functionality is enabled
+                if(this.options.enableUploading) {
+                    var uploadButton = $('<span/>', {
+                        'class': 'enabled upload'
+                    });
+                    var uploadIcon = $('<i/>', {
+                        'class': 'fa fa-upload'
+                    });
+                    var fileInput = $('<input/>', {
+                        type: 'file'
+                    });
+                    if(this.options.uploadIconURL.length) {
+                        uploadIcon.css('background-image', 'url("'+this.options.uploadIconURL+'")');
+                        uploadIcon.addClass('image');
+                    }
+                    uploadButton.append(uploadIcon).append(fileInput);
+                    controlRow.append(uploadButton);
+                }
             }
 
             // Save button
