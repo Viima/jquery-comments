@@ -1136,35 +1136,47 @@
             // Case: attachment
             var isAttachment = commentModel.file != undefined;
             if(isAttachment) {
-
-                // Attachment icon
-                var availableIcons = ['archive', 'audio', 'code', 'excel', 'image', 'movie', 'pdf', 'photo',
-                    'picture', 'powerpoint', 'sound', 'video', 'word', 'zip'];
-                
-                var iconClass = 'fa fa-file-o';
                 var format = commentModel.fileMimeType.split('/')[1];
                 var type = commentModel.fileMimeType.split('/')[0];
-                if(availableIcons.indexOf(format) > 0) {
-                    iconClass = 'fa fa-file-' + format + '-o';
-                } else if(availableIcons.indexOf(type) > 0) {
-                    iconClass = 'fa fa-file-' + type + '-o';
-                }
-
-
-                var fileIcon = $('<i/>', {
-                    'class': iconClass
-                });
-                if(this.options.fileIconURL.length) {
-                    fileIcon.css('background-image', 'url("'+this.options.fileIconURL+'")');
-                    fileIcon.addClass('image');
-                }
 
                 // Attachment link
                 var link = $('<a/>', {
+                    'class': 'attachment',
                     href: commentModel.file,
-                    text: commentModel.fileName
+                    target: '_blank'
                 });
-                content.append(fileIcon).append(link);
+
+                // Case: preview
+                if(type == 'image') {
+                    var image = $('<img/>', {
+                        src: commentModel.file,
+                        alt: commentModel.fileName
+                    });
+                    link.html(image);
+
+                // Case: icon and text
+                } else {
+                    var availableIcons = ['archive', 'audio', 'code', 'excel', 'image', 'movie', 'pdf', 'photo',
+                        'picture', 'powerpoint', 'sound', 'video', 'word', 'zip'];
+                    
+                    var iconClass = 'fa fa-file-o';
+                    if(availableIcons.indexOf(format) > 0) {
+                        iconClass = 'fa fa-file-' + format + '-o';
+                    } else if(availableIcons.indexOf(type) > 0) {
+                        iconClass = 'fa fa-file-' + type + '-o';
+                    }
+
+                    var fileIcon = $('<i/>', {
+                        'class': iconClass
+                    });
+                    if(this.options.fileIconURL.length) {
+                        fileIcon.css('background-image', 'url("'+this.options.fileIconURL+'")');
+                        fileIcon.addClass('image');
+                    }
+                    link.text(commentModel.fileName);
+                    link.prepend(fileIcon);
+                }
+                content.html(link);
 
             // Case: regular comment
             } else {

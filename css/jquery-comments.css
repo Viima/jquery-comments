@@ -345,6 +345,13 @@
 	margin-right: 0.5em;
 }
 
+.jquery-comments ul#comment-list li.comment .wrapper .content a.attachment > * {
+	max-width: 100%;
+	max-height: 300px;
+	width: auto;
+	height: auto;
+}
+
 .jquery-comments ul#comment-list li.comment .wrapper .content time.edited {
 	float: inherit;
 	margin: 0;
