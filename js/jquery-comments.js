@@ -50,6 +50,7 @@
             upvoteIconURL: '',
             replyIconURL: '',
             uploadIconURL: '',
+            fileIconURL: '',
             noCommentsIconURL: '',
 
             // Strings to be formatted (for example localization)
@@ -97,6 +98,8 @@
                 created: 'created',
                 modified: 'modified',
                 content: 'content',
+                file: 'file',
+                fileName: 'file_name',
                 fullname: 'fullname',
                 profilePictureURL: 'profile_picture_url',
                 createdByAdmin: 'created_by_admin',
@@ -110,6 +113,7 @@
             putComment: function(commentJSON, success, error) {success(commentJSON)},
             deleteComment: function(commentJSON, success, error) {success()},
             upvoteComment: function(commentJSON, success, error) {success(commentJSON)},
+            uploadAttachment: function(commentJSON, success, error) {success(commentJSON)},
             refresh: function() {},
             timeFormatter: function(time) {
                 return new Date(time).toLocaleDateString();
@@ -143,6 +147,7 @@
             'click .commenting-field .send.enabled' : 'postComment',
             'click .commenting-field .update.enabled' : 'putComment',
             'click .commenting-field .delete.enabled' : 'deleteComment',
+            'change .commenting-field .upload.enabled input[type="file"]' : 'uploadAttachment',
 
             // Comment
             'click li.comment ul.child-comments .toggle-all': 'toggleReplies',
@@ -611,19 +616,8 @@
             // Disable send button while request is pending
             sendButton.removeClass('enabled');
 
-            var time = new Date().toISOString();
-            var commentJSON = {
-                id: 'c' +  (this.getComments().length + 1),   // Temporary id
-                parent: textarea.attr('data-parent') || null,
-                created: time,
-                modified: time,
-                content: this.getTextareaContent(textarea),
-                fullname: this.options.textFormatter(this.options.youText),
-                profilePictureURL: this.options.profilePictureURL,
-                createdByCurrentUser: true,
-                upvoteCount: 0,
-                userHasUpvoted: false
-            };
+            // Create comment JSON
+            var commentJSON = this.createCommentJSON(textarea);
 
             // Reverse mapping
             commentJSON = this.applyExternalMappings(commentJSON);
@@ -708,6 +702,49 @@
             };
 
             this.options.deleteComment(commentJSON, success, error);
+        },
+
+        uploadAttachment: function(ev) {
+            var self = this;
+            var files = ev.currentTarget.files;
+
+            if(files.length) {
+                var file = files[0];
+                
+                var uploadButton = $(ev.currentTarget).parents('.upload').first();
+                var commentingField = uploadButton.parents('.commenting-field').first();
+                var textarea = commentingField.find('.textarea');
+
+                // Disable upload button while request is pending
+                uploadButton.removeClass('enabled');
+
+                // Create comment JSON
+                var commentJSON = this.createCommentJSON(textarea);
+                commentJSON.content = '';
+                commentJSON.file = file;
+                commentJSON.fileName = file.name;
+
+                // Reverse mapping
+                commentJSON = this.applyExternalMappings(commentJSON);
+
+                var success = function(commentJSON) {
+                    var commentModel = self.createCommentModel(commentJSON);
+                    self.addCommentToDataModel(commentModel);
+                    self.addComment(commentModel);
+
+                    // Close the commenting field if there's no content besides the attachment
+                    if(self.getTextareaContent(textarea).length == 0) {
+                        commentingField.find('.close').trigger('click');
+                    }
+                    uploadButton.addClass('enabled');
+                };
+
+                var error = function() {
+                    uploadButton.addClass('enabled');
+                };
+
+                this.options.uploadAttachment(commentJSON, success, error);
+            }
         },
 
         toggleReplies: function(ev) {
@@ -1090,9 +1127,32 @@
 
             // Content
             var content = $('<div/>', {
-                'class': 'content',
-                text: commentModel.content
-            }).html(this.linkify(this.escape(commentModel.content)));
+                'class': 'content'
+            });
+
+            // Case: attachment
+            if(commentModel.file) {
+
+                // Attachment icon
+                var fileIcon = $('<i/>', {
+                    'class': 'fa fa-file-o'
+                });
+                if(this.options.fileIconURL.length) {
+                    fileIcon.css('background-image', 'url("'+this.options.fileIconURL+'")');
+                    fileIcon.addClass('image');
+                }
+
+                // Attachment link
+                var link = $('<a/>', {
+                    href: commentModel.file,
+                    text: commentModel.fileName
+                });
+                content.append(fileIcon).append(link);
+
+            // Case: regular comment
+            } else {
+                content.html(this.linkify(this.escape(commentModel.content)));
+            }
 
             // Edited timestamp
             if(commentModel.modified && commentModel.modified != commentModel.created) {
@@ -1252,6 +1312,23 @@
                 parentId = parentComment.parent;
             } while(parentComment.parent != null);
             return parentComment;
+        },
+
+        createCommentJSON: function(textarea) {
+            var time = new Date().toISOString();
+            var commentJSON = {
+                id: 'c' +  (this.getComments().length + 1),   // Temporary id
+                parent: textarea.attr('data-parent') || null,
+                created: time,
+                modified: time,
+                content: this.getTextareaContent(textarea),
+                fullname: this.options.textFormatter(this.options.youText),
+                profilePictureURL: this.options.profilePictureURL,
+                createdByCurrentUser: true,
+                upvoteCount: 0,
+                userHasUpvoted: false
+            };
+            return commentJSON;
         },
 
         setToggleAllButtonText: function(toggleAllButton, toggle) {

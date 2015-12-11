@@ -332,6 +332,10 @@
 	word-break: break-word;
 }
 
+.jquery-comments ul#comment-list li.comment .wrapper .content i {
+	margin-right: 0.5em;
+}
+
 .jquery-comments ul#comment-list li.comment .wrapper .content time.edited {
 	float: inherit;
 	margin: 0;
