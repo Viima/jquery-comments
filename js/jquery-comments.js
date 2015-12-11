@@ -333,8 +333,8 @@
             if(commentModel.parent) {
                 var directParentEl = commentList.find('.comment[data-id="'+commentModel.parent+'"]');
 
-                // Re-render direct parent element
-                this.reRenderComment(commentModel.parent);
+                // Re-render action bar of direct parent element
+                this.reRenderCommentActionBar(commentModel.parent);
 
                 // Force replies into one level only
                 var outerMostParent = directParentEl.parents('.comment').last();
@@ -703,7 +703,7 @@
 
             var success = function() {
                 self.removeComment(commentId);
-                if(parentId) self.reRenderComment(parentId);
+                if(parentId) self.reRenderCommentActionBar(parentId);
             };
 
             var error = function() {
@@ -1286,6 +1286,13 @@
             var commentWrapper = this.createCommentWrapperElement(commentModel);
             var commentEl = this.$el.find('li.comment[data-id="'+commentModel.id+'"]');
             commentEl.find('> .comment-wrapper').replaceWith(commentWrapper);
+        },
+
+        reRenderCommentActionBar: function(id) {
+            var commentModel = this.commentsById[id];
+            var commentWrapper = this.createCommentWrapperElement(commentModel);
+            var commentEl = this.$el.find('li.comment[data-id="'+commentModel.id+'"]');
+            commentEl.find('.actions').first().replaceWith(commentWrapper.find('.actions'));
         },
 
         reRenderUpvotes: function(id) {
