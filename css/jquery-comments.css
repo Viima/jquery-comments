@@ -3,6 +3,15 @@
 	font-family: inherit;
 }
 
+.jquery-comments a {
+	color: #0069C5;
+	text-decoration: none;
+}
+
+.jquery-comments a:hover {
+	text-decoration: underline;
+}
+
 .jquery-comments .textarea, .jquery-comments input, .jquery-comments button {
 	-webkit-appearance: none;
 	-moz-appearance: none;
@@ -391,6 +400,16 @@
 .jquery-comments ul#comment-list li.comment .actions .action:not(.upvote):hover,
 .jquery-comments ul#comment-list li.comment .actions .action.upvote:not(.highlight-font) i:hover {
 	color: #666;
+}
+
+.jquery-comments ul#comment-list li.comment .actions .action.delete {
+	opacity: 0.5;
+	pointer-events: none;
+}
+
+.jquery-comments ul#comment-list li.comment .actions .action.delete.enabled {
+	opacity: 1;
+	pointer-events: auto;
 }
 
 

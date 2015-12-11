@@ -144,17 +144,20 @@
             'change .commenting-field .textarea' : 'increaseTextareaHeight textareaContentChanged',
             'click .commenting-field:not(.main) .close' : 'removeCommentingField',
 
-            // Actions
+            // Edit mode actions
             'click .commenting-field .send.enabled' : 'postComment',
             'click .commenting-field .update.enabled' : 'putComment',
             'click .commenting-field .delete.enabled' : 'deleteComment',
             'change .commenting-field .upload.enabled input[type="file"]' : 'uploadAttachment',
 
-            // Comment
+            // Other actions
+            'click li.comment button.upvote' : 'upvoteComment',
+            'click li.comment button.delete.enabled' : 'deleteComment',
+
+            // Other
             'click li.comment ul.child-comments .toggle-all': 'toggleReplies',
             'click li.comment button.reply': 'replyButtonClicked',
-            'click li.comment button.edit': 'editButtonClicked',
-            'click li.comment button.upvote' : 'upvoteComment'
+            'click li.comment button.edit': 'editButtonClicked'
         },
 
 
@@ -329,6 +332,9 @@
             // Case: reply
             if(commentModel.parent) {
                 var directParentEl = commentList.find('.comment[data-id="'+commentModel.parent+'"]');
+
+                // Re-render direct parent element
+                this.reRenderComment(commentModel.parent);
 
                 // Force replies into one level only
                 var outerMostParent = directParentEl.parents('.comment').last();
@@ -684,9 +690,10 @@
         deleteComment: function(ev) {
             var self = this;
             var deleteButton = $(ev.currentTarget);
-            var textarea = deleteButton.parents('.commenting-field').first().find('.textarea');
-            var commentJSON =  $.extend({}, this.commentsById[textarea.attr('data-comment')]);
+            var commentEl = deleteButton.parents('.comment').first();
+            var commentJSON =  $.extend({}, this.commentsById[commentEl.attr('data-id')]);
             var commentId = commentJSON.id;
+            var parentId = commentJSON.parent;
 
             // Disable send button while request is pending
             deleteButton.removeClass('enabled');
@@ -696,6 +703,7 @@
 
             var success = function() {
                 self.removeComment(commentId);
+                if(parentId) self.reRenderComment(parentId);
             };
 
             var error = function() {
@@ -1203,17 +1211,28 @@
             // Upvotes
             var upvotes = this.createUpvoteElement(commentModel);
 
-            // Edit
-            var edit = $('<button/>', {
-                'class': 'action edit',
-                text: this.options.textFormatter(this.options.editText)
-            });
-
             // Append buttons for actions that are enabled
             if(this.options.enableReplying) actions.append(reply);
             if(this.options.enableUpvoting) actions.append(upvotes);
-            if(this.options.enableEditing && commentModel.createdByCurrentUser){
-                actions.append(edit);
+
+            if(commentModel.createdByCurrentUser) {
+
+                // Case: delete button for attachemt
+                if(isAttachment && this.isAllowedToDelete(commentModel.id)) {
+                    var deleteButton = $('<button/>', {
+                        'class': 'action delete enabled',
+                        text: this.options.textFormatter(this.options.deleteText)
+                    });
+                    actions.append(deleteButton);
+
+                // Case: edit button for regular comment
+                } else if(!isAttachment && this.options.enableEditing) {
+                    var editButton = $('<button/>', {
+                        'class': 'action edit',
+                        text: this.options.textFormatter(this.options.editText)
+                    });
+                    actions.append(editButton);
+                }
             }
 
             // Append separators between the actions
