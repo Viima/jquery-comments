@@ -941,14 +941,8 @@
                 // Append delete button if necessary
                 if(this.options.enableDeleting) {
 
-                    var isAllowedToDelete = true;
-
                     // Check if comment with replies can be deleted
-                    if(!this.options.enableDeletingCommentWithReplies) {
-                        $(this.getComments()).each(function(index, comment) {
-                            if(comment.parent == existingCommentId) isAllowedToDelete = false;
-                        });
-                    }
+                    var isAllowedToDelete = this.isAllowedToDelete(existingCommentId);
 
                     if(isAllowedToDelete) {
                         var deleteButton = $('<span/>', {
@@ -1329,6 +1323,16 @@
                 userHasUpvoted: false
             };
             return commentJSON;
+        },
+
+        isAllowedToDelete: function(commentId) {
+            var isAllowedToDelete = true;
+            if(!this.options.enableDeletingCommentWithReplies) {
+                $(this.getComments()).each(function(index, comment) {
+                    if(comment.parent == commentId) isAllowedToDelete = false;
+                });
+            }
+            return isAllowedToDelete;
         },
 
         setToggleAllButtonText: function(toggleAllButton, toggle) {
