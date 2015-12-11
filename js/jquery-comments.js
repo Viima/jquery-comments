@@ -77,7 +77,7 @@
             enableEditing: true,
             enableUpvoting: true,
             enableDeleting: true,
-            enableUploading: true,
+            enableAttachments: true,
             enableDeletingCommentWithReplies: true,
             enableNavigation: true,
             defaultNavigationSortKey: 'newest',
@@ -100,6 +100,7 @@
                 content: 'content',
                 file: 'file',
                 fileName: 'file_name',
+                fileMimeType: 'file_mime_type',
                 fullname: 'fullname',
                 profilePictureURL: 'profile_picture_url',
                 createdByAdmin: 'created_by_admin',
@@ -723,6 +724,7 @@
                 commentJSON.content = '';
                 commentJSON.file = file;
                 commentJSON.fileName = file.name;
+                commentJSON.fileMimeType = file.type;
 
                 // Reverse mapping
                 commentJSON = this.applyExternalMappings(commentJSON);
@@ -745,6 +747,9 @@
 
                 this.options.uploadAttachment(commentJSON, success, error);
             }
+
+            // Clear the input field
+            $(ev.currentTarget).val('');
         },
 
         toggleReplies: function(ev) {
@@ -939,25 +944,21 @@
                 var saveButtonText = this.options.textFormatter(this.options.saveText);
 
                 // Append delete button if necessary
-                if(this.options.enableDeleting) {
+                var isAllowedToDelete = this.isAllowedToDelete(existingCommentId);
 
-                    // Check if comment with replies can be deleted
-                    var isAllowedToDelete = this.isAllowedToDelete(existingCommentId);
-
-                    if(isAllowedToDelete) {
-                        var deleteButton = $('<span/>', {
-                            'class': 'enabled delete',
-                            text: this.options.textFormatter(this.options.deleteText)
-                        }).css('background-color', this.options.deleteButtonColor);
-                        controlRow.append(deleteButton);
-                    }
+                if(isAllowedToDelete) {
+                    var deleteButton = $('<span/>', {
+                        'class': 'enabled delete',
+                        text: this.options.textFormatter(this.options.deleteText)
+                    }).css('background-color', this.options.deleteButtonColor);
+                    controlRow.append(deleteButton);
                 }
 
             } else {
                 var saveButtonText = this.options.textFormatter(this.options.sendText);
 
-                // Add upload button if the functionality is enabled
-                if(this.options.enableUploading) {
+                // Add upload button if attachments are enabled
+                if(this.options.enableAttachments) {
                     var uploadButton = $('<span/>', {
                         'class': 'enabled upload'
                     });
@@ -1125,11 +1126,25 @@
             });
 
             // Case: attachment
-            if(commentModel.file) {
+            var isAttachment = commentModel.file != undefined;
+            if(isAttachment) {
 
                 // Attachment icon
+                var availableIcons = ['archive', 'audio', 'code', 'excel', 'image', 'movie', 'pdf', 'photo',
+                    'picture', 'powerpoint', 'sound', 'video', 'word', 'zip'];
+                
+                var iconClass = 'fa fa-file-o';
+                var format = commentModel.fileMimeType.split('/')[1];
+                var type = commentModel.fileMimeType.split('/')[0];
+                if(availableIcons.indexOf(format) > 0) {
+                    iconClass = 'fa fa-file-' + format + '-o';
+                } else if(availableIcons.indexOf(type) > 0) {
+                    iconClass = 'fa fa-file-' + type + '-o';
+                }
+
+
                 var fileIcon = $('<i/>', {
-                    'class': 'fa fa-file-o'
+                    'class': iconClass
                 });
                 if(this.options.fileIconURL.length) {
                     fileIcon.css('background-image', 'url("'+this.options.fileIconURL+'")');
@@ -1326,13 +1341,16 @@
         },
 
         isAllowedToDelete: function(commentId) {
-            var isAllowedToDelete = true;
-            if(!this.options.enableDeletingCommentWithReplies) {
-                $(this.getComments()).each(function(index, comment) {
-                    if(comment.parent == commentId) isAllowedToDelete = false;
-                });
+            if(this.options.enableDeleting) {
+                var isAllowedToDelete = true;
+                if(!this.options.enableDeletingCommentWithReplies) {
+                    $(this.getComments()).each(function(index, comment) {
+                        if(comment.parent == commentId) isAllowedToDelete = false;
+                    });
+                }
+                return isAllowedToDelete;
             }
-            return isAllowedToDelete;
+            return false;
         },
 
         setToggleAllButtonText: function(toggleAllButton, toggle) {
