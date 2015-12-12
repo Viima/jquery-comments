@@ -99,7 +99,6 @@
                 modified: 'modified',
                 content: 'content',
                 file: 'file',
-                fileName: 'file_name',
                 fileMimeType: 'file_mime_type',
                 fullname: 'fullname',
                 profilePictureURL: 'profile_picture_url',
@@ -731,7 +730,6 @@
                 var commentJSON = this.createCommentJSON(textarea);
                 commentJSON.content = '';
                 commentJSON.file = file;
-                commentJSON.fileName = file.name;
                 commentJSON.fileMimeType = file.type;
 
                 // Reverse mapping
@@ -1149,8 +1147,7 @@
                 // Case: image preview
                 if(type == 'image') {
                     var image = $('<img/>', {
-                        src: commentModel.file,
-                        alt: commentModel.fileName
+                        src: commentModel.file
                     });
                     link.html(image);
 
@@ -1165,6 +1162,8 @@
 
                 // Case: icon and text
                 } else {
+
+                    // Icon
                     var availableIcons = ['archive', 'audio', 'code', 'excel', 'image', 'movie', 'pdf', 'photo',
                         'picture', 'powerpoint', 'sound', 'video', 'word', 'zip'];
                     
@@ -1182,7 +1181,14 @@
                         fileIcon.css('background-image', 'url("'+this.options.fileIconURL+'")');
                         fileIcon.addClass('image');
                     }
-                    link.text(commentModel.fileName);
+
+                    // File name
+                    var parts = commentModel.file.split('/');
+                    var fileName = parts[parts.length - 1];
+                    fileName = fileName.split('?')[0];
+                    fileName = decodeURIComponent(fileName);
+
+                    link.text(fileName);
                     link.prepend(fileIcon);
                 }
                 content.html(link);

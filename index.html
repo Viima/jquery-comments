@@ -59,6 +59,7 @@
                       }, 500)
                     },
                     uploadAttachment: function(data, success, error) {
+                        data.file = '/files/' + data.file.name;
                         setTimeout(function() {
                             success(data);
                         }, 500);
