@@ -350,6 +350,7 @@
 	max-height: 300px;
 	width: auto;
 	height: auto;
+	margin: .25em 0;
 }
 
 .jquery-comments ul#comment-list li.comment .wrapper .content time.edited {
