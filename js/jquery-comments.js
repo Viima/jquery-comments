@@ -1146,13 +1146,22 @@
                     target: '_blank'
                 });
 
-                // Case: preview
+                // Case: image preview
                 if(type == 'image') {
                     var image = $('<img/>', {
                         src: commentModel.file,
                         alt: commentModel.fileName
                     });
                     link.html(image);
+
+                // Case: video preview
+                } else if(type == 'video') {
+                    var video = $('<video/>', {
+                        src: commentModel.file,
+                        type: commentModel.fileMimeType,
+                        controls: 'controls'
+                    });
+                    link.html(video);
 
                 // Case: icon and text
                 } else {
