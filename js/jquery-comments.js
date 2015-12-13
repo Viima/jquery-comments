@@ -68,6 +68,8 @@
             viewAllRepliesText: 'View all __replyCount__ replies',
             hideRepliesText: 'Hide replies',
             noCommentsText: 'No comments',
+            dropAttachmentText: 'Drop file here',
+            attachmentMaxSizeText: '',
             textFormatter: function(text) {
                 return text;
             },
@@ -121,6 +123,9 @@
         },
 
         events: {
+            'dragenter' : 'showDroppableOverlayIfNecessary',
+            'dragleave .droppable-overlay' : 'hideDroppableOverlay',
+
             // Save comment on keydown
             'keydown [contenteditable]' : 'saveOnKeydown',
 
@@ -483,6 +488,19 @@
 
         // Event handlers
         // ==============
+
+        showDroppableOverlayIfNecessary: function(ev) {
+            if(this.options.enableAttachments) {
+                this.$el.find('.droppable-overlay').css('top', this.$el[0].scrollTop);
+                this.$el.find('.droppable-overlay').show();
+                this.$el.addClass('drag-ongoing');
+            }
+        },      
+
+        hideDroppableOverlay: function(ev) {
+            this.$el.find('.droppable-overlay').hide();
+            this.$el.removeClass('drag-ongoing');
+        },
 
         saveOnKeydown: function(ev) {
             // Save comment on cmd/ctrl + enter
@@ -898,6 +916,35 @@
             }
             noComments.prepend($('<br/>')).prepend(noCommentsIcon);
             this.$el.append(noComments);
+
+
+            // Drag & dropping attachments
+            if(this.options.enableAttachments) {
+                var droppableOverlay = $('<div/>', {
+                    'class': 'droppable-overlay'
+                });
+
+                var droppableContainer = $('<div/>', {
+                    'class': 'droppable-container'
+                });
+
+                var droppable = $('<div/>', {
+                    'class': 'droppable'
+                });
+
+                var header = $('<h3/>', {
+                    text: this.options.dropAttachmentText
+                });
+                droppable.append(header);
+
+                // Show max size of the attachemnt if defined
+                if(this.options.attachmentMaxSizeText.length) {
+                    droppable.append(this.options.attachmentMaxSizeText);
+                }
+
+                droppableOverlay.html(droppableContainer.html(droppable)).hide();
+                this.$el.append(droppableOverlay);
+            }
         },
 
         createProfilePictureElement: function(src) {

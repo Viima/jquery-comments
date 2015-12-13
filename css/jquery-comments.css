@@ -487,3 +487,41 @@
 .jquery-comments ul#comment-list li.comment.edit > .comment-wrapper .commenting-field {
 	padding: 0 !important;	/* Parent element has the padding */
 }
+
+/* Drag & drop attachments */
+.jquery-comments.drag-ongoing {
+	overflow-y: hidden !important;
+}
+
+.jquery-comments .droppable-overlay {
+	display: table;
+	position: fixed;
+	z-index: 99;
+
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,0.3)
+}
+
+.jquery-comments .droppable-overlay .droppable-container {
+	pointer-events: none;	/* Prevent dragleave event from firing when dragging above this element */
+	display: table-cell;
+	vertical-align: middle;
+	text-align: center;
+}
+
+.jquery-comments .droppable-overlay .droppable-container .droppable {
+	background: #FFF;
+	color: #666;
+	padding: 4em;
+}
+
+.jquery-comments .droppable-overlay .droppable-container .droppable h3 {
+	font-size: 1.75em;
+	font-weight: bold;
+	color: #333;
+	margin: 0;
+	margin-bottom: 0.25em;
+}

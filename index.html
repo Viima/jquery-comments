@@ -33,6 +33,8 @@
                     profilePictureURL: 'https://viima-app.s3.amazonaws.com/media/user_profiles/user-icon.png',
                     roundProfilePictures: true,
                     textareaRows: 1,
+                    enableAttachments: true,
+                    attachmentMaxSizeText: 'File size is limited to 10Mb.',
                     getComments: function(success, error) {
                         setTimeout(function() {
                             success(commentsArray);
