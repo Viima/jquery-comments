@@ -9,6 +9,7 @@ describe('Basic features', function() {
             spinnerImageURL: '../img/ajax-loader.gif',
             profilePictureURL: 'https://app.viima.com/static/media/user_profiles/user-icon.png',
             roundProfilePictures: true,
+            enableDeletingCommentWithReplies: true,
             textareaRows: 1,
             textareaMaxRows: 4,
             getComments: function(success, error) {

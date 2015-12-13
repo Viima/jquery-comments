@@ -68,8 +68,9 @@
             viewAllRepliesText: 'View all __replyCount__ replies',
             hideRepliesText: 'Hide replies',
             noCommentsText: 'No comments',
-            dropAttachmentText: 'Drop file here',
-            attachmentMaxSizeText: '',
+            attachmentDropText: 'Drop files here',
+            attachmentMaxSizeText: 'Single file size is limited to __fileSize__MB',
+            attachmentMaxSizeInMB: 10,
             textFormatter: function(text) {
                 return text;
             },
@@ -80,7 +81,7 @@
             enableUpvoting: true,
             enableDeleting: true,
             enableAttachments: true,
-            enableDeletingCommentWithReplies: true,
+            enableDeletingCommentWithReplies: false,
             enableNavigation: true,
             defaultNavigationSortKey: 'newest',
 
@@ -123,9 +124,6 @@
         },
 
         events: {
-            'dragenter' : 'showDroppableOverlayIfNecessary',
-            'dragleave .droppable-overlay' : 'hideDroppableOverlay',
-
             // Save comment on keydown
             'keydown [contenteditable]' : 'saveOnKeydown',
 
@@ -161,7 +159,13 @@
             // Other
             'click li.comment ul.child-comments .toggle-all': 'toggleReplies',
             'click li.comment button.reply': 'replyButtonClicked',
-            'click li.comment button.edit': 'editButtonClicked'
+            'click li.comment button.edit': 'editButtonClicked',
+
+            // Drag & dropping attachments
+            'dragenter' : 'showDroppableOverlayIfNecessary',
+            'dragleave .droppable-overlay' : 'hideDroppableOverlay',
+            'dragover .droppable-overlay' : 'handleDragOver',
+            'drop .droppable-overlay' : 'handleDrop'
         },
 
 
@@ -500,6 +504,19 @@
         hideDroppableOverlay: function(ev) {
             this.$el.find('.droppable-overlay').hide();
             this.$el.removeClass('drag-ongoing');
+        },
+
+        handleDragOver: function(ev) {
+            ev.stopPropagation();
+            ev.preventDefault();
+            ev.originalEvent.dataTransfer.dropEffect = 'copy';
+        },
+
+        handleDrop: function(ev) {
+            ev.stopPropagation();
+            ev.preventDefault();
+            var files = ev.originalEvent.dataTransfer.files;
+            console.log(files);
         },
 
         saveOnKeydown: function(ev) {
@@ -933,13 +950,15 @@
                 });
 
                 var header = $('<h3/>', {
-                    text: this.options.dropAttachmentText
+                    text: this.options.textFormatter(this.options.attachmentDropText)
                 });
                 droppable.append(header);
 
                 // Show max size of the attachemnt if defined
                 if(this.options.attachmentMaxSizeText.length) {
-                    droppable.append(this.options.attachmentMaxSizeText);
+                    var maxSizeText = this.options.textFormatter(this.options.attachmentMaxSizeText)
+                    maxSizeText = maxSizeText.replace('__fileSize__', this.options.attachmentMaxSizeInMB);
+                    droppable.append(maxSizeText);
                 }
 
                 droppableOverlay.html(droppableContainer.html(droppable)).hide();
