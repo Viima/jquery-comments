@@ -493,7 +493,7 @@
         // Event handlers
         // ==============
 
-        showDroppableOverlayIfNecessary: function(ev) {
+        showDroppableOverlayIfNecessary: function() {
             if(this.options.enableAttachments) {
                 this.$el.find('.droppable-overlay').css('top', this.$el[0].scrollTop);
                 this.$el.find('.droppable-overlay').show();
@@ -501,7 +501,7 @@
             }
         },      
 
-        hideDroppableOverlay: function(ev) {
+        hideDroppableOverlay: function() {
             this.$el.find('.droppable-overlay').hide();
             this.$el.removeClass('drag-ongoing');
         },
@@ -516,7 +516,10 @@
             ev.stopPropagation();
             ev.preventDefault();
             var files = ev.originalEvent.dataTransfer.files;
-            console.log(files);
+            $(files).each(function(index, file) {
+                console.log(file)
+            });
+            this.hideDroppableOverlay();
         },
 
         saveOnKeydown: function(ev) {
@@ -1038,7 +1041,8 @@
                         'class': 'fa fa-upload'
                     });
                     var fileInput = $('<input/>', {
-                        type: 'file'
+                        type: 'file',
+                        multiple: 'multiple'
                     });
                     if(this.options.uploadIconURL.length) {
                         uploadIcon.css('background-image', 'url("'+this.options.uploadIconURL+'")');
