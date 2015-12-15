@@ -496,64 +496,6 @@
         // Event handlers
         // ==============
 
-        showDroppableOverlay: function(ev) {
-            if(this.options.enableAttachments) {
-                this.$el.find('.droppable-overlay').css('top', this.$el[0].scrollTop);
-                this.$el.find('.droppable-overlay').show();
-                this.$el.addClass('drag-ongoing');
-            }
-        },
-
-        handleDragEnter: function(ev) {
-            var count = $(ev.currentTarget).data('dnd-count') || 0;
-            count++;
-            $(ev.currentTarget).data('dnd-count', count);
-            $(ev.currentTarget).addClass('drag-over');
-        },
-
-        handleDragLeave: function(ev, callback) {
-            var count = $(ev.currentTarget).data('dnd-count');
-            count--;
-            $(ev.currentTarget).data('dnd-count', count);
-
-            if(count == 0) {            
-                $(ev.currentTarget).removeClass('drag-over');
-                if(callback) callback();
-            }
-        },
-
-        handleDragLeaveForOverlay: function(ev) {
-            var self = this;
-            this.handleDragLeave(ev, function() {
-                self.hideDroppableOverlay();
-            });
-        },
-
-        handleDragLeaveForDroppable: function(ev) {
-            this.handleDragLeave(ev);
-        },
-
-        handleDragOverForOverlay: function(ev) {
-            ev.stopPropagation();
-            ev.preventDefault();
-            ev.originalEvent.dataTransfer.dropEffect = 'copy';
-        },
-
-        hideDroppableOverlay: function() {
-            this.$el.find('.droppable-overlay').hide();
-            this.$el.removeClass('drag-ongoing');
-        },
-
-        handleDrop: function(ev) {
-            ev.stopPropagation();
-            ev.preventDefault();
-            var files = ev.originalEvent.dataTransfer.files;
-            $(files).each(function(index, file) {
-                console.log(file)
-            });
-            this.hideDroppableOverlay();
-        },
-
         saveOnKeydown: function(ev) {
             // Save comment on cmd/ctrl + enter
             if(ev.keyCode == 13 && (ev.metaKey || ev.ctrlKey)) {
@@ -828,6 +770,46 @@
             $(ev.currentTarget).val('');
         },
 
+        upvoteComment: function(ev) {
+            var self = this;
+            var commentEl = $(ev.currentTarget).parents('li.comment').first();
+            var commentModel = commentEl.data().model;
+
+            // Check whether user upvoted the comment or revoked the upvote
+            var previousUpvoteCount = commentModel.upvoteCount;
+            var newUpvoteCount;
+            if(commentModel.userHasUpvoted) {
+                newUpvoteCount = previousUpvoteCount - 1;
+            } else {
+                newUpvoteCount = previousUpvoteCount + 1;
+            }
+
+            // Show changes immediatelly
+            commentModel.userHasUpvoted = !commentModel.userHasUpvoted;
+            commentModel.upvoteCount = newUpvoteCount;
+            this.reRenderUpvotes(commentModel.id);
+
+            // Reverse mapping
+            var commentJSON = $.extend({}, commentModel);
+            commentJSON = this.applyExternalMappings(commentJSON);
+
+            var success = function(commentJSON) {
+                var commentModel = self.createCommentModel(commentJSON);
+                self.updateCommentModel(commentModel);
+                self.reRenderUpvotes(commentModel.id);
+            };
+
+            var error = function() {
+
+                // Revert changes
+                commentModel.userHasUpvoted = !commentModel.userHasUpvoted;
+                commentModel.upvoteCount = previousUpvoteCount;
+                self.reRenderUpvotes(commentModel.id);
+            };
+
+            this.options.upvoteComment(commentJSON, success, error);
+        },
+
         toggleReplies: function(ev) {
             var el = $(ev.currentTarget);
             el.siblings('.hidden-reply').toggleClass('visible');
@@ -877,44 +859,62 @@
             this.moveCursorToEnd(textarea);
         },
 
-        upvoteComment: function(ev) {
-            var self = this;
-            var commentEl = $(ev.currentTarget).parents('li.comment').first();
-            var commentModel = commentEl.data().model;
-
-            // Check whether user upvoted the comment or revoked the upvote
-            var previousUpvoteCount = commentModel.upvoteCount;
-            var newUpvoteCount;
-            if(commentModel.userHasUpvoted) {
-                newUpvoteCount = previousUpvoteCount - 1;
-            } else {
-                newUpvoteCount = previousUpvoteCount + 1;
+        showDroppableOverlay: function(ev) {
+            if(this.options.enableAttachments) {
+                this.$el.find('.droppable-overlay').css('top', this.$el[0].scrollTop);
+                this.$el.find('.droppable-overlay').show();
+                this.$el.addClass('drag-ongoing');
             }
+        },
 
-            // Show changes immediatelly
-            commentModel.userHasUpvoted = !commentModel.userHasUpvoted;
-            commentModel.upvoteCount = newUpvoteCount;
-            this.reRenderUpvotes(commentModel.id);
+        handleDragEnter: function(ev) {
+            var count = $(ev.currentTarget).data('dnd-count') || 0;
+            count++;
+            $(ev.currentTarget).data('dnd-count', count);
+            $(ev.currentTarget).addClass('drag-over');
+        },
 
-            // Reverse mapping
-            var commentJSON = $.extend({}, commentModel);
-            commentJSON = this.applyExternalMappings(commentJSON);
+        handleDragLeave: function(ev, callback) {
+            var count = $(ev.currentTarget).data('dnd-count');
+            count--;
+            $(ev.currentTarget).data('dnd-count', count);
 
-            var success = function(commentJSON) {
-                var commentModel = self.createCommentModel(commentJSON);
-                self.updateCommentModel(commentModel);
-                self.reRenderUpvotes(commentModel.id);
-            };
+            if(count == 0) {            
+                $(ev.currentTarget).removeClass('drag-over');
+                if(callback) callback();
+            }
+        },
 
-            var error = function() {
+        handleDragLeaveForOverlay: function(ev) {
+            var self = this;
+            this.handleDragLeave(ev, function() {
+                self.hideDroppableOverlay();
+            });
+        },
 
-                // Revert changes
-                commentModel.userHasUpvoted = !commentModel.userHasUpvoted;
-                commentModel.upvoteCount = previousUpvoteCount;
-                self.reRenderUpvotes(commentModel.id);
-            };
+        handleDragLeaveForDroppable: function(ev) {
+            this.handleDragLeave(ev);
+        },
 
-            this.options.upvoteComment(commentJSON, success, error);
+        handleDragOverForOverlay: function(ev) {
+            ev.stopPropagation();
+            ev.preventDefault();
+            ev.originalEvent.dataTransfer.dropEffect = 'copy';
+        },
+
+        hideDroppableOverlay: function() {
+            this.$el.find('.droppable-overlay').hide();
+            this.$el.removeClass('drag-ongoing');
+        },
+
+        handleDrop: function(ev) {
+            ev.stopPropagation();
+            ev.preventDefault();
+            var files = ev.originalEvent.dataTransfer.files;
+            $(files).each(function(index, file) {
+                console.log(file)
+            });
+            this.hideDroppableOverlay();
         },
 
 
