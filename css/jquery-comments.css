@@ -215,7 +215,7 @@
 .jquery-comments .textarea-wrapper .control-row > span.upload {
 	position: relative;
     overflow: hidden;
-	background-color: #AAA;
+	background-color: #999;
 }
 
 .jquery-comments .textarea-wrapper .control-row > span.upload input {
@@ -506,7 +506,6 @@
 }
 
 .jquery-comments .droppable-overlay .droppable-container {
-	pointer-events: none;	/* Prevent dragleave event from firing when dragging above this element */
 	display: table-cell;
 	vertical-align: middle;
 	text-align: center;
@@ -514,14 +513,15 @@
 
 .jquery-comments .droppable-overlay .droppable-container .droppable {
 	background: #FFF;
-	color: #666;
-	padding: 4em;
+	color: #CCC;
+	padding: 6em;
 }
 
-.jquery-comments .droppable-overlay .droppable-container .droppable h3 {
-	font-size: 1.75em;
-	font-weight: bold;
-	color: #333;
-	margin: 0;
-	margin-bottom: 0.25em;
+.jquery-comments .droppable-overlay .droppable-container .droppable.drag-over {
+	color: #999;
+}
+
+.jquery-comments .droppable-overlay .droppable-container .droppable i {
+	font-size: 4em;
+	margin-bottom: 5px;
 }

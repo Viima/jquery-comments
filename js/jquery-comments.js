@@ -69,8 +69,6 @@
             hideRepliesText: 'Hide replies',
             noCommentsText: 'No comments',
             attachmentDropText: 'Drop files here',
-            attachmentMaxSizeText: 'Single file size is limited to __fileSize__MB',
-            attachmentMaxSizeInMB: 10,
             textFormatter: function(text) {
                 return text;
             },
@@ -162,9 +160,14 @@
             'click li.comment button.edit': 'editButtonClicked',
 
             // Drag & dropping attachments
-            'dragenter' : 'showDroppableOverlayIfNecessary',
-            'dragleave .droppable-overlay' : 'hideDroppableOverlay',
-            'dragover .droppable-overlay' : 'handleDragOver',
+            'dragenter' : 'showDroppableOverlay',
+
+            'dragenter .droppable-overlay' : 'handleDragEnter',
+            'dragleave .droppable-overlay' : 'handleDragLeaveForOverlay',
+            'dragenter .droppable-overlay .droppable' : 'handleDragEnter',
+            'dragleave .droppable-overlay .droppable' : 'handleDragLeaveForDroppable',
+
+            'dragover .droppable-overlay' : 'handleDragOverForOverlay',
             'drop .droppable-overlay' : 'handleDrop'
         },
 
@@ -493,23 +496,52 @@
         // Event handlers
         // ==============
 
-        showDroppableOverlayIfNecessary: function() {
+        showDroppableOverlay: function(ev) {
             if(this.options.enableAttachments) {
                 this.$el.find('.droppable-overlay').css('top', this.$el[0].scrollTop);
                 this.$el.find('.droppable-overlay').show();
                 this.$el.addClass('drag-ongoing');
             }
-        },      
+        },
+
+        handleDragEnter: function(ev) {
+            var count = $(ev.currentTarget).data('dnd-count') || 0;
+            count++;
+            $(ev.currentTarget).data('dnd-count', count);
+            $(ev.currentTarget).addClass('drag-over');
+        },
+
+        handleDragLeave: function(ev, callback) {
+            var count = $(ev.currentTarget).data('dnd-count');
+            count--;
+            $(ev.currentTarget).data('dnd-count', count);
+
+            if(count == 0) {            
+                $(ev.currentTarget).removeClass('drag-over');
+                if(callback) callback();
+            }
+        },
+
+        handleDragLeaveForOverlay: function(ev) {
+            var self = this;
+            this.handleDragLeave(ev, function() {
+                self.hideDroppableOverlay();
+            });
+        },
+
+        handleDragLeaveForDroppable: function(ev) {
+            this.handleDragLeave(ev);
+        },
+
+        handleDragOverForOverlay: function(ev) {
+            ev.stopPropagation();
+            ev.preventDefault();
+            ev.originalEvent.dataTransfer.dropEffect = 'copy';
+        },
 
         hideDroppableOverlay: function() {
             this.$el.find('.droppable-overlay').hide();
             this.$el.removeClass('drag-ongoing');
-        },
-
-        handleDragOver: function(ev) {
-            ev.stopPropagation();
-            ev.preventDefault();
-            ev.originalEvent.dataTransfer.dropEffect = 'copy';
         },
 
         handleDrop: function(ev) {
@@ -952,17 +984,19 @@
                     'class': 'droppable'
                 });
 
-                var header = $('<h3/>', {
+                var uploadIcon = $('<i/>', {
+                    'class': 'fa fa-upload'
+                });
+                if(this.options.uploadIconURL.length) {
+                    uploadIcon.css('background-image', 'url("'+this.options.uploadIconURL+'")');
+                    uploadIcon.addClass('image');
+                }
+
+                var dropAttachmentText = $('<div/>', {
                     text: this.options.textFormatter(this.options.attachmentDropText)
                 });
-                droppable.append(header);
-
-                // Show max size of the attachemnt if defined
-                if(this.options.attachmentMaxSizeText.length) {
-                    var maxSizeText = this.options.textFormatter(this.options.attachmentMaxSizeText)
-                    maxSizeText = maxSizeText.replace('__fileSize__', this.options.attachmentMaxSizeInMB);
-                    droppable.append(maxSizeText);
-                }
+                droppable.append(uploadIcon);
+                droppable.append(dropAttachmentText);
 
                 droppableOverlay.html(droppableContainer.html(droppable)).hide();
                 this.$el.append(droppableOverlay);
