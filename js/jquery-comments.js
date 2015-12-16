@@ -50,14 +50,16 @@
             upvoteIconURL: '',
             replyIconURL: '',
             uploadIconURL: '',
+            attachmentIconURL: '',
             fileIconURL: '',
             noCommentsIconURL: '',
 
             // Strings to be formatted (for example localization)
             textareaPlaceholderText: 'Add a comment',
-            popularText: 'Popular',
             newestText: 'Newest',
             oldestText: 'Oldest',
+            popularText: 'Popular',
+            attachmentsText: 'Attachments',
             sendText: 'Send',
             replyText: 'Reply',
             editText: 'Edit',
@@ -68,6 +70,7 @@
             viewAllRepliesText: 'View all __replyCount__ replies',
             hideRepliesText: 'Hide replies',
             noCommentsText: 'No comments',
+            noAttachmentsText: 'No attachments',
             attachmentDropText: 'Drop files here',
             textFormatter: function(text) {
                 return text;
@@ -84,7 +87,7 @@
             defaultNavigationSortKey: 'newest',
 
             // Colors
-            highlightColor: '#1D8CEA',
+            highlightColor: '#2793e6',
             deleteButtonColor: '#C9302C',
 
             roundProfilePictures: false,
@@ -134,6 +137,7 @@
 
             // Navigation
             'click .navigation li' : 'navigationElementClicked',
+            'click .navigation li[data-sort-key]' : 'sortChanged',
 
             // Main comenting field
             'click .commenting-field.main .textarea': 'showMainCommentingField',
@@ -299,7 +303,10 @@
         render: function() {
             var self = this;
 
-            // Create new comment list
+            // Show active container
+            this.showActiveContainer();
+            
+            // Create the list element before appending to DOM in order to reach better performance
             this.$el.find('#comment-list').remove();
             var commentList = $('<ul/>', {
                 id: 'comment-list'
@@ -329,11 +336,32 @@
                 self.addComment(commentModel, commentList);
             });
 
-            // Appned comment list to DOM and remove spinner
+            // Appned comment list to DOM
+            this.$el.find('[data-container="comments"]').prepend(commentList);
+
+            // Attachments
+            if(this.options.enableAttachments) {   
+
+                // Create the list element before appending to DOM in order to reach better performance         
+                this.$el.find('#attachment-list').remove();
+                var attachmentList = $('<ul/>', {
+                    id: 'attachment-list'
+                });
+                this.$el.find('[data-container="attachments"]').prepend(attachmentList);
+            }
+
+            // Remove spinner
             this.$el.find('> .spinner').remove();
-            this.$el.find('.no-comments').before(commentList);
 
             this.options.refresh();
+        },
+
+        showActiveContainer: function() {
+            var activeNavigationEl = this.$el.find('.navigation li.active');
+            var containerName = activeNavigationEl.data('container-name');
+            var containerEl = this.$el.find('[data-container="' + containerName + '"]');
+            containerEl.siblings('[data-container]').hide();
+            containerEl.show();
         },
 
         addComment: function(commentModel, commentList) {
@@ -588,6 +616,13 @@
             // Indicate active sort
             navigationEl.siblings().removeClass('active');
             navigationEl.addClass('active');
+
+            // Show active container
+            this.showActiveContainer();
+        },
+
+        sortChanged: function(ev) {
+            var navigationEl = $(ev.currentTarget);
 
             // Sort the comments
             var sortKey = navigationEl.data().sortKey;
@@ -977,10 +1012,16 @@
             spinner.html(spinnerIcon);
             this.$el.append(spinner);
 
+            // Comments container
+            var commentsContainer = $('<div/>', {
+                'class': 'data-container',
+                'data-container': 'comments'
+            });
+            this.$el.append(commentsContainer);
 
             // "No comments" placeholder
             var noComments = $('<div/>', {
-                'class': 'no-comments',
+                'class': 'no-comments no-data',
                 text: this.options.textFormatter(this.options.noCommentsText)
             });
             var noCommentsIcon = $('<i/>', {
@@ -990,12 +1031,36 @@
                 noCommentsIcon.css('background-image', 'url("'+this.options.noCommentsIconURL+'")');
                 noCommentsIcon.addClass('image');
             }
-            noComments.prepend($('<br/>')).prepend(noCommentsIcon);
-            this.$el.append(noComments);
+            noComments.prepend($('<br/>')).prepend(noCommentsIcon);            
+            commentsContainer.append(noComments);
 
-
-            // Drag & dropping attachments
+            // Attachments
             if(this.options.enableAttachments) {
+
+                // Attachments container
+                var attachmentsContainer = $('<div/>', {
+                    'class': 'data-container',
+                    'data-container': 'attachments'
+                });
+                this.$el.append(attachmentsContainer);
+
+                // "No attachments" placeholder
+                var noAttachments = $('<div/>', {
+                    'class': 'no-attachments no-data',
+                    text: this.options.textFormatter(this.options.noAttachmentsText)
+                });
+                var noAttachmentsIcon = $('<i/>', {
+                    'class': 'fa fa-paperclip fa-2x'
+                });
+                if(this.options.attachmentIconURL.length) {
+                    noAttachmentsIcon.css('background-image', 'url("'+this.options.attachmentIconURL+'")');
+                    noAttachmentsIcon.addClass('image');
+                }
+                noAttachments.prepend($('<br/>')).prepend(noAttachmentsIcon);
+                attachmentsContainer.append(noAttachments);
+
+
+                // Drag & dropping attachments
                 var droppableOverlay = $('<div/>', {
                     'class': 'droppable-overlay'
                 });
@@ -1009,7 +1074,7 @@
                 });
 
                 var uploadIcon = $('<i/>', {
-                    'class': 'fa fa-upload'
+                    'class': 'fa fa-upload fa-4x'
                 });
                 if(this.options.uploadIconURL.length) {
                     uploadIcon.css('background-image', 'url("'+this.options.uploadIconURL+'")');
@@ -1156,24 +1221,45 @@
             // Newest
             var newest = $('<li/>', {
                 text: this.options.textFormatter(this.options.newestText),
-                'data-sort-key': 'newest'
+                'data-sort-key': 'newest',
+                'data-container-name': 'comments'
             });
 
             // Oldest
             var oldest = $('<li/>', {
                 text: this.options.textFormatter(this.options.oldestText),
-                'data-sort-key': 'oldest'
+                'data-sort-key': 'oldest',
+                'data-container-name': 'comments'
             });
 
             // Popular
             var popular = $('<li/>', {
                 text: this.options.textFormatter(this.options.popularText),
-                'data-sort-key': 'popularity'
+                'data-sort-key': 'popularity',
+                'data-container-name': 'comments'
             });
+
+            // Attachments
+            var attachments = $('<li/>', {
+                'class': 'attachments',
+                'data-container-name': 'attachments',
+                text: this.options.textFormatter(this.options.attachmentsText)
+            });
+
+            // Attachments icon
+            var attachmentsIcon = $('<i/>', {
+                'class': 'fa fa-paperclip'
+            });
+            if(this.options.attachmentIconURL.length) {
+                attachmentsIcon.css('background-image', 'url("'+this.options.attachmentIconURL+'")');
+                attachmentsIcon.addClass('image');
+            }
+            attachments.prepend(attachmentsIcon);
 
             navigationEl.append(newest).append(oldest);
             var enableSortingByPopularity = this.options.enableReplying || this.options.enableUpvoting;
             if(enableSortingByPopularity) navigationEl.append(popular);
+            if(this.options.enableAttachments) navigationEl.append(attachments);
 
             navigationEl.find('[data-sort-key=' + this.currentSortKey + ']').addClass('active');
             return navigationEl;

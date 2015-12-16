@@ -4,7 +4,7 @@
 }
 
 .jquery-comments a {
-	color: #1D8CEA;
+	color: #2793e6;
 	text-decoration: none;
 }
 
@@ -69,6 +69,10 @@
 
 .jquery-comments .profile-picture.round {
 	border-radius: 50%;
+}
+
+.jquery-comments .commenting-field.main{
+	margin-bottom: 0.75em;
 }
 
 .jquery-comments .commenting-field.main .profile-picture {
@@ -245,10 +249,19 @@
 	padding: 0 1em;
 	cursor: pointer;
 	font-weight: bold;
+
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }
 
 .jquery-comments ul.navigation li.active, .jquery-comments ul.navigation li:hover {
 	color: #000;
+}
+
+.jquery-comments ul.navigation li.attachments {
+	float: right;
 }
 
 .jquery-comments ul.navigation li.active:after {
@@ -262,7 +275,7 @@
 	left: 0;
 }
 
-.jquery-comments .no-comments {
+.jquery-comments .no-data {
 	display: none;
 
 	text-align: center;
@@ -271,6 +284,10 @@
 }
 
 .jquery-comments ul#comment-list:empty ~ .no-comments {
+	display: inherit;
+}
+
+.jquery-comments ul#attachment-list:empty ~ .no-attachments {
 	display: inherit;
 }
 
@@ -522,6 +539,5 @@
 }
 
 .jquery-comments .droppable-overlay .droppable-container .droppable i {
-	font-size: 4em;
 	margin-bottom: 5px;
 }
