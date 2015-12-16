@@ -450,7 +450,7 @@
             var self = this;
             if(!commentingField) commentingField = this.$el.find('.commenting-field.main');
             var fileCount = files.length;
-            
+
             if(fileCount) {
                 var uploadButton = commentingField.find('.upload');
                 var textarea = commentingField.find('.textarea');
@@ -1550,9 +1550,13 @@
 
         reRenderUpvotes: function(id) {
             var commentModel = this.commentsById[id];
-            var upvotes = this.createUpvoteElement(commentModel);
-            var commentEl = this.$el.find('li.comment[data-id="'+commentModel.id+'"]');
-            commentEl.find('.upvote').first().replaceWith(upvotes);
+            var commentElements = this.$el.find('li.comment[data-id="'+commentModel.id+'"]');
+
+            var self = this;
+            commentElements.each(function(index, commentEl) {
+                var upvotes = self.createUpvoteElement(commentModel);
+                $(commentEl).find('.upvote').first().replaceWith(upvotes);
+            });
         },
 
 
