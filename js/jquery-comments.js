@@ -358,16 +358,27 @@
                 self.addComment(commentModel, commentList);
             });
 
-            // Appned comment list to DOM
+            // Appned list to DOM
             this.$el.find('[data-container="comments"]').prepend(commentList);
         },
 
         createAttachments: function() {
+            var self = this;
+
             // Create the list element before appending to DOM in order to reach better performance
             this.$el.find('#attachment-list').remove();
             var attachmentList = $('<ul/>', {
                 id: 'attachment-list'
             });
+
+            var attachments = this.getAttachments();
+            this.sortComments(attachments, 'newest');
+            attachments.reverse();    // Reverse the order as they are prepended to DOM
+            $(attachments).each(function(index, commentModel) {
+                self.addAttachment(commentModel, attachmentList);
+            });
+
+            // Appned list to DOM
             this.$el.find('[data-container="attachments"]').prepend(attachmentList);
         },
 
@@ -397,6 +408,12 @@
             } else {
                 commentList.prepend(commentEl);
             }
+        },
+
+        addAttachment: function(commentModel, commentList) {
+            commentList = commentList || this.$el.find('#attachment-list');
+            var commentEl = this.createCommentElement(commentModel);
+            commentList.prepend(commentEl);
         },
 
         removeComment: function(commentId) {
@@ -432,8 +449,9 @@
         uploadAttachments: function(files, commentingField) {
             var self = this;
             if(!commentingField) commentingField = this.$el.find('.commenting-field.main');
-
-            if(files.length) {
+            var fileCount = files.length;
+            
+            if(fileCount) {
                 var uploadButton = commentingField.find('.upload');
                 var textarea = commentingField.find('.textarea');
 
@@ -451,8 +469,9 @@
                     var commentModel = self.createCommentModel(commentJSON);
                     self.addCommentToDataModel(commentModel);
                     self.addComment(commentModel);
+                    self.addAttachment(commentModel);
 
-                    if(completeCallbacks == files.length) {                    
+                    if(completeCallbacks == fileCount) {                    
 
                         // Close the commenting field if all the uploads were successfull
                         // and there's no content besides the attachment
@@ -467,7 +486,7 @@
                 var error = function() {
                     completeCallbacks++;
 
-                    if(completeCallbacks == files.length) {
+                    if(completeCallbacks == fileCount) {
                         uploadButton.addClass('enabled');
                     }
                 };
@@ -483,7 +502,7 @@
                     // Reverse mapping
                     commentJSON = self.applyExternalMappings(commentJSON);
 
-                    self.options.uploadAttachment(commentJSON, success, error, files.length);
+                    self.options.uploadAttachment(commentJSON, success, error, fileCount);
                 });
 
             }
@@ -540,9 +559,6 @@
         sortComments: function (comments, sortKey) {
             var self = this;
 
-            // No need to sort attachments
-            if(sortKey == 'attachments') return;
-
             // Sort by popularity
             if(sortKey == 'popularity') {
                 comments.sort(function(commentA, commentB) {
@@ -570,10 +586,10 @@
                 comments.sort(function(commentA, commentB) {
                     var createdA = new Date(commentA.created).getTime();
                     var createdB = new Date(commentB.created).getTime();
-                    if(sortKey == 'newest') {
-                        return createdB - createdA;
-                    } else {
+                    if(sortKey == 'oldest') {
                         return createdA - createdB;
+                    } else {
+                        return createdB - createdA;
                     }
                 });
             }
@@ -627,9 +643,11 @@
             navigationEl.siblings().removeClass('active');
             navigationEl.addClass('active');
 
-            // Sort the comments
+            // Sort the comments if necessary
             var sortKey = navigationEl.data().sortKey;
-            this.sortAndReArrangeComments(sortKey);
+            if(sortKey != 'attachments') {
+                this.sortAndReArrangeComments(sortKey);
+            }
 
             // Save the current sort key
             this.currentSortKey = sortKey;
@@ -1586,6 +1604,10 @@
 
         getChildComments: function(parentId) {
             return this.getComments().filter(function(comment){return comment.parent == parentId});
+        },
+
+        getAttachments: function() {
+            return this.getComments().filter(function(comment){return comment.file != undefined});
         },
 
         getOutermostParent: function(directParentId) {
