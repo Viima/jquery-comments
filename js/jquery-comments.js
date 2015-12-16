@@ -305,7 +305,30 @@
 
             // Show active container
             this.showActiveContainer();
-            
+
+            // Create comments
+            this.createComments();
+
+            // Create attachments if enabled
+            if(this.options.enableAttachments) this.createAttachments(); 
+
+            // Remove spinner
+            this.$el.find('> .spinner').remove();
+
+            this.options.refresh();
+        },
+
+        showActiveContainer: function() {
+            var activeNavigationEl = this.$el.find('.navigation li.active');
+            var containerName = activeNavigationEl.data('container-name');
+            var containerEl = this.$el.find('[data-container="' + containerName + '"]');
+            containerEl.siblings('[data-container]').hide();
+            containerEl.show();
+        },
+
+        createComments: function() {
+            var self = this;
+
             // Create the list element before appending to DOM in order to reach better performance
             this.$el.find('#comment-list').remove();
             var commentList = $('<ul/>', {
@@ -338,30 +361,15 @@
 
             // Appned comment list to DOM
             this.$el.find('[data-container="comments"]').prepend(commentList);
-
-            // Attachments
-            if(this.options.enableAttachments) {   
-
-                // Create the list element before appending to DOM in order to reach better performance         
-                this.$el.find('#attachment-list').remove();
-                var attachmentList = $('<ul/>', {
-                    id: 'attachment-list'
-                });
-                this.$el.find('[data-container="attachments"]').prepend(attachmentList);
-            }
-
-            // Remove spinner
-            this.$el.find('> .spinner').remove();
-
-            this.options.refresh();
         },
 
-        showActiveContainer: function() {
-            var activeNavigationEl = this.$el.find('.navigation li.active');
-            var containerName = activeNavigationEl.data('container-name');
-            var containerEl = this.$el.find('[data-container="' + containerName + '"]');
-            containerEl.siblings('[data-container]').hide();
-            containerEl.show();
+        createAttachments: function() {
+            // Create the list element before appending to DOM in order to reach better performance
+            this.$el.find('#attachment-list').remove();
+            var attachmentList = $('<ul/>', {
+                id: 'attachment-list'
+            });
+            this.$el.find('[data-container="attachments"]').prepend(attachmentList);
         },
 
         addComment: function(commentModel, commentList) {
