@@ -436,11 +436,11 @@
             // Remove the comment from data model
             delete this.commentsById[commentId];
 
-            var commentEl = this.$el.find('li.comment[data-id="'+commentId+'"]');
-            var parentEl = commentEl.parents('li.comment').last();
+            var commentElements = this.$el.find('li.comment[data-id="'+commentId+'"]');
+            var parentEl = commentElements.parents('li.comment').last();
 
             // Remove the element
-            commentEl.remove();
+            commentElements.remove();
 
             // Update the toggle all button
             this.updateToggleAllButton(parentEl);
