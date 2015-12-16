@@ -283,7 +283,7 @@
 	color: #CCC;
 }
 
-.jquery-comments ul#comment-list:empty ~ .no-comments {
+.jquery-comments ul:empty ~ .no-comments {
 	display: inherit;
 }
 
@@ -291,30 +291,30 @@
 	display: inherit;
 }
 
-.jquery-comments ul#comment-list li.comment {
+.jquery-comments ul li.comment {
 	clear: both;
 }
 
-.jquery-comments ul#comment-list li.comment .comment-wrapper,
-.jquery-comments ul#comment-list li.toggle-all,
-.jquery-comments ul#comment-list li.comment .commenting-field {
+.jquery-comments ul li.comment .comment-wrapper,
+.jquery-comments ul li.toggle-all,
+.jquery-comments ul li.comment .commenting-field {
 	padding: .5em;
 }
 
-.jquery-comments ul#comment-list li.comment .comment-wrapper {
+.jquery-comments ul li.comment .comment-wrapper {
 	border-top: 1px solid #DDD;
 	overflow: hidden;
 }
 
-.jquery-comments ul#comment-list > li.comment:first-child > .comment-wrapper {
+.jquery-comments ul > li.comment:first-child > .comment-wrapper {
 	border-top: none;
 }
 
-.jquery-comments ul#comment-list li.comment .comment-wrapper > .profile-picture {
+.jquery-comments ul li.comment .comment-wrapper > .profile-picture {
 	margin-right: .5em;
 }
 
-.jquery-comments ul#comment-list li.comment time {
+.jquery-comments ul li.comment time {
 	float: right;
 	line-height: 1.4em;
 	margin-left: .5em;
@@ -322,7 +322,7 @@
 	color: #666;
 }
 
-.jquery-comments ul#comment-list li.comment .name {
+.jquery-comments ul li.comment .name {
 	line-height: 1.4em;
 	font-weight: bold;
 	overflow: hidden;
@@ -330,39 +330,39 @@
 	white-space: nowrap;
 }
 
-.jquery-comments ul#comment-list li.comment .name .reply-to {
+.jquery-comments ul li.comment .name .reply-to {
 	color: #999;
 	font-size: .8em;
 	font-weight: normal;
 	vertical-align: top;
 }
 
-.jquery-comments ul#comment-list li.comment .name .reply-to i {
+.jquery-comments ul li.comment .name .reply-to i {
 	margin-left: .5em;
 	margin-right: .25em;
 }
 
-.jquery-comments ul#comment-list li.comment .wrapper{
+.jquery-comments ul li.comment .wrapper{
 	line-height: 1.3em;
 	overflow: hidden;
 }
 
-.jquery-comments.mobile ul#comment-list li.comment .child-comments li.comment .wrapper{
+.jquery-comments.mobile ul li.comment .child-comments li.comment .wrapper{
 	overflow: visible;
 }
 
 
 /* Content */
-.jquery-comments ul#comment-list li.comment .wrapper .content {
+.jquery-comments ul li.comment .wrapper .content {
 	white-space: pre-line;
 	word-break: break-word;
 }
 
-.jquery-comments ul#comment-list li.comment .wrapper .content a.attachment i {
+.jquery-comments ul li.comment .wrapper .content a.attachment i {
 	margin-right: 0.5em;
 }
 
-.jquery-comments ul#comment-list li.comment .wrapper .content a.attachment > * {
+.jquery-comments ul li.comment .wrapper .content a.attachment > * {
 	max-width: 100%;
 	max-height: 300px;
 	width: auto;
@@ -371,7 +371,7 @@
 	margin-bottom: .25em;
 }
 
-.jquery-comments ul#comment-list li.comment .wrapper .content time.edited {
+.jquery-comments ul li.comment .wrapper .content time.edited {
 	float: inherit;
 	margin: 0;
 	font-size: .9em;
@@ -379,22 +379,22 @@
 	color: #999;
 }
 
-.jquery-comments ul#comment-list li.comment .wrapper .content time.edited:before {
+.jquery-comments ul li.comment .wrapper .content time.edited:before {
 	content: " - ";
 }
 
 
 /* Actions */
-.jquery-comments.mobile ul#comment-list li.comment .actions {
+.jquery-comments.mobile ul li.comment .actions {
 	font-size: 1em;
 }
 
-.jquery-comments ul#comment-list li.comment .actions > * {
+.jquery-comments ul li.comment .actions > * {
 	color: #999;
 	font-weight: bold;
 }
 
-.jquery-comments ul#comment-list li.comment .actions .action {
+.jquery-comments ul li.comment .actions .action {
 	display: inline-block;
 	cursor: pointer;
 	margin-left: 1em;
@@ -403,44 +403,44 @@
 	font-size: 0.9em;
 }
 
-.jquery-comments ul#comment-list li.comment .actions .action:first-child {
+.jquery-comments ul li.comment .actions .action:first-child {
 	margin-left: 0;
 }
 
-.jquery-comments ul#comment-list li.comment .actions .action.upvote {
+.jquery-comments ul li.comment .actions .action.upvote {
 	cursor: inherit;
 }
 
-.jquery-comments ul#comment-list li.comment .actions .action.upvote .upvote-count {
+.jquery-comments ul li.comment .actions .action.upvote .upvote-count {
 	margin-right: .5em;
 }
 
-.jquery-comments ul#comment-list li.comment .actions .action.upvote .upvote-count:empty {
+.jquery-comments ul li.comment .actions .action.upvote .upvote-count:empty {
 	display: none;
 }
 
-.jquery-comments ul#comment-list li.comment .actions .action.upvote i {
+.jquery-comments ul li.comment .actions .action.upvote i {
 	cursor: pointer;
 }
 
-.jquery-comments ul#comment-list li.comment .actions .action:not(.upvote):hover,
-.jquery-comments ul#comment-list li.comment .actions .action.upvote:not(.highlight-font) i:hover {
+.jquery-comments ul li.comment .actions .action:not(.upvote):hover,
+.jquery-comments ul li.comment .actions .action.upvote:not(.highlight-font) i:hover {
 	color: #666;
 }
 
-.jquery-comments ul#comment-list li.comment .actions .action.delete {
+.jquery-comments ul li.comment .actions .action.delete {
 	opacity: 0.5;
 	pointer-events: none;
 }
 
-.jquery-comments ul#comment-list li.comment .actions .action.delete.enabled {
+.jquery-comments ul li.comment .actions .action.delete.enabled {
 	opacity: 1;
 	pointer-events: auto;
 }
 
 
 /* Child comments */
-.jquery-comments ul#comment-list li.comment .child-comments > *:before { /* Margin for second level content */
+.jquery-comments ul li.comment .child-comments > *:before { /* Margin for second level content */
 	content: "";
 	height: 1px;
 	float: left;
@@ -449,25 +449,25 @@
 	max-width: calc(50px + .5em);	/* Profile picture max width plus margin */
 }
 
-.jquery-comments ul#comment-list li.comment .child-comments .profile-picture {
+.jquery-comments ul li.comment .child-comments .profile-picture {
 	width: 2.4em;
 	height: 2.4em;
 }
 
-.jquery-comments ul#comment-list li.comment .child-comments li.toggle-all {
+.jquery-comments ul li.comment .child-comments li.toggle-all {
 	padding-top: 0;
 }
 
-.jquery-comments ul#comment-list li.comment .child-comments li.toggle-all span:first-child {
+.jquery-comments ul li.comment .child-comments li.toggle-all span:first-child {
 	vertical-align: middle;
 }
 
-.jquery-comments ul#comment-list li.comment .child-comments li.toggle-all span:first-child:hover {
+.jquery-comments ul li.comment .child-comments li.toggle-all span:first-child:hover {
 	cursor: pointer;
 	text-decoration: underline;
 }
 
-.jquery-comments ul#comment-list li.comment .child-comments li.toggle-all .caret {
+.jquery-comments ul li.comment .child-comments li.toggle-all .caret {
 	display: inline-block;
 	vertical-align: middle;
 	width: 0;
@@ -482,26 +482,26 @@
 	border-right-color: rgba(0, 0, 0, 0);
 }
 
-.jquery-comments ul#comment-list li.comment .child-comments li.toggle-all .caret.up {
+.jquery-comments ul li.comment .child-comments li.toggle-all .caret.up {
 	border-top-color: rgba(0, 0, 0, 0);
 	border-bottom-color: inherit;
 	margin-top: -.2em;
 }
 
-.jquery-comments ul#comment-list li.comment .child-comments .hidden-reply {
+.jquery-comments ul li.comment .child-comments .hidden-reply {
 	display: none;
 }
 
-.jquery-comments ul#comment-list li.comment .child-comments .visible {
+.jquery-comments ul li.comment .child-comments .visible {
 	display: inherit;
 }
 
 /* Editing comment */
-.jquery-comments ul#comment-list li.comment.edit > .comment-wrapper > *:not(.commenting-field) {
+.jquery-comments ul li.comment.edit > .comment-wrapper > *:not(.commenting-field) {
 	display: none;
 }
 
-.jquery-comments ul#comment-list li.comment.edit > .comment-wrapper .commenting-field {
+.jquery-comments ul li.comment.edit > .comment-wrapper .commenting-field {
 	padding: 0 !important;	/* Parent element has the padding */
 }
 
