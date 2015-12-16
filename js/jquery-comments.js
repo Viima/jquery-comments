@@ -1536,16 +1536,24 @@
 
         reRenderComment: function(id) {
             var commentModel = this.commentsById[id];
-            var commentWrapper = this.createCommentWrapperElement(commentModel);
-            var commentEl = this.$el.find('li.comment[data-id="'+commentModel.id+'"]');
-            commentEl.find('> .comment-wrapper').replaceWith(commentWrapper);
+            var commentElements = this.$el.find('li.comment[data-id="'+commentModel.id+'"]');
+
+            var self = this;
+            commentElements.each(function(index, commentEl) {
+                var commentWrapper = self.createCommentWrapperElement(commentModel);
+                $(commentEl).find('.comment-wrapper').first().replaceWith(commentWrapper);
+            });
         },
 
         reRenderCommentActionBar: function(id) {
             var commentModel = this.commentsById[id];
-            var commentWrapper = this.createCommentWrapperElement(commentModel);
-            var commentEl = this.$el.find('li.comment[data-id="'+commentModel.id+'"]');
-            commentEl.find('.actions').first().replaceWith(commentWrapper.find('.actions'));
+            var commentElements = this.$el.find('li.comment[data-id="'+commentModel.id+'"]');
+
+            var self = this;
+            commentElements.each(function(index, commentEl) {
+                var commentWrapper = self.createCommentWrapperElement(commentModel);
+                $(commentEl).find('.actions').first().replaceWith(commentWrapper.find('.actions'));
+            });
         },
 
         reRenderUpvotes: function(id) {
