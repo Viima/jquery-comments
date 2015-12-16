@@ -114,7 +114,7 @@
             putComment: function(commentJSON, success, error) {success(commentJSON)},
             deleteComment: function(commentJSON, success, error) {success()},
             upvoteComment: function(commentJSON, success, error) {success(commentJSON)},
-            uploadAttachment: function(commentJSON, success, error) {success(commentJSON)},
+            uploadAttachment: function(commentJSON, success, error, count) {success(commentJSON)},
             refresh: function() {},
             timeFormatter: function(time) {
                 return new Date(time).toLocaleDateString();
@@ -399,40 +399,58 @@
             if(!commentingField) commentingField = this.$el.find('.commenting-field.main');
 
             if(files.length) {
-                var file = files[0];
-                
                 var uploadButton = commentingField.find('.upload');
                 var textarea = commentingField.find('.textarea');
 
                 // Disable upload button while request is pending
                 uploadButton.removeClass('enabled');
 
-                // Create comment JSON
-                var commentJSON = this.createCommentJSON(textarea);
-                commentJSON.content = '';
-                commentJSON.file = file;
-                commentJSON.fileMimeType = file.type;
-
-                // Reverse mapping
-                commentJSON = this.applyExternalMappings(commentJSON);
+                // Keep count of completed requests
+                var completeCallbacks = 0;
+                var successCallbacks = 0;
 
                 var success = function(commentJSON) {
+                    successCallbacks++;
+                    completeCallbacks++;
+
                     var commentModel = self.createCommentModel(commentJSON);
                     self.addCommentToDataModel(commentModel);
                     self.addComment(commentModel);
 
-                    // Close the commenting field if there's no content besides the attachment
-                    if(self.getTextareaContent(textarea).length == 0) {
-                        commentingField.find('.close').trigger('click');
+                    if(completeCallbacks == files.length) {                    
+
+                        // Close the commenting field if all the uploads were successfull
+                        // and there's no content besides the attachment
+                        if(successCallbacks == completeCallbacks && self.getTextareaContent(textarea).length == 0) {
+                            commentingField.find('.close').trigger('click');
+                        }
+
+                        uploadButton.addClass('enabled');
                     }
-                    uploadButton.addClass('enabled');
                 };
 
                 var error = function() {
-                    uploadButton.addClass('enabled');
+                    completeCallbacks++;
+
+                    if(completeCallbacks == files.length) {
+                        uploadButton.addClass('enabled');
+                    }
                 };
 
-                this.options.uploadAttachment(commentJSON, success, error);
+                $(files).each(function(index, file) {
+
+                    // Create comment JSON
+                    var commentJSON = self.createCommentJSON(textarea);
+                    commentJSON.content = '';
+                    commentJSON.file = file;
+                    commentJSON.fileMimeType = file.type;
+
+                    // Reverse mapping
+                    commentJSON = self.applyExternalMappings(commentJSON);
+
+                    self.options.uploadAttachment(commentJSON, success, error, files.length);
+                });
+
             }
 
             // Clear the input field
