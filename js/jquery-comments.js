@@ -148,7 +148,7 @@
             'click .commenting-field .send.enabled' : 'postComment',
             'click .commenting-field .update.enabled' : 'putComment',
             'click .commenting-field .delete.enabled' : 'deleteComment',
-            'change .commenting-field .upload.enabled input[type="file"]' : 'uploadAttachment',
+            'change .commenting-field .upload.enabled input[type="file"]' : 'fileInputChanged',
 
             // Other actions
             'click li.comment button.upvote' : 'upvoteComment',
@@ -392,6 +392,51 @@
 
             // Update the toggle all button
             this.updateToggleAllButton(parentEl);
+        },
+
+        uploadAttachments: function(files, commentingField) {
+            var self = this;
+            if(!commentingField) commentingField = this.$el.find('.commenting-field.main');
+
+            if(files.length) {
+                var file = files[0];
+                
+                var uploadButton = commentingField.find('.upload');
+                var textarea = commentingField.find('.textarea');
+
+                // Disable upload button while request is pending
+                uploadButton.removeClass('enabled');
+
+                // Create comment JSON
+                var commentJSON = this.createCommentJSON(textarea);
+                commentJSON.content = '';
+                commentJSON.file = file;
+                commentJSON.fileMimeType = file.type;
+
+                // Reverse mapping
+                commentJSON = this.applyExternalMappings(commentJSON);
+
+                var success = function(commentJSON) {
+                    var commentModel = self.createCommentModel(commentJSON);
+                    self.addCommentToDataModel(commentModel);
+                    self.addComment(commentModel);
+
+                    // Close the commenting field if there's no content besides the attachment
+                    if(self.getTextareaContent(textarea).length == 0) {
+                        commentingField.find('.close').trigger('click');
+                    }
+                    uploadButton.addClass('enabled');
+                };
+
+                var error = function() {
+                    uploadButton.addClass('enabled');
+                };
+
+                this.options.uploadAttachment(commentJSON, success, error);
+            }
+
+            // Clear the input field
+            uploadButton.find('input').val('');
         },
 
         updateToggleAllButton: function(parentEl) {
@@ -724,50 +769,10 @@
             this.options.deleteComment(commentJSON, success, error);
         },
 
-        uploadAttachment: function(ev) {
-            var self = this;
+        fileInputChanged: function(ev, files) {
             var files = ev.currentTarget.files;
-
-            if(files.length) {
-                var file = files[0];
-                
-                var uploadButton = $(ev.currentTarget).parents('.upload').first();
-                var commentingField = uploadButton.parents('.commenting-field').first();
-                var textarea = commentingField.find('.textarea');
-
-                // Disable upload button while request is pending
-                uploadButton.removeClass('enabled');
-
-                // Create comment JSON
-                var commentJSON = this.createCommentJSON(textarea);
-                commentJSON.content = '';
-                commentJSON.file = file;
-                commentJSON.fileMimeType = file.type;
-
-                // Reverse mapping
-                commentJSON = this.applyExternalMappings(commentJSON);
-
-                var success = function(commentJSON) {
-                    var commentModel = self.createCommentModel(commentJSON);
-                    self.addCommentToDataModel(commentModel);
-                    self.addComment(commentModel);
-
-                    // Close the commenting field if there's no content besides the attachment
-                    if(self.getTextareaContent(textarea).length == 0) {
-                        commentingField.find('.close').trigger('click');
-                    }
-                    uploadButton.addClass('enabled');
-                };
-
-                var error = function() {
-                    uploadButton.addClass('enabled');
-                };
-
-                this.options.uploadAttachment(commentJSON, success, error);
-            }
-
-            // Clear the input field
-            $(ev.currentTarget).val('');
+            var commentingField = $(ev.currentTarget).parents('.commenting-field').first();
+            this.uploadAttachments(files, commentingField);
         },
 
         upvoteComment: function(ev) {
@@ -908,13 +913,14 @@
         },
 
         handleDrop: function(ev) {
-            ev.stopPropagation();
             ev.preventDefault();
-            var files = ev.originalEvent.dataTransfer.files;
-            $(files).each(function(index, file) {
-                console.log(file)
-            });
+
+            // Reset DND counts
+            $(ev.target).trigger('dragleave');
+
+            // Hide the overlay and upload the files
             this.hideDroppableOverlay();
+            this.uploadAttachments(ev.originalEvent.dataTransfer.files);
         },
 
 
