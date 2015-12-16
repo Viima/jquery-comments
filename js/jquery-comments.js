@@ -137,7 +137,6 @@
 
             // Navigation
             'click .navigation li' : 'navigationElementClicked',
-            'click .navigation li[data-sort-key]' : 'sortChanged',
 
             // Main comenting field
             'click .commenting-field.main .textarea': 'showMainCommentingField',
@@ -541,6 +540,9 @@
         sortComments: function (comments, sortKey) {
             var self = this;
 
+            // No need to sort attachments
+            if(sortKey == 'attachments') return;
+
             // Sort by popularity
             if(sortKey == 'popularity') {
                 comments.sort(function(commentA, commentB) {
@@ -625,19 +627,15 @@
             navigationEl.siblings().removeClass('active');
             navigationEl.addClass('active');
 
-            // Show active container
-            this.showActiveContainer();
-        },
-
-        sortChanged: function(ev) {
-            var navigationEl = $(ev.currentTarget);
-
             // Sort the comments
             var sortKey = navigationEl.data().sortKey;
             this.sortAndReArrangeComments(sortKey);
 
             // Save the current sort key
             this.currentSortKey = sortKey;
+
+            // Show active container
+            this.showActiveContainer();
         },
 
         showMainCommentingField: function(ev) {
@@ -1249,9 +1247,9 @@
 
             // Attachments
             var attachments = $('<li/>', {
-                'class': 'attachments',
-                'data-container-name': 'attachments',
-                text: this.options.textFormatter(this.options.attachmentsText)
+                text: this.options.textFormatter(this.options.attachmentsText),
+                'data-sort-key': 'attachments',
+                'data-container-name': 'attachments'
             });
 
             // Attachments icon
@@ -1538,6 +1536,7 @@
             var commentEl = this.$el.find('li.comment[data-id="'+commentModel.id+'"]');
             commentEl.find('.upvote').first().replaceWith(upvotes);
         },
+
 
         // Styling
         // =======

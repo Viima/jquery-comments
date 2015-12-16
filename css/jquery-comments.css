@@ -260,7 +260,7 @@
 	color: #000;
 }
 
-.jquery-comments ul.navigation li.attachments {
+.jquery-comments ul.navigation li[data-sort-key="attachments"] {
 	float: right;
 }
 
