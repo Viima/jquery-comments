@@ -331,7 +331,8 @@
             // Create the list element before appending to DOM in order to reach better performance
             this.$el.find('#comment-list').remove();
             var commentList = $('<ul/>', {
-                id: 'comment-list'
+                id: 'comment-list',
+                'class': 'main'
             });
 
             // Divide commments into main level comments and replies
@@ -368,7 +369,8 @@
             // Create the list element before appending to DOM in order to reach better performance
             this.$el.find('#attachment-list').remove();
             var attachmentList = $('<ul/>', {
-                id: 'attachment-list'
+                id: 'attachment-list',
+                'class': 'main'
             });
 
             var attachments = this.getAttachments();
