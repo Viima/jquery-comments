@@ -438,6 +438,18 @@
 	pointer-events: auto;
 }
 
+.jquery-comments ul#attachment-list li.comment .actions .action:not(.delete) {
+	display: none;
+}
+
+.jquery-comments ul#attachment-list li.comment .actions .action.delete {
+	margin: 0;
+}
+
+.jquery-comments ul#attachment-list li.comment .actions .separator {
+	display: none;
+}
+
 
 /* Child comments */
 .jquery-comments ul li.comment .child-comments > *:before { /* Margin for second level content */
