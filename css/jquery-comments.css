@@ -238,7 +238,7 @@
 
 	color: #CCC;
 	border-bottom: 2px solid #CCC;
-	margin-bottom: 1em;
+	margin-bottom: .5em;
 	line-height: 2em;
 	font-size: 1em;
 }
@@ -277,7 +277,7 @@
 
 .jquery-comments .no-data {
 	display: none;
-
+	margin: 1em;
 	text-align: center;
 	font-size: 1.5em;
 	color: #CCC;
