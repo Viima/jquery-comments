@@ -1191,7 +1191,8 @@
                     });
                     var fileInput = $('<input/>', {
                         type: 'file',
-                        multiple: 'multiple'
+                        multiple: 'multiple',
+                        'data-role': 'none' // Prevent jquery-mobile for adding classes
                     });
                     if(this.options.uploadIconURL.length) {
                         uploadIcon.css('background-image', 'url("'+this.options.uploadIconURL+'")');
