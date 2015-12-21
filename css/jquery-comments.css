@@ -304,10 +304,15 @@
     content: "";
     border-left: 0.3em solid rgba(0, 0, 0, 0) !important;
     border-right: 0.3em solid rgba(0, 0, 0, 0) !important;
-    border-top: 0.4em solid rgba(0, 0, 0, 0.75);
+    border-top: 0.4em solid #CCC;
     margin-left: 0.5em;
     position: relative;
     top: -0.1em;
+}
+
+.jquery-comments ul.navigation .navigation-wrapper.responsive li.title.active header:after,
+.jquery-comments ul.navigation .navigation-wrapper.responsive li.title:hover header:after {
+	border-top-color: #000;
 }
 
 .jquery-comments ul.navigation .navigation-wrapper.responsive ul.dropdown {
