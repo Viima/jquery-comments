@@ -84,6 +84,7 @@
             enableAttachments: true,
             enableDeletingCommentWithReplies: false,
             enableNavigation: true,
+            forceResponsive: false,
             defaultNavigationSortKey: 'newest',
 
             // Colors
@@ -1354,6 +1355,7 @@
                 dropdownNavigationWrapper.append(attachments.clone());
             }
 
+            if(this.options.forceResponsive) this.forceResponsive();
             return navigationEl;
         },
 
