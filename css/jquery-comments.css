@@ -239,7 +239,6 @@
 
 	color: #CCC;
 	border-bottom: 2px solid #CCC;
-	margin-bottom: .5em;
 	line-height: 2em;
 	font-size: 1em;
 }
@@ -293,6 +292,13 @@
 	.jquery-comments ul.navigation .navigation-wrapper.responsive {
 		display: initial;
 	}
+}
+
+.jquery-comments.responsive ul.navigation .navigation-wrapper {
+	display: none;
+}
+.jquery-comments.responsive ul.navigation .navigation-wrapper.responsive {
+	display: initial;
 }
 
 .jquery-comments ul.navigation .navigation-wrapper.responsive li.title {

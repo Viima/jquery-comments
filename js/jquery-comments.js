@@ -636,6 +636,10 @@
             this.showActiveContainer();
         },
 
+        forceResponsive: function() {
+            this.$el.addClass('responsive');
+        },
+
         // Event handlers
         // ==============
 
