@@ -324,12 +324,17 @@
 	background: #FFF;
 	border: 1px solid;
 	z-index: 99;
+	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+	-webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+	-moz-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
+	-ms-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
 }
 
 .jquery-comments ul.navigation .navigation-wrapper.responsive ul.dropdown li {
 	display: block;
 	color: #000;
 	font-weight: normal;
+	padding: 0.25em 0;
 }
 
 .jquery-comments ul.navigation .navigation-wrapper.responsive ul.dropdown li.active {
