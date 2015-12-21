@@ -244,12 +244,17 @@
 	font-size: 1em;
 }
 
+.jquery-comments ul.navigation .navigation-wrapper {
+	position: relative;
+}
+
 .jquery-comments ul.navigation li {
 	display: inline-block;
 	position: relative;
 	padding: 0 1em;
 	cursor: pointer;
 	font-weight: bold;
+	text-align: center;
 
 	-webkit-user-select: none;
 	-moz-user-select: none;
@@ -257,12 +262,9 @@
 	user-select: none;
 }
 
-.jquery-comments ul.navigation li.active, .jquery-comments ul.navigation li:hover {
+.jquery-comments ul.navigation li.active,
+.jquery-comments ul.navigation li:hover {
 	color: #000;
-}
-
-.jquery-comments ul.navigation li[data-sort-key="attachments"] {
-	float: right;
 }
 
 .jquery-comments ul.navigation li.active:after {
@@ -274,6 +276,67 @@
 	position: absolute;
 	bottom: -2px;
 	left: 0;
+}
+
+.jquery-comments ul.navigation li[data-sort-key="attachments"] {
+	float: right;
+}
+
+.jquery-comments ul.navigation .navigation-wrapper.responsive {
+	display: none;
+}
+
+@media screen and (max-width: 600px) {
+	.jquery-comments ul.navigation .navigation-wrapper {
+		display: none;
+	}
+	.jquery-comments ul.navigation .navigation-wrapper.responsive {
+		display: initial;
+	}
+}
+
+.jquery-comments ul.navigation .navigation-wrapper.responsive li.title {
+	padding: 0 1.5em;
+}
+
+.jquery-comments ul.navigation .navigation-wrapper.responsive li.title header:after {
+    display: inline-block;
+    content: "";
+    border-left: 0.3em solid rgba(0, 0, 0, 0) !important;
+    border-right: 0.3em solid rgba(0, 0, 0, 0) !important;
+    border-top: 0.4em solid rgba(0, 0, 0, 0.75);
+    margin-left: 0.5em;
+    position: relative;
+    top: -0.1em;
+}
+
+.jquery-comments ul.navigation .navigation-wrapper.responsive ul.dropdown {
+	display: none;
+	position: absolute;
+	left: 0;
+	width: 100%;
+
+	background: #FFF;
+	border: 1px solid;
+	z-index: 99;
+}
+
+.jquery-comments ul.navigation .navigation-wrapper.responsive ul.dropdown li {
+	display: block;
+	color: #000;
+	font-weight: normal;
+}
+
+.jquery-comments ul.navigation .navigation-wrapper.responsive ul.dropdown li.active {
+	color: #FFF;
+}
+
+.jquery-comments ul.navigation .navigation-wrapper.responsive ul.dropdown li:hover:not(.active) {
+	background: #F5F5F5;
+}
+
+.jquery-comments ul.navigation .navigation-wrapper.responsive ul.dropdown li:after {
+	display: none;
 }
 
 .jquery-comments .no-data {

@@ -125,6 +125,9 @@
         },
 
         events: {
+            // Close dropdowns
+            'click': 'closeDropdowns',
+
             // Save comment on keydown
             'keydown [contenteditable]' : 'saveOnKeydown',
 
@@ -136,7 +139,8 @@
             'blur [contenteditable]' : 'checkEditableContentForChange',
 
             // Navigation
-            'click .navigation li' : 'navigationElementClicked',
+            'click .navigation li[data-sort-key]' : 'navigationElementClicked',
+            'click .navigation li.title' : 'toggleNavigationDropdown',
 
             // Main comenting field
             'click .commenting-field.main .textarea': 'showMainCommentingField',
@@ -318,7 +322,7 @@
         },
 
         showActiveContainer: function() {
-            var activeNavigationEl = this.$el.find('.navigation li.active');
+            var activeNavigationEl = this.$el.find('.navigation li[data-container-name].active');
             var containerName = activeNavigationEl.data('container-name');
             var containerEl = this.$el.find('[data-container="' + containerName + '"]');
             containerEl.siblings('[data-container]').hide();
@@ -611,9 +615,33 @@
             });
         },
 
+        showActiveSort: function() {
+            var activeElements = this.$el.find('.navigation li[data-sort-key="' + this.currentSortKey + '"]');
+
+            // Indicate active sort
+            this.$el.find('.navigation li').removeClass('active');
+            activeElements.addClass('active');
+
+            // Update title for dropdown
+            var titleEl = this.$el.find('.navigation .title');
+            if(this.currentSortKey != 'attachments') {
+                titleEl.addClass('active');
+                titleEl.find('header').html(activeElements.first().html());
+             } else {
+                var defaultDropdownEl = this.$el.find('.navigation ul.dropdown').children().first();
+                titleEl.find('header').html(defaultDropdownEl.html());
+             } 
+
+            // Show active container
+            this.showActiveContainer();
+        },
 
         // Event handlers
         // ==============
+
+        closeDropdowns: function() {
+            this.$el.find('.dropdown').hide();
+        },
 
         saveOnKeydown: function(ev) {
             // Save comment on cmd/ctrl + enter
@@ -640,22 +668,24 @@
 
         navigationElementClicked: function(ev) {
             var navigationEl = $(ev.currentTarget);
-
-            // Indicate active sort
-            navigationEl.siblings().removeClass('active');
-            navigationEl.addClass('active');
+            var sortKey = navigationEl.data().sortKey;
 
             // Sort the comments if necessary
-            var sortKey = navigationEl.data().sortKey;
             if(sortKey != 'attachments') {
                 this.sortAndReArrangeComments(sortKey);
             }
 
             // Save the current sort key
             this.currentSortKey = sortKey;
+            this.showActiveSort();
+        },
 
-            // Show active container
-            this.showActiveContainer();
+        toggleNavigationDropdown: function(ev) {
+            // Prevent closing immediately
+            ev.stopPropagation();
+
+            var dropdown = $(ev.currentTarget).find('~ .dropdown');
+            dropdown.toggle();
         },
 
         showMainCommentingField: function(ev) {
@@ -1022,6 +1052,7 @@
             // Navigation bar
             if (this.options.enableNavigation) {
                 this.$el.append(this.createNavigationElement());
+                this.showActiveSort();
             }
 
             // Loading spinner
@@ -1244,6 +1275,10 @@
             var navigationEl = $('<ul/>', {
                 'class': 'navigation'
             });
+            var navigationWrapper = $('<div/>', {
+                'class': 'navigation-wrapper'
+            });
+            navigationEl.append(navigationWrapper);
 
             // Newest
             var newest = $('<li/>', {
@@ -1283,12 +1318,38 @@
             }
             attachments.prepend(attachmentsIcon);
 
-            navigationEl.append(newest).append(oldest);
-            var enableSortingByPopularity = this.options.enableReplying || this.options.enableUpvoting;
-            if(enableSortingByPopularity) navigationEl.append(popular);
-            if(this.options.enableAttachments) navigationEl.append(attachments);
 
-            navigationEl.find('[data-sort-key=' + this.currentSortKey + ']').addClass('active');
+            // Responsive navigation
+            var dropdownNavigationWrapper = $('<div/>', {
+                'class': 'navigation-wrapper responsive'
+            });
+            var dropdownNavigation = $('<ul/>', {
+                'class': 'dropdown'
+            });
+            var dropdownTitle = $('<li/>', {
+                'class': 'title'
+            });
+            var dropdownTitleHeader = $('<header/>');
+
+            dropdownTitle.append(dropdownTitleHeader);
+            dropdownNavigationWrapper.append(dropdownTitle);
+            dropdownNavigationWrapper.append(dropdownNavigation);
+            navigationEl.append(dropdownNavigationWrapper);
+
+
+            // Populate elements
+            navigationWrapper.append(newest).append(oldest);
+            dropdownNavigation.append(newest.clone()).append(oldest.clone());
+
+            if(this.options.enableReplying || this.options.enableUpvoting) {
+                navigationWrapper.append(popular);
+                dropdownNavigation.append(popular.clone());
+            }
+            if(this.options.enableAttachments) {
+                navigationWrapper.append(attachments);
+                dropdownNavigationWrapper.append(attachments.clone());
+            }
+
             return navigationEl;
         },
 
@@ -1581,6 +1642,11 @@
 
             // Navigation underline
             this.createCss('.jquery-comments ul.navigation li.active:after {background: '
+                + this.options.highlightColor  + ' !important;',
+                +'}');
+
+            // Dropdown active element
+            this.createCss('.jquery-comments ul.navigation ul.dropdown li.active {background: '
                 + this.options.highlightColor  + ' !important;',
                 +'}');
 
