@@ -43,7 +43,10 @@
         currentSortKey: '',
 
         options: {
+
+            // User
             profilePictureURL: '',
+            currentUserIsAdmin: false,
 
             // Font awesome icon overrides
             spinnerIconURL: '',
@@ -1550,9 +1553,9 @@
             if(this.options.enableReplying) actions.append(reply);
             if(this.options.enableUpvoting) actions.append(upvotes);
 
-            if(commentModel.createdByCurrentUser) {
+            if(commentModel.createdByCurrentUser || this.options.currentUserIsAdmin) {
 
-                // Case: delete button for attachemt
+                // Case: delete button for attachment
                 if(isAttachment && this.isAllowedToDelete(commentModel.id)) {
                     var deleteButton = $('<button/>', {
                         'class': 'action delete enabled',
