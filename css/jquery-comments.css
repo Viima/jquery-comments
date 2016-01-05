@@ -444,7 +444,7 @@
 
 .jquery-comments ul.main li.comment .wrapper .content a.attachment > * {
 	max-width: 100%;
-	max-height: 300px;
+	max-height: 200px;
 	width: auto;
 	height: auto;
 	margin-top: .25em;

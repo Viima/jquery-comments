@@ -1408,8 +1408,8 @@
                 text: commentModel.fullname
             });
 
-            // Highlight name for admins
-            if(commentModel.createdByAdmin) name.addClass('highlight-font-bold');
+            // Highlight name for own comments and admin
+            if(commentModel.createdByCurrentUser || commentModel.createdByAdmin) name.addClass('highlight-font-bold');
 
             // Show reply-to name if parent of parent exists
             if(commentModel.parent) {
