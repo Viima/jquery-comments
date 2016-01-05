@@ -107,6 +107,7 @@
                 modified: 'modified',
                 content: 'content',
                 file: 'file',
+                fileURL: 'file_url',
                 fileMimeType: 'file_mime_type',
                 fullname: 'fullname',
                 profilePictureURL: 'profile_picture_url',
@@ -507,6 +508,7 @@
                     var commentJSON = self.createCommentJSON(textarea);
                     commentJSON.content = '';
                     commentJSON.file = file;
+                    commentJSON.fileURL = 'C:/fakepath/' + file.name;
                     commentJSON.fileMimeType = file.type;
 
                     // Reverse mapping
@@ -1443,7 +1445,7 @@
             });
 
             // Case: attachment
-            var isAttachment = commentModel.file != undefined;
+            var isAttachment = commentModel.fileURL != undefined;
             if(isAttachment) {
                 var format = commentModel.fileMimeType.split('/')[1];
                 var type = commentModel.fileMimeType.split('/')[0];
@@ -1451,21 +1453,21 @@
                 // Attachment link
                 var link = $('<a/>', {
                     'class': 'attachment',
-                    href: commentModel.file,
+                    href: commentModel.fileURL,
                     target: '_blank'
                 });
 
                 // Case: image preview
                 if(type == 'image') {
                     var image = $('<img/>', {
-                        src: commentModel.file
+                        src: commentModel.fileURL
                     });
                     link.html(image);
 
                 // Case: video preview
                 } else if(type == 'video') {
                     var video = $('<video/>', {
-                        src: commentModel.file,
+                        src: commentModel.fileURL,
                         type: commentModel.fileMimeType,
                         controls: 'controls'
                     });
@@ -1494,7 +1496,7 @@
                     }
 
                     // File name
-                    var parts = commentModel.file.split('/');
+                    var parts = commentModel.fileURL.split('/');
                     var fileName = parts[parts.length - 1];
                     fileName = fileName.split('?')[0];
                     fileName = decodeURIComponent(fileName);
@@ -1697,7 +1699,7 @@
         },
 
         getAttachments: function() {
-            return this.getComments().filter(function(comment){return comment.file != undefined});
+            return this.getComments().filter(function(comment){return comment.fileURL != undefined});
         },
 
         getOutermostParent: function(directParentId) {
