@@ -1405,7 +1405,7 @@
             // Name
             var name = $('<div/>', {
                 'class': 'name',
-                text: commentModel.fullname
+                text: commentModel.createdByCurrentUser ? this.options.textFormatter(this.options.youText) : commentModel.fullname
             });
 
             // Highlight name for own comments and admin
