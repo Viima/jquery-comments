@@ -122,7 +122,7 @@
             putComment: function(commentJSON, success, error) {success(commentJSON)},
             deleteComment: function(commentJSON, success, error) {success()},
             upvoteComment: function(commentJSON, success, error) {success(commentJSON)},
-            uploadAttachment: function(commentJSON, success, error, count) {success(commentJSON)},
+            uploadAttachments: function(commentArray, success, error) {success(commentArray)},
             refresh: function() {},
             timeFormatter: function(time) {
                 return new Date(time).toLocaleDateString();
@@ -469,43 +469,33 @@
                 // Disable upload button while request is pending
                 uploadButton.removeClass('enabled');
 
-                // Keep count of completed requests
-                var completeCallbacks = 0;
-                var successCallbacks = 0;
+                var success = function(commentArray) {
+                	$(commentArray).each(function(index, commentJSON) {
+	                    var commentModel = self.createCommentModel(commentJSON);
+	                    self.addCommentToDataModel(commentModel);
+	                    self.addComment(commentModel);
+	                    self.addAttachment(commentModel);
+                	});
 
-                var success = function(commentJSON) {
-                    successCallbacks++;
-                    completeCallbacks++;
-
-                    var commentModel = self.createCommentModel(commentJSON);
-                    self.addCommentToDataModel(commentModel);
-                    self.addComment(commentModel);
-                    self.addAttachment(commentModel);
-
-                    if(completeCallbacks == fileCount) {                    
-
-                        // Close the commenting field if all the uploads were successfull
-                        // and there's no content besides the attachment
-                        if(successCallbacks == completeCallbacks && self.getTextareaContent(textarea).length == 0) {
-                            commentingField.find('.close').trigger('click');
-                        }
-
-                        uploadButton.addClass('enabled');
+                    // Close the commenting field if all the uploads were successfull
+                    // and there's no content besides the attachment
+                    if(commentArray.length == fileCount && self.getTextareaContent(textarea).length == 0) {
+                        commentingField.find('.close').trigger('click');
                     }
+
+                    uploadButton.addClass('enabled');
                 };
 
                 var error = function() {
-                    completeCallbacks++;
-
-                    if(completeCallbacks == fileCount) {
-                        uploadButton.addClass('enabled');
-                    }
+                    uploadButton.addClass('enabled');
                 };
 
+                var commentArray = [];
                 $(files).each(function(index, file) {
 
                     // Create comment JSON
                     var commentJSON = self.createCommentJSON(textarea);
+                    commentJSON.id += '-' + index;
                     commentJSON.content = '';
                     commentJSON.file = file;
                     commentJSON.fileURL = 'C:/fakepath/' + file.name;
@@ -513,10 +503,10 @@
 
                     // Reverse mapping
                     commentJSON = self.applyExternalMappings(commentJSON);
-
-                    self.options.uploadAttachment(commentJSON, success, error, fileCount);
+                    commentArray.push(commentJSON);
                 });
 
+                self.options.uploadAttachments(commentArray, success, error);
             }
 
             // Clear the input field
