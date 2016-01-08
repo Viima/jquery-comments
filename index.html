@@ -45,24 +45,23 @@
                         }, 500);
                     },
                     putComment: function(data, success, error) {
-                      setTimeout(function() {
-                        success(data);
-                      }, 200)
+						setTimeout(function() {
+							success(data);
+						}, 500);
                     },
                     deleteComment: function(data, success, error) {
-                      setTimeout(function() {
-                        success();
-                      }, 500)
+						setTimeout(function() {
+							success();
+						}, 500);
                     },
                     upvoteComment: function(data, success, error) {
-                      setTimeout(function() {
-                        success(data);
-                      }, 500)
+						setTimeout(function() {
+							success(data);
+						}, 500);
                     },
-                    uploadAttachment: function(data, success, error) {
-                        data.file = '/files/' + data.file.name;
+                    uploadAttachments: function(dataArray, success, error) {
                         setTimeout(function() {
-                            success(data);
+                            success(dataArray);
                         }, 500);
                     },
                 });

@@ -51,7 +51,8 @@
 .jquery-comments .spinner {
 	font-size: 2em;
 	text-align: center;
-	padding: 0;
+	padding: 0.5em;
+    color: #666;
 }
 
 .jquery-comments ul {

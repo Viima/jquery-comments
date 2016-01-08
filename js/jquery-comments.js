@@ -466,8 +466,12 @@
                 var uploadButton = commentingField.find('.upload');
                 var textarea = commentingField.find('.textarea');
 
-                // Disable upload button while request is pending
+                // Disable upload button and append spinners while request is pending
                 uploadButton.removeClass('enabled');
+                var commentListSpinner = this.createSpinner();
+                var attachmentListSpinner = this.createSpinner();
+                this.$el.find('ul#comment-list').prepend(commentListSpinner);
+                this.$el.find('ul#attachment-list').prepend(attachmentListSpinner);
 
                 var success = function(commentArray) {
                 	$(commentArray).each(function(index, commentJSON) {
@@ -483,11 +487,17 @@
                         commentingField.find('.close').trigger('click');
                     }
 
+                    // Enable upload button and remove spinners
                     uploadButton.addClass('enabled');
+                    commentListSpinner.remove();
+                    attachmentListSpinner.remove();
                 };
 
                 var error = function() {
+                	// Enable upload button and remove spinners
                     uploadButton.addClass('enabled');
+                    commentListSpinner.remove();
+					attachmentListSpinner.remove();
                 };
 
                 var commentArray = [];
@@ -1056,17 +1066,7 @@
             }
 
             // Loading spinner
-            var spinner = $('<div/>', {
-                'class': 'spinner'
-            });
-            var spinnerIcon = $('<i/>', {
-                'class': 'fa fa-spinner fa-spin'
-            });
-            if(this.options.spinnerIconURL.length) {
-                spinnerIcon.css('background-image', 'url("'+this.options.spinnerIconURL+'")');
-                spinnerIcon.addClass('image');
-            }
-            spinner.html(spinnerIcon);
+            var spinner = this.createSpinner();
             this.$el.append(spinner);
 
             // Comments container
@@ -1352,6 +1352,21 @@
 
             if(this.options.forceResponsive) this.forceResponsive();
             return navigationEl;
+        },
+
+        createSpinner: function() {
+        	var spinner = $('<div/>', {
+        	    'class': 'spinner'
+        	});
+        	var spinnerIcon = $('<i/>', {
+        	    'class': 'fa fa-spinner fa-spin'
+        	});
+        	if(this.options.spinnerIconURL.length) {
+        	    spinnerIcon.css('background-image', 'url("'+this.options.spinnerIconURL+'")');
+        	    spinnerIcon.addClass('image');
+        	}
+        	spinner.html(spinnerIcon);
+        	return spinner;
         },
 
         createCommentElement: function(commentModel) {
