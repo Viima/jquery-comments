@@ -410,7 +410,12 @@
 
                 // Append element to DOM
                 var childCommentsEl = outerMostParent.find('.child-comments');
-                childCommentsEl.append(commentEl);
+                var commentingField = childCommentsEl.find('.commenting-field');
+                if(commentingField.length) {
+                    commentingField.before(commentEl)
+                } else {
+                    childCommentsEl.append(commentEl);
+                }
 
                 // Update toggle all -button
                 this.updateToggleAllButton(outerMostParent);
@@ -460,6 +465,7 @@
         uploadAttachments: function(files, commentingField) {
             var self = this;
             if(!commentingField) commentingField = this.$el.find('.commenting-field.main');
+            var isReply = !commentingField.hasClass('main');
             var fileCount = files.length;
 
             if(fileCount) {
@@ -468,10 +474,14 @@
 
                 // Disable upload button and append spinners while request is pending
                 uploadButton.removeClass('enabled');
-                var commentListSpinner = this.createSpinner();
                 var attachmentListSpinner = this.createSpinner();
-                this.$el.find('ul#comment-list').prepend(commentListSpinner);
+                var commentListSpinner = this.createSpinner();
                 this.$el.find('ul#attachment-list').prepend(attachmentListSpinner);
+                if(isReply) {
+                    commentingField.before(commentListSpinner);
+                } else {
+                    this.$el.find('ul#comment-list').prepend(commentListSpinner);
+                }
 
                 var success = function(commentArray) {
                 	$(commentArray).each(function(index, commentJSON) {
