@@ -1222,9 +1222,11 @@
                     });
                     var fileInput = $('<input/>', {
                         type: 'file',
-                        multiple: 'multiple',
                         'data-role': 'none' // Prevent jquery-mobile for adding classes
                     });
+                    // Multi file upload might not work with backend as the the file names
+                    // may be the same causing duplicates
+                    if(!$.browser.mobile) fileInput.attr('multiple', 'multiple');
                     if(this.options.uploadIconURL.length) {
                         uploadIcon.css('background-image', 'url("'+this.options.uploadIconURL+'")');
                         uploadIcon.addClass('image');
