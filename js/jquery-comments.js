@@ -1464,8 +1464,17 @@
             // Case: attachment
             var isAttachment = commentModel.fileURL != undefined;
             if(isAttachment) {
-                var format = commentModel.fileMimeType.split('/')[1];
-                var type = commentModel.fileMimeType.split('/')[0];
+                var format = null;
+                var type = null;
+
+                // Type and format
+                if(commentModel.fileMimeType) {
+                    var mimeTypeParts = commentModel.fileMimeType.split('/');
+                    if(mimeTypeParts.length == 2) {
+                        format = mimeTypeParts[1];
+                        type = mimeTypeParts[0];
+                    }
+                }
 
                 // Attachment link
                 var link = $('<a/>', {
