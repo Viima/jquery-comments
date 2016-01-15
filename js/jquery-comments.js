@@ -1098,6 +1098,7 @@
             // Reply
             var reply = $('<button/>', {
                 'class': 'action reply',
+                'type': 'button',
                 text: this.options.textFormatter(this.options.replyText)
             });
 
