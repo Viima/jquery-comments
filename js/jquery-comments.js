@@ -84,7 +84,7 @@
             enableEditing: true,
             enableUpvoting: true,
             enableDeleting: true,
-            enableAttachments: true,
+            enableAttachments: false,
             enableDeletingCommentWithReplies: false,
             enableNavigation: true,
             forceResponsive: false,
