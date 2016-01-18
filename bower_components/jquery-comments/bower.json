@@ -1,0 +1,24 @@
+{
+  "name": "jquery-comments",
+  "version": "1.1.0",
+  "homepage": "http://viima.github.io/jquery-comments/",
+  "authors": [
+    "Joona Tykkyläinen <joona@viima.com>"
+  ],
+  "description": "jquery-comments is a jQuery plugin for implementing an out-of-the-box commenting solution to any web application with an existing backend. It provides all the UI functionalities and ties them to callbacks that let you easily define what you want to do with the data. The library is highly customizable and very easy to integrate thanks to a wide variety of settings.",
+  "main": "js/lib/jquery-comments.js",
+  "keywords": [
+    "comments",
+    "commenting",
+    "discussion"
+  ],
+  "license": "MIT",
+  "moduleType": "globals",
+  "ignore": [
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "screenshot.png"
+  ]
+}
