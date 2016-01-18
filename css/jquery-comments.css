@@ -51,7 +51,7 @@
 	font-size: 2em;
 	text-align: center;
 	padding: 0.5em;
-    color: #666;
+	color: #666;
 }
 
 .jquery-comments ul {
@@ -224,7 +224,7 @@
 
 .jquery-comments .textarea-wrapper .control-row > span.upload {
 	position: relative;
-    overflow: hidden;
+	overflow: hidden;
 	background-color: #999;
 }
 

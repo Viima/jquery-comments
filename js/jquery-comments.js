@@ -531,10 +531,10 @@
                 };
 
                 var error = function() {
-                	// Enable upload button and remove spinners
+                    // Enable upload button and remove spinners
                     uploadButton.addClass('enabled');
                     commentListSpinner.remove();
-					attachmentListSpinner.remove();
+                    attachmentListSpinner.remove();
                 };
 
                 var commentArray = [];
@@ -1278,6 +1278,7 @@
                     // Multi file upload might not work with backend as the the file names
                     // may be the same causing duplicates
                     if(!$.browser.mobile) fileInput.attr('multiple', 'multiple');
+
                     if(this.options.uploadIconURL.length) {
                         uploadIcon.css('background-image', 'url("'+this.options.uploadIconURL+'")');
                         uploadIcon.addClass('image');
@@ -1996,5 +1997,4 @@
             $.data(this, 'comments', comments);
         });
     };
-
 }));
