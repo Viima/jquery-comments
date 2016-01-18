@@ -6,8 +6,7 @@ describe('Basic features', function() {
         var commentsContainer = $('<div/>');
 
         commentsContainer.comments({
-            spinnerImageURL: '../img/ajax-loader.gif',
-            profilePictureURL: 'https://app.viima.com/static/media/user_profiles/user-icon.png',
+            profilePictureURL: 'https://viima-app.s3.amazonaws.com/media/user_profiles/user-icon.png',
             roundProfilePictures: true,
             enableAttachments: true,
             enableDeletingCommentWithReplies: true,

@@ -1165,10 +1165,17 @@
         },
 
         createProfilePictureElement: function(src) {
-            var profilePicture = $('<img/>', {
-                src: src,
-                'class': 'profile-picture' + (this.options.roundProfilePictures ? ' round' : '')
-            });
+            if(src) {
+                var profilePicture = $('<img/>', {
+                    src: src
+                });
+            } else {
+                var profilePicture = $('<i/>', {
+                    'class': 'fa fa-user'
+                });
+            }
+            profilePicture.addClass('profile-picture');
+            if(this.options.roundProfilePictures) profilePicture.addClass('round');
             return profilePicture;
         },
 
