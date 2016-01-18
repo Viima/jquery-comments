@@ -784,6 +784,96 @@ $('#comments-container').comments({
 </tr>
 
 
+<tr>
+<td><code>enableAttachments</code></td>
+<td>
+<p>
+A <code>boolean</code> value determing whether attachments are enabled
+</p>
+<label>DEFAULT</label>  
+<code>false</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    enableAttachments: true
+});
+</pre>
+</td>
+</tr>
+
+
+<tr>
+<td><code>enableNavigation</code></td>
+<td>
+<p>
+A <code>boolean</code> value determing whether navigation is enabled
+</p>
+<label>DEFAULT</label>  
+<code>true</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    enableNavigation: false
+});
+</pre>
+</td>
+</tr>
+
+
+<tr>
+<td><code>postCommentOnEnter</code></td>
+<td>
+<p>
+A <code>boolean</code> value determing whether comments will be posted by pressing enter
+</p>
+<label>DEFAULT</label>  
+<code>false</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    postCommentOnEnter: true
+});
+</pre>
+</td>
+</tr>
+
+
+<tr>
+<td><code>forceResponsive</code></td>
+<td>
+<p>
+A <code>boolean</code> value determing whether the main navigation elements are presented in a dropdown
+</p>
+<label>DEFAULT</label>  
+<code>false</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    forceResponsive: true
+});
+</pre>
+</td>
+</tr>
+
+
+<tr>
+<td><code>readOnly</code></td>
+<td>
+<p>
+A <code>boolean</code> value determing whether any actions are enabled
+</p>
+<label>DEFAULT</label>  
+<code>false</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    readOnly: true
+});
+</pre>
+</td>
+</tr>
+
+
 <tr><th colspan="2">Field mappings</th></tr>
 
 <tr>
@@ -1081,6 +1171,25 @@ $('#comments-container').comments({
 </tr>
 
 <tr><th colspan="2">Miscellaneous</th></tr>
+
+
+<tr>
+<td><code>defaultNavigationSortKey</code></td>
+<td>
+<p>
+A <code>string</code> value determing the default sorting. Possible values are <code>newest</code>, <code>oldest</code>, <code>popularity</code> and <code>attachments</code>
+</p>
+<label>DEFAULT</label>  
+<code class="string">"newest"</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    defaultNavigationSortKey: 'popularity'
+});
+</pre>
+</td>
+</tr>
+
 
 <tr>
 <td><code>roundProfilePictures</code></td>
