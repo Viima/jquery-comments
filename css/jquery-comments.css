@@ -411,6 +411,10 @@
 	white-space: nowrap;
 }
 
+.jquery-comments ul.main li.comment .name a {
+	color: inherit;
+}
+
 .jquery-comments ul.main li.comment .name .reply-to {
 	color: #999;
 	font-size: .8em;

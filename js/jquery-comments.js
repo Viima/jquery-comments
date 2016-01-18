@@ -111,6 +111,7 @@
                 fileURL: 'file_url',
                 fileMimeType: 'file_mime_type',
                 fullname: 'fullname',
+                profileURL: 'profile_url',
                 profilePictureURL: 'profile_picture_url',
                 createdByAdmin: 'created_by_admin',
                 createdByCurrentUser: 'created_by_current_user',
@@ -1424,10 +1425,19 @@
             });
 
             // Name
+            var nameText = commentModel.createdByCurrentUser ? this.options.textFormatter(this.options.youText) : commentModel.fullname;
             var name = $('<div/>', {
-                'class': 'name',
-                text: commentModel.createdByCurrentUser ? this.options.textFormatter(this.options.youText) : commentModel.fullname
+                'class': 'name'
             });
+            if(commentModel.profileURL) {
+                var link = $('<a/>', {
+                    href: commentModel.profileURL,
+                    text: nameText
+                });
+                name.html(link);
+            } else {
+                name.text(nameText);
+            }
 
             // Highlight name for own comments and admin
             if(commentModel.createdByCurrentUser || commentModel.createdByAdmin) name.addClass('highlight-font-bold');
