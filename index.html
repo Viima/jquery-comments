@@ -788,7 +788,7 @@ $('#comments-container').comments({
 <td><code>enableAttachments</code></td>
 <td>
 <p>
-A <code>boolean</code> value determing whether attachments are enabled
+A <code>boolean</code> value determing whether attachments are enabled. The <code>file</code> field of a comment is set by jquery-comments but the server should return the url for the uploaded file in <code>fileURL</code> field.
 </p>
 <label>DEFAULT</label>  
 <code>false</code>
@@ -888,9 +888,13 @@ id                      // Required
 parent                  // Required if replying is enabled
 created                 // Required
 modified                // Required if editing is enabled
-content                 // Required
+content                 // Either content or fileURL must be present
+fileURL                 // Either content or fileURL must be present
+file                    // Optional
+fileMimeType            // Optional
 fullname                // Required
-profilePictureURL       // Required
+profileURL              // Optional
+profilePictureURL       // Optional
 createdByAdmin          // Optional
 createdByCurrentUser    // Required if editing is enabled
 upvoteCount             // Required if upvoting is enabled
@@ -899,17 +903,21 @@ userHasUpvoted          // Required if upvoting is enabled
 <label>DEFAULT</label>  
 <pre class="prettyprint linemus">
 fieldMappings: {
-   id: 'id',
-   parent: 'parent',
-   created: 'created',
-   modified: 'modified',
-   content: 'content',
-   fullname: 'fullname',
-   profilePictureURL: 'profile_picture_url',
-   createdByAdmin: 'created_by_admin',
-   createdByCurrentUser: 'created_by_current_user',
-   upvoteCount: 'upvote_count',
-   userHasUpvoted: 'user_has_upvoted',
+    id: 'id',
+    parent: 'parent',
+    created: 'created',
+    modified: 'modified',
+    content: 'content',
+    file: 'file',
+    fileURL: 'file_url',
+    fileMimeType: 'file_mime_type',
+    fullname: 'fullname',
+    profileURL: 'profile_url',
+    profilePictureURL: 'profile_picture_url',
+    createdByAdmin: 'created_by_admin',
+    createdByCurrentUser: 'created_by_current_user',
+    upvoteCount: 'upvote_count',
+    userHasUpvoted: 'user_has_upvoted'
 }
 </pre>
 <label class="example">EXAMPLE</label>  
