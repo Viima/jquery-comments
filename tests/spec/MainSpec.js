@@ -20,6 +20,11 @@ describe('Basic features', function() {
                     success(data);
                 }, 10);
             },
+            uploadAttachments: function(data, success, error) {
+                setTimeout(function() {
+                    success(data);
+                }, 10);
+            },
             putComment: function(data, success, error) {
                 setTimeout(function() {
                     success(data);
@@ -315,7 +320,7 @@ describe('Basic features', function() {
                 expect(toggleAllText).toBe('View all 6 replies');
                 expect(mostPopularComment.find('li.comment:visible').length).toBe(2);
             });
-        }); 
+        });
 
         it('Should close the reply field when clicking the close icon', function() {
             mostPopularComment.find('.reply').first().click();
@@ -727,6 +732,89 @@ describe('Basic features', function() {
         });
     });
 
+describe('Uploading attachments', function() {
+
+    var mainCommentingField;
+    var mainTextarea;
+    var lineHeight;
+
+    beforeEach(function() {
+        mainCommentingField = $('.commenting-field.main');
+        mainTextarea = mainCommentingField.find('.textarea');
+    });
+
+    it('Should able to upload a new main level attachment', function() {
+        var fileName = 'test.txt';
+        var file = new File([], 'test.txt');
+        comments.uploadAttachments([file]);
+
+        var commentCount = comments.getComments().length;
+        var attachmentCount = comments.getAttachments().length;
+        wait(function() {
+            var commentCountUpdated = comments.getComments().length == commentCount + 1;
+            var attachmentCountUpdated = comments.getAttachments().length == attachmentCount + 1;
+            return commentCountUpdated && attachmentCountUpdated;
+        });
+
+        run(function() {
+            // New comment should always be placed first initially
+            var commentEl = $('#comment-list li.comment').first();
+            var idOfNewComment = commentEl.data().id;
+
+            expect(commentEl.find('.content').text()).toBe(fileName);
+            expect(commentEl.hasClass('by-current-user')).toBe(true);
+            checkCommentElementData(commentEl);
+
+            // Check that there are one regular comment element and one attachment element
+            expect($('li.comment[data-id="'+idOfNewComment+'"]').length).toBe(2);
+
+            // Check that sorting works also with the new comment
+            $('li[data-sort-key="popularity"]').click();
+            checkOrder($('#comment-list > li.comment'), [1,3,2,idOfNewComment]);
+            $('li[data-sort-key="oldest"]').click();
+            checkOrder($('#comment-list > li.comment'), [1,2,3,idOfNewComment]);
+            $('li[data-sort-key="newest"]').click();
+            checkOrder($('#comment-list > li.comment'), [idOfNewComment,3,2,1]);
+        });
+    });
+
+    it('Should be able to upload an attachment as a reply', function() {
+        var mostPopularComment = $('#comment-list li.comment[data-id=1]');
+        mostPopularComment.find('.reply').first().click();
+        var replyField = mostPopularComment.find('.commenting-field');
+        expect(replyField.length).toBe(1);
+
+        var fileName = 'test.txt';
+        var file = new File([], 'test.txt');
+        comments.uploadAttachments([file], replyField);
+
+        var commentCount = comments.getComments().length;
+        var attachmentCount = comments.getAttachments().length;
+        wait(function() {
+            var commentCountUpdated = comments.getComments().length == commentCount + 1;
+            var attachmentCountUpdated = comments.getAttachments().length == attachmentCount + 1;
+            return commentCountUpdated && attachmentCountUpdated;
+        });
+
+        run(function() {
+            // New reply should always be placed last
+            var commentEl = mostPopularComment.find('li.comment').last();
+            var idOfNewComment = commentEl.data().id;
+
+            expect(commentEl.find('.content').text()).toBe(fileName);
+            expect(commentEl.hasClass('by-current-user')).toBe(true);
+            checkCommentElementData(commentEl);
+
+            // Check position
+            checkOrder(mostPopularComment.find('li.comment'), [6,7,8,9,10,idOfNewComment]);
+
+            var toggleAllText = mostPopularComment.find('li.toggle-all').text();
+            expect(toggleAllText).toBe('View all 6 replies');
+            expect(mostPopularComment.find('li.comment:visible').length).toBe(2);
+        });
+    });
+});
+
     afterEach(function() {
         $('.jquery-comments').remove();
     });
@@ -765,7 +853,14 @@ describe('Basic features', function() {
         // Check basic fields
         expect(profilePicture).toBe(commentModel.profilePictureURL);
         expect(fullname).toBe(commentModel.fullname);
-        expect(content).toBe(commentModel.content);
+
+        // Check content
+        if(commentModel.fileURL) {
+            var link = commentEl.find('a');
+            expect(link.attr('href')).toBe(commentModel.fileURL);
+        } else {
+            expect(content).toBe(commentModel.content);
+        }
 
         // Check time
         var modelCreatedDate = new Date(commentModel.created);

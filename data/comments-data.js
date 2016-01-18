@@ -43,7 +43,6 @@ var commentsArray = [
    "parent": 3,
    "created": "2015-01-04",
    "modified": "2015-01-04",
-   "content": "",
    "file_url": "http://www.w3schools.com/html/mov_bbb.mp4",
    "file_mime_type": "video/mp4",
    "fullname": "Todd Brown",
