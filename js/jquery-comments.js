@@ -1,4 +1,4 @@
-//     jquery-comments.js 1.0.1
+//     jquery-comments.js 1.1.0
 
 //     (c) 2015 Joona Tykkyläinen, Viima Solutions Oy
 //     jquery-comments may be freely distributed under the MIT license.
@@ -87,6 +87,7 @@
             enableAttachments: false,
             enableDeletingCommentWithReplies: false,
             enableNavigation: true,
+            postCommentOnEnter: false,
             forceResponsive: false,
             defaultNavigationSortKey: 'newest',
 
@@ -665,11 +666,14 @@
 
         saveOnKeydown: function(ev) {
             // Save comment on cmd/ctrl + enter
-            if(ev.keyCode == 13 && (ev.metaKey || ev.ctrlKey)) {
-                var el = $(ev.currentTarget);
-                el.siblings('.control-row').find('.save').trigger('click');
-                ev.stopPropagation();
-                ev.preventDefault();
+            if(ev.keyCode == 13) {
+                var metaKey = ev.metaKey || ev.ctrlKey;
+                if(this.options.postCommentOnEnter || metaKey) {                
+                    var el = $(ev.currentTarget);
+                    el.siblings('.control-row').find('.save').trigger('click');
+                    ev.stopPropagation();
+                    ev.preventDefault();
+                }
             }
         },
 
