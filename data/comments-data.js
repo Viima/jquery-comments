@@ -9,7 +9,6 @@ var commentsArray = [
    "profile_picture_url": "https://app.viima.com/static/media/user_profiles/user-icon.png",
    "created_by_admin": false,
    "created_by_current_user": false,
-   "moderation_pending": false,
    "upvote_count": 3,
    "user_has_upvoted": false
 },
@@ -23,7 +22,6 @@ var commentsArray = [
    "profile_picture_url": "https://app.viima.com/static/media/user_profiles/admin-user-icon.png",
    "created_by_admin": true,
    "created_by_current_user": false,
-   "moderation_pending": false,
    "upvote_count": 2,
    "user_has_upvoted": false
 },
@@ -37,7 +35,6 @@ var commentsArray = [
    "profile_picture_url": "https://app.viima.com/static/media/user_profiles/user-icon.png",
    "created_by_admin": false,
    "created_by_current_user": true,
-   "moderation_pending": false,
    "upvote_count": 2,
    "user_has_upvoted": true
 },
@@ -46,12 +43,12 @@ var commentsArray = [
    "parent": 3,
    "created": "2015-01-04",
    "modified": "2015-01-04",
-   "content": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed posuere interdum sem. Quisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu.",
+   "file_url": "http://www.w3schools.com/html/mov_bbb.mp4",
+   "file_mime_type": "video/mp4",
    "fullname": "Todd Brown",
    "profile_picture_url": "https://app.viima.com/static/media/user_profiles/user-icon.png",
    "created_by_admin": false,
    "created_by_current_user": false,
-   "moderation_pending": false,
    "upvote_count": 0,
    "user_has_upvoted": false
 },
@@ -65,7 +62,6 @@ var commentsArray = [
    "profile_picture_url": "https://app.viima.com/static/media/user_profiles/user-icon.png",
    "created_by_admin": false,
    "created_by_current_user": false,
-   "moderation_pending": false,
    "upvote_count": 0,
    "user_has_upvoted": false
 },
@@ -79,7 +75,6 @@ var commentsArray = [
    "profile_picture_url": "https://app.viima.com/static/media/user_profiles/user-icon.png",
    "created_by_admin": false,
    "created_by_current_user": false,
-   "moderation_pending": false,
    "upvote_count": 1,
    "user_has_upvoted": false
 },
@@ -93,7 +88,6 @@ var commentsArray = [
    "profile_picture_url": "https://app.viima.com/static/media/user_profiles/admin-user-icon.png",
    "created_by_admin": true,
    "created_by_current_user": false,
-   "moderation_pending": false,
    "upvote_count": 0,
    "user_has_upvoted": false
 },
@@ -107,7 +101,6 @@ var commentsArray = [
    "profile_picture_url": "https://app.viima.com/static/media/user_profiles/user-icon.png",
    "created_by_admin": false,
    "created_by_current_user": true,
-   "moderation_pending": false,
    "upvote_count": 0,
    "user_has_upvoted": false
 },
@@ -121,7 +114,6 @@ var commentsArray = [
    "profile_picture_url": "https://app.viima.com/static/media/user_profiles/user-icon.png",
    "created_by_admin": false,
    "created_by_current_user": false,
-   "moderation_pending": false,
    "upvote_count": 0,
    "user_has_upvoted": false
 },
@@ -135,8 +127,7 @@ var commentsArray = [
    "profile_picture_url": "https://app.viima.com/static/media/user_profiles/user-icon.png",
    "created_by_admin": false,
    "created_by_current_user": true,
-   "moderation_pending": false,
    "upvote_count": 0,
    "user_has_upvoted": false
-},
+}
 ]
