@@ -5,7 +5,12 @@ jquery-comments is a jQuery plugin for implementing an out-of-the-box commenting
 
 Features
 --------
-- Commenting, replying (nested comments), editing, deleting and upvoting
+- Commenting
+- Replying (nested comments)
+- Editing comments
+- Deleting comments
+- Upvoting comments
+- Uploading attachments
 - Enabling/disabling functionalities
 - Localization
 - Time formatting
@@ -23,23 +28,21 @@ Quick start
 **1) Add the following to your HTML file**
 ```html
 <link rel="stylesheet" type="text/css" href="css/jquery-comments.css">
-<link rel="stylesheet" type="text/css" href="css/font-awesome.min.css"> <!-- Optional -->
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
-<script type="text/javascript" src="js/lib/jquery-1.9.0.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
 <script type="text/javascript" src="js/jquery-comments.js"></script>
 ```
 
 **2) Initialize the library**
 ```javascript
 $('#comments-container').comments({
-    profilePictureURL: 'https://app.viima.com/static/media/user_profiles/user-icon.png',
     getComments: function(success, error) {
         var commentsArray = [{
             id: 1,
             created: '2015-10-01',
             content: 'Lorem ipsum dolort sit amet',
             fullname: 'Simon Powell',
-            profile_picture_url: 'https://app.viima.com/static/media/user_profiles/user-icon.png',
             upvote_count: 2,
             user_has_upvoted: false
         }];
@@ -49,10 +52,13 @@ $('#comments-container').comments({
 ```
 If you are not using Font Awesome for icons, you should replace the icons with custom images by overriding following options when initializing the library:
 ```javascript
-spinnerIconURL: 'img/spinner.gif',
-upvoteIconURL: 'img/upvote-icon.png',
-replyIconURL: 'img/reply-icon.png',
-noCommentsIconURL: 'img/no-comments-icon.png',
+spinnerIconURL: '',
+noCommentsIconURL: '',
+upvoteIconURL: '',		// Only if upvoting is enabled
+replyIconURL: '',		// Only if replying is enabled
+uploadIconURL: '',		// Only if attachments are enabled
+attachmentIconURL: '',	// Only if attachments are enabled
+fileIconURL: '',		// Only if attachments are enabled
 ```
 
 Dependencies
@@ -74,4 +80,4 @@ IE9+ and all modern browsers
 
 Copyright and license
 ---------------------
-Code and documentation copyright 2015 [Viima Solutions Oy](https://www.viima.com/). Code released under [the MIT license](https://github.com/Viima/jquery-comments/blob/master/LICENSE).
+Code and documentation copyright 2016 [Viima Solutions Oy](https://www.viima.com/). Code released under [the MIT license](https://github.com/Viima/jquery-comments/blob/master/LICENSE).
