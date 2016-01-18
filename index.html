@@ -128,14 +128,19 @@
             <a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h3>
 
             <ul>
-            <li>Commenting, replying (nested comments), editing, deleting and upvoting</li>
-            <li>Enabling/disabling functionalities</li>
-            <li>Localization</li>
-            <li>Time formatting</li>
-            <li>Field mappings</li>
-            <li>Callbacks</li>
-            <li>Fully responsive and mobile compatible</li>
-            <li>Miscellaneous settings</li>
+				<li>Commenting</li>
+				<li>Replying (nested comments)</li>
+				<li>Editing comments</li>
+				<li>Deleting comments</li>
+				<li>Upvoting comments</li>
+				<li>Uploading attachments</li>
+				<li>Enabling/disabling functionalities</li>
+				<li>Localization</li>
+				<li>Time formatting</li>
+				<li>Field mappings</li>
+				<li>Callbacks</li>
+				<li>Fully responsive and mobile compatible</li>
+				<li>Miscellaneous settings</li>
             </ul>
 
             <h3>
@@ -149,9 +154,9 @@
             <p><strong>1) Add the following to your HTML file</strong></p>
 
 <pre><code>&lt;link rel="stylesheet" type="text/css" href="css/jquery-comments.css"&gt;
-&lt;link rel="stylesheet" type="text/css" href="css/font-awesome.min.css"&gt; &lt;!-- Optional --&gt;
+&lt;link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"&gt;
 
-&lt;script type="text/javascript" src="js/lib/jquery-1.9.0.min.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src=""https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.0/jquery.min.js"&gt;&lt;/script&gt;
 &lt;script type="text/javascript" src="js/jquery-comments.js"&gt;&lt;/script&gt;
 </code></pre>
 
@@ -165,7 +170,6 @@
             created: '2015-10-01',
             content: 'Lorem ipsum dolort sit amet',
             fullname: 'Simon Powell',
-            profile_picture_url: 'https://app.viima.com/static/media/user_profiles/user-icon.png',
             upvote_count: 2,
             user_has_upvoted: false
         }];
@@ -176,10 +180,13 @@
 
             <p>If you are not using Font Awesome for icons, you should replace the icons with custom images by overriding following options when initializing the library:</p>
 
-<pre><code>spinnerIconURL: 'img/spinner.gif',
-upvoteIconURL: 'img/upvote-icon.png',
-replyIconURL: 'img/reply-icon.png',
-noCommentsIconURL: 'img/no-comments-icon.png',
+<pre><code>spinnerIconURL: '',
+noCommentsIconURL: '',
+upvoteIconURL: '',      // Only if upvoting is enabled
+replyIconURL: '',       // Only if replying is enabled
+uploadIconURL: '',      // Only if attachments are enabled
+attachmentIconURL: '',  // Only if attachments are enabled
+fileIconURL: '',        // Only if attachments are enabled
 </code></pre>
 
 
@@ -1076,7 +1083,7 @@ $('#comments-container').comments({
             <h3>
             <a id="copyright-and-license" class="anchor" href="#copyright-and-license" aria-hidden="true"><span class="octicon octicon-link"></span></a>Copyright and license</h3>
 
-            <p>Code and documentation copyright 2015 <a href="https://www.viima.com/">Viima Solutions Oy</a>. Code released under <a href="https://github.com/Viima/jquery-comments/blob/master/LICENSE">the MIT license</a>.</p>
+            <p>Code and documentation copyright 2016 <a href="https://www.viima.com/">Viima Solutions Oy</a>. Code released under <a href="https://github.com/Viima/jquery-comments/blob/master/LICENSE">the MIT license</a>.</p>
 
                   <footer class="site-footer">
                     <span class="site-footer-owner"><a href="https://github.com/Viima/jquery-comments">jquery-comments</a> is maintained by <a href="https://github.com/Viima">Viima</a>.</span>
