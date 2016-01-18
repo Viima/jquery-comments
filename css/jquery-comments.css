@@ -647,3 +647,11 @@
 .jquery-comments .droppable-overlay .droppable-container .droppable i {
 	margin-bottom: 5px;
 }
+
+/* Read-only mode */
+.jquery-comments.read-only .commenting-field {
+	display: none;
+}
+.jquery-comments.read-only .actions {
+	display: none;
+}

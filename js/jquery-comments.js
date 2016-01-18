@@ -89,6 +89,7 @@
             enableNavigation: true,
             postCommentOnEnter: false,
             forceResponsive: false,
+            readOnly: false,
             defaultNavigationSortKey: 'newest',
 
             // Colors
@@ -209,6 +210,9 @@
             }
             $.extend(this.options, options);
 
+            // Read-only mode
+            if(this.options.readOnly) this.$el.addClass('read-only');
+            
             // Set initial sort key
             this.currentSortKey = this.options.defaultNavigationSortKey;
 
