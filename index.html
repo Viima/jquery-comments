@@ -195,14 +195,13 @@ fileIconURL: '',        // Only if attachments are enabled
 
 <table>
 
-
-<tr><th colspan="2">Images</th></tr>
+<tr><th colspan="2">Current user</th></tr>
 
 <tr>
 <td><code>profilePictureURL</code></td>
 <td>
 <p>
-An <code>url</code> for profile picture of the current user
+An <code>url</code> for profile picture of the current user. Not required if Font Awesome is used.
 </p>
 <label>DEFAULT</label>  
 <code class="string">""</code>
@@ -214,8 +213,25 @@ $('#comments-container').comments({
 </pre>
 </td>
 </tr>
+<tr>
+<td><code>currentUserIsAdmin</code></td>
+<td>
+<p>
+A <code>boolean</code> value determing whether the current user is administarator
+</p>
+<label>DEFAULT</label>  
+<code class="boolean">false</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    currentUserIsAdmin: true
+});
+</pre>
+</td>
+</tr>
 
 
+<tr><th colspan="2">Images</th></tr>
 <tr>
 <td><code>spinnerIconURL</code></td>
 <td>
@@ -269,6 +285,56 @@ $('#comments-container').comments({
 </td>
 </tr>
 
+<tr>
+<td><code>uploadIconURL</code></td>
+<td>
+<p>
+An <code>url</code> for upload icon that is used as a button for uploading attachments. Not required if Font Awesome is used.
+</p>
+<label>DEFAULT</label>  
+<code class="string">""</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    uploadIconURL: '/img/upload-icon.png'
+});
+</pre>
+</td>
+</tr>
+
+<tr>
+<td><code>attachmentIconURL</code></td>
+<td>
+<p>
+An <code>url</code> for attachment icon that is used as a symbor for attachments. Not required if Font Awesome is used.
+</p>
+<label>DEFAULT</label>  
+<code class="string">""</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    attachmentIconURL: '/img/attachment-icon.png'
+});
+</pre>
+</td>
+</tr>
+
+<tr>
+<td><code>fileIconURL</code></td>
+<td>
+<p>
+An <code>url</code> for file icon that is used to indicate that a link is an attachment. Not required if Font Awesome is used.
+</p>
+<label>DEFAULT</label>  
+<code class="string">""</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    fileIconURL: '/img/file-icon.png'
+});
+</pre>
+</td>
+</tr>
 
 <tr>
 <td><code>noCommentsIconURL</code></td>
