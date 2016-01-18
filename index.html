@@ -375,24 +375,6 @@ $('#comments-container').comments({
 
 
 <tr>
-<td><code>popularText</code></td>
-<td>
-<p>
-A <code>string</code> that is displayed on sorting button for most popular comments
-</p>
-<label>DEFAULT</label>  
-<code class="string">"Popular"</code>
-<label class="example">EXAMPLE</label>  
-<pre class="prettyprint linemus">
-$('#comments-container').comments({
-    popularText: 'Most popular'
-});
-</pre>
-</td>
-</tr>
-
-
-<tr>
 <td><code>newestText</code></td>
 <td>
 <p>
@@ -427,6 +409,39 @@ $('#comments-container').comments({
 </td>
 </tr>
 
+<tr>
+<td><code>popularText</code></td>
+<td>
+<p>
+A <code>string</code> that is displayed on sorting button for most popular comments
+</p>
+<label>DEFAULT</label>  
+<code class="string">"Popular"</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    popularText: 'Most popular'
+});
+</pre>
+</td>
+</tr>
+
+<tr>
+<td><code>attachmentsText</code></td>
+<td>
+<p>
+A <code>string</code> that is displayed on sorting button for attachments
+</p>
+<label>DEFAULT</label>  
+<code class="string">"Attachments"</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    attachmentsText: 'Show attachments'
+});
+</pre>
+</td>
+</tr>
 
 <tr>
 <td><code>sendText</code></td>
@@ -481,42 +496,6 @@ $('#comments-container').comments({
 </td>
 </tr>
 
-
-<tr>
-<td><code>saveText</code></td>
-<td>
-<p>
-A <code>string</code> that is displayed on save button
-</p>
-<label>DEFAULT</label>  
-<code class="string">"Save"</code>
-<label class="example">EXAMPLE</label>  
-<pre class="prettyprint linemus">
-$('#comments-container').comments({
-    saveText: 'Update'
-});
-</pre>
-</td>
-</tr>
-
-
-<tr>
-<td><code>deleteText</code></td>
-<td>
-<p>
-A <code>string</code> that is displayed on delete button
-</p>
-<label>DEFAULT</label>  
-<code class="string">"Delete"</code>
-<label class="example">EXAMPLE</label>  
-<pre class="prettyprint linemus">
-$('#comments-container').comments({
-    deleteText: 'Remove'
-});
-</pre>
-</td>
-</tr>
-
 <tr>
 <td><code>editedText</code></td>
 <td>
@@ -552,6 +531,40 @@ $('#comments-container').comments({
 </td>
 </tr>
 
+<tr>
+<td><code>saveText</code></td>
+<td>
+<p>
+A <code>string</code> that is displayed on save button
+</p>
+<label>DEFAULT</label>  
+<code class="string">"Save"</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    saveText: 'Update'
+});
+</pre>
+</td>
+</tr>
+
+
+<tr>
+<td><code>deleteText</code></td>
+<td>
+<p>
+A <code>string</code> that is displayed on delete button
+</p>
+<label>DEFAULT</label>  
+<code class="string">"Delete"</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    deleteText: 'Remove'
+});
+</pre>
+</td>
+</tr>
 
 <tr>
 <td><code>viewAllRepliesText</code></td>
@@ -606,6 +619,41 @@ $('#comments-container').comments({
 </td>
 </tr>
 
+
+<tr>
+<td><code>noAttachmentsText</code></td>
+<td>
+<p>
+A <code>string</code> that is displayed if there are no attachments to show
+</p>
+<label>DEFAULT</label>  
+<code class="string">"No attachments"</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    noAttachmentsText: 'There are no attachments'
+});
+</pre>
+</td>
+</tr>
+
+
+<tr>
+<td><code>attachmentDropText</code></td>
+<td>
+<p>
+A <code>string</code> that is used to inform the user where the attachments can be dropped
+</p>
+<label>DEFAULT</label>  
+<code class="string">"Drop files here"</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    attachmentDropText: 'Drop here'
+});
+</pre>
+</td>
+</tr>
 
 
 <tr><th colspan="2">Colors</th></tr>
