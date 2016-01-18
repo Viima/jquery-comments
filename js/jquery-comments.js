@@ -212,7 +212,7 @@
 
             // Read-only mode
             if(this.options.readOnly) this.$el.addClass('read-only');
-            
+
             // Set initial sort key
             this.currentSortKey = this.options.defaultNavigationSortKey;
 
@@ -288,6 +288,27 @@
             var error = function() {
                 success([]);
             };
+
+            this.options.getComments(success, error);
+        },
+
+        fetchNext: function() {
+            var self = this;
+
+            // Loading indicator
+            var spinner = this.createSpinner();
+            this.$el.find('ul#comment-list').append(spinner);
+
+            var success = function (commentModels) {
+                $(commentModels).each(function(index, commentModel) {
+                    self.createComment(commentModel);
+                });
+                spinner.remove();
+            }
+
+            var error = function() {
+                spinner.remove();
+            }
 
             this.options.getComments(success, error);
         },
@@ -824,9 +845,7 @@
             commentJSON = this.applyExternalMappings(commentJSON);
 
             var success = function(commentJSON) {
-                var commentModel = self.createCommentModel(commentJSON);
-                self.addCommentToDataModel(commentModel);
-                self.addComment(commentModel);
+                self.createComment(commentJSON);
                 commentingField.find('.close').trigger('click');
             };
 
@@ -835,6 +854,12 @@
             };
 
             this.options.postComment(commentJSON, success, error);
+        },
+
+        createComment: function(commentJSON) {
+            var commentModel = this.createCommentModel(commentJSON);
+            this.addCommentToDataModel(commentModel);
+            this.addComment(commentModel);
         },
 
         putComment: function(ev) {
