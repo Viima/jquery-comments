@@ -511,12 +511,12 @@
                 }
 
                 var success = function(commentArray) {
-                	$(commentArray).each(function(index, commentJSON) {
-	                    var commentModel = self.createCommentModel(commentJSON);
-	                    self.addCommentToDataModel(commentModel);
-	                    self.addComment(commentModel);
-	                    self.addAttachment(commentModel);
-                	});
+                    $(commentArray).each(function(index, commentJSON) {
+                        var commentModel = self.createCommentModel(commentJSON);
+                        self.addCommentToDataModel(commentModel);
+                        self.addComment(commentModel);
+                        self.addAttachment(commentModel);
+                    });
 
                     // Close the commenting field if all the uploads were successfull
                     // and there's no content besides the attachment
@@ -1217,8 +1217,12 @@
             });
 
             // Profile picture
-            var profilePicture = this.createProfilePictureElement(this.options.profilePictureURL);
-            profilePicture.addClass('by-current-user');
+            if(existingCommentId) {
+                var profilePictureURL = this.commentsById[existingCommentId].profilePictureURL;
+            } else {
+                var profilePictureURL = this.options.profilePictureURL;
+            }
+            var profilePicture = this.createProfilePictureElement(profilePictureURL);
 
             // New comment
             var textareaWrapper = $('<div/>', {
@@ -1409,18 +1413,18 @@
         },
 
         createSpinner: function() {
-        	var spinner = $('<div/>', {
-        	    'class': 'spinner'
-        	});
-        	var spinnerIcon = $('<i/>', {
-        	    'class': 'fa fa-spinner fa-spin'
-        	});
-        	if(this.options.spinnerIconURL.length) {
-        	    spinnerIcon.css('background-image', 'url("'+this.options.spinnerIconURL+'")');
-        	    spinnerIcon.addClass('image');
-        	}
-        	spinner.html(spinnerIcon);
-        	return spinner;
+            var spinner = $('<div/>', {
+                'class': 'spinner'
+            });
+            var spinnerIcon = $('<i/>', {
+                'class': 'fa fa-spinner fa-spin'
+            });
+            if(this.options.spinnerIconURL.length) {
+                spinnerIcon.css('background-image', 'url("'+this.options.spinnerIconURL+'")');
+                spinnerIcon.addClass('image');
+            }
+            spinner.html(spinnerIcon);
+            return spinner;
         },
 
         createCommentElement: function(commentModel) {
