@@ -1253,16 +1253,15 @@
             if(existingCommentId) {
                 var saveButtonText = this.options.textFormatter(this.options.saveText);
 
-                // Append delete button if necessary
-                var isAllowedToDelete = this.isAllowedToDelete(existingCommentId);
+                // Delete button
+                var deleteButton = $('<span/>', {
+                    'class': 'delete',
+                    text: this.options.textFormatter(this.options.deleteText)
+                }).css('background-color', this.options.deleteButtonColor);
+                controlRow.append(deleteButton);
 
-                if(isAllowedToDelete) {
-                    var deleteButton = $('<span/>', {
-                        'class': 'enabled delete',
-                        text: this.options.textFormatter(this.options.deleteText)
-                    }).css('background-color', this.options.deleteButtonColor);
-                    controlRow.append(deleteButton);
-                }
+                // Enable the delete button only if the user is allowed to delete
+                if(this.isAllowedToDelete(existingCommentId)) deleteButton.addClass('enabled')
 
             } else {
                 var saveButtonText = this.options.textFormatter(this.options.sendText);
