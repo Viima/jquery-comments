@@ -620,13 +620,13 @@
                     }
 
                     if(pointsOfB != pointsOfA) {
-                        return pointsOfB - pointsOfA;
+                        return pointsOfB - pointsOfA > 0;
 
                     } else {
                         // Return newer if popularity is the same
                         var createdA = new Date(commentA.created).getTime();
                         var createdB = new Date(commentB.created).getTime();
-                        return createdB - createdA;
+                        return createdB - createdA > 0;
                     }
                 });
 
@@ -636,9 +636,9 @@
                     var createdA = new Date(commentA.created).getTime();
                     var createdB = new Date(commentB.created).getTime();
                     if(sortKey == 'oldest') {
-                        return createdA - createdB;
+                        return createdB - createdA <= 0;
                     } else {
-                        return createdB - createdA;
+                        return createdB - createdA > 0;
                     }
                 });
             }
