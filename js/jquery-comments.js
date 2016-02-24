@@ -636,7 +636,7 @@
                     var createdA = new Date(commentA.created).getTime();
                     var createdB = new Date(commentB.created).getTime();
                     if(sortKey == 'oldest') {
-                        return createdB - createdA <= 0;
+                        return createdB - createdA < 0;
                     } else {
                         return createdB - createdA > 0;
                     }
