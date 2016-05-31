@@ -303,7 +303,7 @@ http://viima.github.io/jquery-comments/*/
 		display: none;
 	}
 	.jquery-comments ul.navigation .navigation-wrapper.responsive {
-		display: initial;
+		display: inline;
 	}
 }
 
@@ -311,7 +311,7 @@ http://viima.github.io/jquery-comments/*/
 	display: none;
 }
 .jquery-comments.responsive ul.navigation .navigation-wrapper.responsive {
-	display: initial;
+	display: inline;
 }
 
 .jquery-comments ul.navigation .navigation-wrapper.responsive li.title {
