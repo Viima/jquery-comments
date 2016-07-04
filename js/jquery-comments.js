@@ -41,7 +41,7 @@
         $el: null,
         commentsById: {},
         currentSortKey: '',
-		options: {},
+        options: {},
         events: {
             // Close dropdowns
             'click': 'closeDropdowns',
