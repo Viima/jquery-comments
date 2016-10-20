@@ -1992,8 +1992,8 @@
     $.fn.comments = function(options) {
         return this.each(function() {
             var comments = Object.create(Comments);
-            comments.init(options || {}, this);
             $.data(this, 'comments', comments);
+            comments.init(options || {}, this);
         });
     };
 }));
