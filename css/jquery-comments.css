@@ -42,7 +42,7 @@ http://viima.github.io/jquery-comments/*/
 	border-radius: 4px;
 	background: #fff;
 	border: 1px solid #e4e4e4;
-	color: #333;
+	color: inherit;
 	padding: 0 3px !important;
 }
 
