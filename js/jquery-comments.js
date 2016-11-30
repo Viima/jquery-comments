@@ -78,6 +78,7 @@
             // Other actions
             'click li.comment button.upvote' : 'upvoteComment',
             'click li.comment button.delete.enabled' : 'deleteComment',
+            'click li.comment .tag' : 'tagClicked',
 
             // Other
             'click li.comment ul.child-comments .toggle-all': 'toggleReplies',
@@ -142,6 +143,7 @@
                 enableUpvoting: true,     
                 enableDeleting: true,     
                 enableAttachments: false,     
+                enableTags: false,     
                 enableDeletingCommentWithReplies: false,      
                 enableNavigation: true,       
                 postCommentOnEnter: false,        
@@ -182,6 +184,7 @@
                 putComment: function(commentJSON, success, error) {success(commentJSON)},     
                 deleteComment: function(commentJSON, success, error) {success()},     
                 upvoteComment: function(commentJSON, success, error) {success(commentJSON)},      
+                tagClicked: function(tag) {location.hash = 'tags/' + tag},      
                 uploadAttachments: function(commentArray, success, error) {success(commentArray)},        
                 refresh: function() {},       
                 timeFormatter: function(time) {return new Date(time).toLocaleDateString()}
@@ -927,6 +930,12 @@
             this.options.deleteComment(commentJSON, success, error);
         },
 
+        tagClicked: function(ev) {
+            var el = $(ev.currentTarget);
+            var tag = el.text().slice(1);
+            this.options.tagClicked(tag);
+        },
+
         fileInputChanged: function(ev, files) {
             var files = ev.currentTarget.files;
             var commentingField = $(ev.currentTarget).parents('.commenting-field').first();
@@ -1583,7 +1592,9 @@
 
             // Case: regular comment
             } else {
-                content.html(this.linkify(this.escape(commentModel.content)));
+                var html = this.linkify(this.escape(commentModel.content));
+                if(this.options.enableTags) html = this.highlightTags(html);
+                content.html(html);
             }
 
             // Edited timestamp
@@ -1920,6 +1931,10 @@
 
         escape: function(inputText) {
             return $('<pre/>').text(inputText).html();
+        },
+
+        highlightTags: function(inputText) {
+            return inputText.replace(/(^|\s)(#[a-z\d-]+)/ig, '$1<a class="tag hashtag">$2</a>');
         },
 
         linkify: function(inputText) {

@@ -9,6 +9,7 @@ describe('Basic features', function() {
             profilePictureURL: 'https://viima-app.s3.amazonaws.com/media/user_profiles/user-icon.png',
             roundProfilePictures: true,
             enableAttachments: true,
+            enableTags: true,
             enableDeletingCommentWithReplies: true,
             textareaRows: 1,
             textareaMaxRows: 4,
@@ -844,7 +845,7 @@ describe('Uploading attachments', function() {
         var fullname = replyTo.length ? nameContainer.text().split(replyTo)[0] : nameContainer.text();
 
         // Get content without edited timestamp
-        var content = commentEl.find('.content').first().clone().children().remove().end().text();
+        var content = commentEl.find('.content').first().clone().children('time').remove().end().text();
         var dateUI = new Date(commentEl.find('time').first().attr('data-original'));
 
         // Model that we are testing against

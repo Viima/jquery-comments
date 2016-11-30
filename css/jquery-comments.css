@@ -38,6 +38,21 @@ http://viima.github.io/jquery-comments/*/
 	vertical-align: inherit;
 }
 
+.jquery-comments .tag {
+	border-radius: 4px;
+	background: #fff;
+	border: 1px solid #e4e4e4;
+	color: #333;
+	padding: 0 3px !important;
+}
+
+.jquery-comments .tag:hover {
+	cursor: pointer;
+	text-decoration: none;
+	background-color: #d8edf8;
+	border-color: #2793e6;
+}
+
 .jquery-comments [contentEditable=true]:empty:not(:focus):before{
     content:attr(data-placeholder);
     color: #CCC;
