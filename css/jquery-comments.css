@@ -46,6 +46,7 @@ http://viima.github.io/jquery-comments/*/
 	cursor: pointer;
 	font-weight: normal;
 	border-radius: 0.2em;
+	white-space: nowrap;
 }
 
 .jquery-comments .tag:hover {
