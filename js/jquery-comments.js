@@ -1934,7 +1934,7 @@
         },
 
         highlightTags: function(inputText) {
-            return inputText.replace(/(^|\s)(#[a-z\d-]+)/ig, '$1<a class="tag hashtag">$2</a>');
+            return inputText.replace(/(^|\s)(#[a-zäöüß\d-_]+)/ig, '$1<a class="tag hashtag">$2</a>');
         },
 
         linkify: function(inputText) {
