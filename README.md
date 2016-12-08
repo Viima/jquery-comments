@@ -11,6 +11,7 @@ Features
 - Deleting comments
 - Upvoting comments
 - Uploading attachments
+- Hashtags
 - Enabling/disabling functionalities
 - Localization
 - Time formatting
