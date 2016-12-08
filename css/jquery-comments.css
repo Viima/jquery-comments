@@ -39,18 +39,20 @@ http://viima.github.io/jquery-comments/*/
 }
 
 .jquery-comments .tag {
-	color: #333;
-	background: #e5e5e5;
-	border: 1px solid #c5c5c5;
-	padding: 0 0.3em !important;
+	color: inherit;
+	background: #ddd;
+	border: 1px solid #ccc;
+	padding: 0.05em 0.5em;
+	font-size: 0.9em;
 	cursor: pointer;
 	font-weight: normal;
-	border-radius: 0.2em;
+	border-radius: 1em;
 	white-space: nowrap;
+	transition: all 0.2s linear;
 }
 
 .jquery-comments .tag:hover {
-	color: #333;
+	color: inherit;
 	text-decoration: none;
 	background-color: #d8edf8;
 	border-color: #2793e6;
