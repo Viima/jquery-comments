@@ -803,6 +803,24 @@ $('#comments-container').comments({
 
 
 <tr>
+<td><code>enableHashtags</code></td>
+<td>
+<p>
+A <code>boolean</code> value determing whether hashtags are enabled
+</p>
+<label>DEFAULT</label>  
+<code>false</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    enableHashtags: true
+});
+</pre>
+</td>
+</tr>
+
+
+<tr>
 <td><code>enableNavigation</code></td>
 <td>
 <p>
@@ -1197,6 +1215,31 @@ $('#comments-container').comments({
 </pre>
 </td>
 </tr>
+
+
+<tr>
+<td><code>hashtagClicked</code></td>
+<td>
+<p>
+A callback <code>function</code> that is called after user has clicked a hashtag.
+</p>
+<label>DEFAULT</label>  
+<pre class="prettyprint linemus">
+function(hashtag) {
+    location.hash = 'tags/' + hashtag
+}
+</pre>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    hashtagClicked: function(hashtag) {
+        location.href = '#tags/' + hashtag
+    }
+});
+</pre>
+</td>
+</tr>
+
 
 <tr><th colspan="2">Formatters</th></tr>
 
