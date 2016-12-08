@@ -8,7 +8,7 @@
 		
 		<!-- Styles -->
 		<link rel="stylesheet" type="text/css" href="css/jquery-comments.css">
-		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+		<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
 
 		<!-- Data -->
 		<script type="text/javascript" src="data/comments-data.js"></script>
@@ -34,6 +34,7 @@
 					roundProfilePictures: true,
 					textareaRows: 1,
 					enableAttachments: true,
+					enableHashtags: true,
 					getComments: function(success, error) {
 						setTimeout(function() {
 							success(commentsArray);
