@@ -9,7 +9,7 @@ describe('Basic features', function() {
             profilePictureURL: 'https://viima-app.s3.amazonaws.com/media/user_profiles/user-icon.png',
             roundProfilePictures: true,
             enableAttachments: true,
-            enableTags: true,
+            enableHashtags: true,
             enableDeletingCommentWithReplies: true,
             textareaRows: 1,
             textareaMaxRows: 4,
