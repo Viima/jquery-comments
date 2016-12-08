@@ -30,7 +30,7 @@ var commentsArray = [
    "parent": null,
    "created": "2015-01-03",
    "modified": "2015-01-03",
-   "content": "Sed posuere interdum sem.\nQuisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu. Sed arcu lectus auctor vitae, consectetuer et venenatis eget velit.",
+   "content": "Sed posuere #interdum sem.\nQuisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu. Sed arcu lectus auctor vitae, consectetuer et venenatis eget velit.",
    "fullname": "You",
    "profile_picture_url": "https://app.viima.com/static/media/user_profiles/user-icon.png",
    "created_by_admin": false,

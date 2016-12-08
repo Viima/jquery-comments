@@ -1,4 +1,4 @@
-/*jquery-comments.js 1.1.0
+/*jquery-comments.js 1.1.3
 
 (c) 2016 Joona Tykkyläinen, Viima Solutions Oy
 jquery-comments may be freely distributed under the MIT license.
@@ -36,6 +36,26 @@ http://viima.github.io/jquery-comments/*/
 
 .jquery-comments button {
 	vertical-align: inherit;
+}
+
+.jquery-comments .tag {
+	color: inherit;
+	background: #ddd;
+	border: 1px solid #ccc;
+	padding: 0.05em 0.4em;
+	font-size: 0.9em;
+	cursor: pointer;
+	font-weight: normal;
+	border-radius: 1em;
+	white-space: nowrap;
+	transition: all 0.2s linear;
+}
+
+.jquery-comments .tag:hover {
+	color: inherit;
+	text-decoration: none;
+	background-color: #d8edf8;
+	border-color: #2793e6;
 }
 
 .jquery-comments [contentEditable=true]:empty:not(:focus):before{
@@ -303,7 +323,7 @@ http://viima.github.io/jquery-comments/*/
 		display: none;
 	}
 	.jquery-comments ul.navigation .navigation-wrapper.responsive {
-		display: initial;
+		display: inline;
 	}
 }
 
@@ -311,7 +331,7 @@ http://viima.github.io/jquery-comments/*/
 	display: none;
 }
 .jquery-comments.responsive ul.navigation .navigation-wrapper.responsive {
-	display: initial;
+	display: inline;
 }
 
 .jquery-comments ul.navigation .navigation-wrapper.responsive li.title {

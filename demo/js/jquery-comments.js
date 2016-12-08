@@ -1,4 +1,4 @@
-//     jquery-comments.js 1.1.0
+//     jquery-comments.js 1.1.3
 
 //     (c) 2016 Joona Tykkyläinen, Viima Solutions Oy
 //     jquery-comments may be freely distributed under the MIT license.
@@ -41,97 +41,7 @@
         $el: null,
         commentsById: {},
         currentSortKey: '',
-
-        options: {
-
-            // User
-            profilePictureURL: '',
-            currentUserIsAdmin: false,
-
-            // Font awesome icon overrides
-            spinnerIconURL: '',
-            upvoteIconURL: '',
-            replyIconURL: '',
-            uploadIconURL: '',
-            attachmentIconURL: '',
-            fileIconURL: '',
-            noCommentsIconURL: '',
-
-            // Strings to be formatted (for example localization)
-            textareaPlaceholderText: 'Add a comment',
-            newestText: 'Newest',
-            oldestText: 'Oldest',
-            popularText: 'Popular',
-            attachmentsText: 'Attachments',
-            sendText: 'Send',
-            replyText: 'Reply',
-            editText: 'Edit',
-            editedText: 'Edited',
-            youText: 'You',
-            saveText: 'Save',
-            deleteText: 'Delete',
-            viewAllRepliesText: 'View all __replyCount__ replies',
-            hideRepliesText: 'Hide replies',
-            noCommentsText: 'No comments',
-            noAttachmentsText: 'No attachments',
-            attachmentDropText: 'Drop files here',
-            textFormatter: function(text) {
-                return text;
-            },
-
-            // Functionalities
-            enableReplying: true,
-            enableEditing: true,
-            enableUpvoting: true,
-            enableDeleting: true,
-            enableAttachments: false,
-            enableDeletingCommentWithReplies: false,
-            enableNavigation: true,
-            postCommentOnEnter: false,
-            forceResponsive: false,
-            readOnly: false,
-            defaultNavigationSortKey: 'newest',
-
-            // Colors
-            highlightColor: '#2793e6',
-            deleteButtonColor: '#C9302C',
-
-            roundProfilePictures: false,
-            textareaRows: 2,
-            textareaRowsOnFocus: 2,
-            textareaMaxRows: 5,
-            maxRepliesVisible: 2,
-
-            fieldMappings: {
-                id: 'id',
-                parent: 'parent',
-                created: 'created',
-                modified: 'modified',
-                content: 'content',
-                file: 'file',
-                fileURL: 'file_url',
-                fileMimeType: 'file_mime_type',
-                fullname: 'fullname',
-                profileURL: 'profile_url',
-                profilePictureURL: 'profile_picture_url',
-                createdByAdmin: 'created_by_admin',
-                createdByCurrentUser: 'created_by_current_user',
-                upvoteCount: 'upvote_count',
-                userHasUpvoted: 'user_has_upvoted'
-            },
-
-            getComments: function(success, error) {success([])},
-            postComment: function(commentJSON, success, error) {success(commentJSON)},
-            putComment: function(commentJSON, success, error) {success(commentJSON)},
-            deleteComment: function(commentJSON, success, error) {success()},
-            upvoteComment: function(commentJSON, success, error) {success(commentJSON)},
-            uploadAttachments: function(commentArray, success, error) {success(commentArray)},
-            refresh: function() {},
-            timeFormatter: function(time) {
-                return new Date(time).toLocaleDateString();
-            }
-        },
-
+        options: {},
         events: {
             // Close dropdowns
             'click': 'closeDropdowns',
@@ -168,6 +78,7 @@
             // Other actions
             'click li.comment button.upvote' : 'upvoteComment',
             'click li.comment button.delete.enabled' : 'deleteComment',
+            'click li.comment .hashtag' : 'hashtagClicked',
 
             // Other
             'click li.comment ul.child-comments .toggle-all': 'toggleReplies',
@@ -187,6 +98,100 @@
         },
 
 
+        // Default options
+        // ===============
+
+        getDefaultOptions: function() {
+            return {
+
+                // User        
+                profilePictureURL: '',        
+                currentUserIsAdmin: false,        
+                
+                // Font awesome icon overrides        
+                spinnerIconURL: '',       
+                upvoteIconURL: '',        
+                replyIconURL: '',     
+                uploadIconURL: '',        
+                attachmentIconURL: '',        
+                fileIconURL: '',      
+                noCommentsIconURL: '',        
+                
+                // Strings to be formatted (for example localization)     
+                textareaPlaceholderText: 'Add a comment',     
+                newestText: 'Newest',     
+                oldestText: 'Oldest',     
+                popularText: 'Popular',       
+                attachmentsText: 'Attachments',       
+                sendText: 'Send',     
+                replyText: 'Reply',       
+                editText: 'Edit',     
+                editedText: 'Edited',     
+                youText: 'You',       
+                saveText: 'Save',     
+                deleteText: 'Delete',     
+                viewAllRepliesText: 'View all __replyCount__ replies',        
+                hideRepliesText: 'Hide replies',      
+                noCommentsText: 'No comments',        
+                noAttachmentsText: 'No attachments',      
+                attachmentDropText: 'Drop files here',        
+                textFormatter: function(text) {return text},        
+                
+                // Functionalities        
+                enableReplying: true,     
+                enableEditing: true,      
+                enableUpvoting: true,     
+                enableDeleting: true,     
+                enableAttachments: false,     
+                enableHashtags: false,     
+                enableDeletingCommentWithReplies: false,      
+                enableNavigation: true,       
+                postCommentOnEnter: false,        
+                forceResponsive: false,       
+                readOnly: false,      
+                defaultNavigationSortKey: 'newest',       
+                
+                // Colors     
+                highlightColor: '#2793e6',        
+                deleteButtonColor: '#C9302C',     
+                
+                roundProfilePictures: false,      
+                textareaRows: 2,      
+                textareaRowsOnFocus: 2,       
+                textareaMaxRows: 5,       
+                maxRepliesVisible: 2,     
+                
+                fieldMappings: {      
+                    id: 'id',     
+                    parent: 'parent',     
+                    created: 'created',       
+                    modified: 'modified',     
+                    content: 'content',       
+                    file: 'file',     
+                    fileURL: 'file_url',      
+                    fileMimeType: 'file_mime_type',       
+                    fullname: 'fullname',     
+                    profileURL: 'profile_url',        
+                    profilePictureURL: 'profile_picture_url',     
+                    createdByAdmin: 'created_by_admin',       
+                    createdByCurrentUser: 'created_by_current_user',      
+                    upvoteCount: 'upvote_count',      
+                    userHasUpvoted: 'user_has_upvoted'        
+                },        
+                
+                getComments: function(success, error) {success([])},      
+                postComment: function(commentJSON, success, error) {success(commentJSON)},        
+                putComment: function(commentJSON, success, error) {success(commentJSON)},     
+                deleteComment: function(commentJSON, success, error) {success()},     
+                upvoteComment: function(commentJSON, success, error) {success(commentJSON)},      
+                hashtagClicked: function(hashtag) {location.hash = 'tags/' + hashtag},      
+                uploadAttachments: function(commentArray, success, error) {success(commentArray)},        
+                refresh: function() {},       
+                timeFormatter: function(time) {return new Date(time).toLocaleDateString()}
+            }
+        },
+
+
         // Initialization
         // ==============
 
@@ -201,14 +206,7 @@
             if($.browser.mobile) this.$el.addClass('mobile');
 
             // Init options
-            if(options.fieldMappings) {
-                options = $.extend({}, options);
-                $.extend(this.options.fieldMappings, options.fieldMappings);
-
-                // Field mappings needs to be deleted so that the field won't get overidden
-                delete options['fieldMappings'];
-            }
-            $.extend(this.options, options);
+            this.options = $.extend(true, {}, this.getDefaultOptions(), options);;
 
             // Read-only mode
             if(this.options.readOnly) this.$el.addClass('read-only');
@@ -511,12 +509,12 @@
                 }
 
                 var success = function(commentArray) {
-                	$(commentArray).each(function(index, commentJSON) {
-	                    var commentModel = self.createCommentModel(commentJSON);
-	                    self.addCommentToDataModel(commentModel);
-	                    self.addComment(commentModel);
-	                    self.addAttachment(commentModel);
-                	});
+                    $(commentArray).each(function(index, commentJSON) {
+                        var commentModel = self.createCommentModel(commentJSON);
+                        self.addCommentToDataModel(commentModel);
+                        self.addComment(commentModel);
+                        self.addAttachment(commentModel);
+                    });
 
                     // Close the commenting field if all the uploads were successfull
                     // and there's no content besides the attachment
@@ -932,6 +930,12 @@
             this.options.deleteComment(commentJSON, success, error);
         },
 
+        hashtagClicked: function(ev) {
+            var el = $(ev.currentTarget);
+            var hashtag = el.text().slice(1);
+            this.options.hashtagClicked(hashtag);
+        },
+
         fileInputChanged: function(ev, files) {
             var files = ev.currentTarget.files;
             var commentingField = $(ev.currentTarget).parents('.commenting-field').first();
@@ -1217,8 +1221,12 @@
             });
 
             // Profile picture
-            var profilePicture = this.createProfilePictureElement(this.options.profilePictureURL);
-            profilePicture.addClass('by-current-user');
+            if(existingCommentId) {
+                var profilePictureURL = this.commentsById[existingCommentId].profilePictureURL;
+            } else {
+                var profilePictureURL = this.options.profilePictureURL;
+            }
+            var profilePicture = this.createProfilePictureElement(profilePictureURL);
 
             // New comment
             var textareaWrapper = $('<div/>', {
@@ -1249,16 +1257,15 @@
             if(existingCommentId) {
                 var saveButtonText = this.options.textFormatter(this.options.saveText);
 
-                // Append delete button if necessary
-                var isAllowedToDelete = this.isAllowedToDelete(existingCommentId);
+                // Delete button
+                var deleteButton = $('<span/>', {
+                    'class': 'delete',
+                    text: this.options.textFormatter(this.options.deleteText)
+                }).css('background-color', this.options.deleteButtonColor);
+                controlRow.append(deleteButton);
 
-                if(isAllowedToDelete) {
-                    var deleteButton = $('<span/>', {
-                        'class': 'enabled delete',
-                        text: this.options.textFormatter(this.options.deleteText)
-                    }).css('background-color', this.options.deleteButtonColor);
-                    controlRow.append(deleteButton);
-                }
+                // Enable the delete button only if the user is allowed to delete
+                if(this.isAllowedToDelete(existingCommentId)) deleteButton.addClass('enabled')
 
             } else {
                 var saveButtonText = this.options.textFormatter(this.options.sendText);
@@ -1409,18 +1416,18 @@
         },
 
         createSpinner: function() {
-        	var spinner = $('<div/>', {
-        	    'class': 'spinner'
-        	});
-        	var spinnerIcon = $('<i/>', {
-        	    'class': 'fa fa-spinner fa-spin'
-        	});
-        	if(this.options.spinnerIconURL.length) {
-        	    spinnerIcon.css('background-image', 'url("'+this.options.spinnerIconURL+'")');
-        	    spinnerIcon.addClass('image');
-        	}
-        	spinner.html(spinnerIcon);
-        	return spinner;
+            var spinner = $('<div/>', {
+                'class': 'spinner'
+            });
+            var spinnerIcon = $('<i/>', {
+                'class': 'fa fa-spinner fa-spin'
+            });
+            if(this.options.spinnerIconURL.length) {
+                spinnerIcon.css('background-image', 'url("'+this.options.spinnerIconURL+'")');
+                spinnerIcon.addClass('image');
+            }
+            spinner.html(spinnerIcon);
+            return spinner;
         },
 
         createCommentElement: function(commentModel) {
@@ -1585,7 +1592,9 @@
 
             // Case: regular comment
             } else {
-                content.html(this.linkify(this.escape(commentModel.content)));
+                var html = this.linkify(this.escape(commentModel.content));
+                if(this.options.enableHashtags) html = this.highlightTags(html);
+                content.html(html);
             }
 
             // Edited timestamp
@@ -1924,6 +1933,10 @@
             return $('<pre/>').text(inputText).html();
         },
 
+        highlightTags: function(inputText) {
+            return inputText.replace(/(^|\s)(#[a-zäöüß\d-_]+)/ig, '$1<a class="tag hashtag">$2</a>');
+        },
+
         linkify: function(inputText) {
             var replacedText, replacePattern1, replacePattern2, replacePattern3;
 
@@ -1994,8 +2007,8 @@
     $.fn.comments = function(options) {
         return this.each(function() {
             var comments = Object.create(Comments);
-            comments.init(options || {}, this);
             $.data(this, 'comments', comments);
+            comments.init(options || {}, this);
         });
     };
 }));
