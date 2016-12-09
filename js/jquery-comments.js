@@ -184,7 +184,7 @@
                 putComment: function(commentJSON, success, error) {success(commentJSON)},     
                 deleteComment: function(commentJSON, success, error) {success()},     
                 upvoteComment: function(commentJSON, success, error) {success(commentJSON)},      
-                hashtagClicked: function(hashtag) {location.hash = 'tags/' + hashtag},      
+                hashtagClicked: function(hashtag) {},      
                 uploadAttachments: function(commentArray, success, error) {success(commentArray)},        
                 refresh: function() {},       
                 timeFormatter: function(time) {return new Date(time).toLocaleDateString()}
