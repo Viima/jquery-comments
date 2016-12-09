@@ -47,7 +47,6 @@ http://viima.github.io/jquery-comments/*/
 	cursor: pointer;
 	font-weight: normal;
 	border-radius: 1em;
-	white-space: nowrap;
 	transition: all 0.2s linear;
 }
 

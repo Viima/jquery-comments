@@ -184,7 +184,7 @@
                 putComment: function(commentJSON, success, error) {success(commentJSON)},     
                 deleteComment: function(commentJSON, success, error) {success()},     
                 upvoteComment: function(commentJSON, success, error) {success(commentJSON)},      
-                hashtagClicked: function(hashtag) {location.hash = 'tags/' + hashtag},      
+                hashtagClicked: function(hashtag) {},      
                 uploadAttachments: function(commentArray, success, error) {success(commentArray)},        
                 refresh: function() {},       
                 timeFormatter: function(time) {return new Date(time).toLocaleDateString()}
@@ -932,7 +932,7 @@
 
         hashtagClicked: function(ev) {
             var el = $(ev.currentTarget);
-            var hashtag = el.text().slice(1);
+            var hashtag = el.data('tag');
             this.options.hashtagClicked(hashtag);
         },
 
@@ -1934,7 +1934,7 @@
         },
 
         highlightTags: function(inputText) {
-            return inputText.replace(/(^|\s)(#[a-zäöüß\d-_]+)/ig, '$1<a class="tag hashtag">$2</a>');
+            return inputText.replace(/(^|\s)#([a-zäöüß\d-_]+)/ig, '$1<a class="tag hashtag" data-tag="$2">#$2</a>');
         },
 
         linkify: function(inputText) {
