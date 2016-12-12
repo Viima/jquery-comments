@@ -353,26 +353,33 @@ http://viima.github.io/jquery-comments/*/
 	border-top-color: #000;
 }
 
-.jquery-comments ul.navigation .navigation-wrapper.responsive ul.dropdown {
+.jquery-comments ul.dropdown {
 	display: none;
 	position: absolute;
-	left: 0;
-	width: 100%;
-
 	background: #FFF;
-	border: 1px solid;
 	z-index: 99;
+	line-height: 1.5em;
+
+	border: 1px solid #CCC;
 	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
 	-webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
 	-moz-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
 	-ms-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
 }
 
-.jquery-comments ul.navigation .navigation-wrapper.responsive ul.dropdown li {
+.jquery-comments ul.dropdown li {
 	display: block;
-	color: #000;
+	padding: 0.4em 2em;
 	font-weight: normal;
-	padding: 0.25em 0;
+}
+
+.jquery-comments ul.navigation .navigation-wrapper.responsive ul.dropdown {
+	left: 0;
+	width: 100%;
+}
+
+.jquery-comments ul.navigation .navigation-wrapper.responsive ul.dropdown li {
+	color: #000;
 }
 
 .jquery-comments ul.navigation .navigation-wrapper.responsive ul.dropdown li.active {
