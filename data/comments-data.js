@@ -131,3 +131,42 @@ var commentsArray = [
    "user_has_upvoted": false
 }
 ]
+
+var usersArray = [
+{
+   id: 1,
+   fullname: "Bryan Connery",
+   email: "bryan.connery@viima.com",
+   profile_picture_url: "https://app.viima.com/static/media/user_profiles/user-icon.png"
+},
+{
+   id: 2,
+   fullname: "Jack Hemsworth",
+   email: "jack.hemsworth@viima.com",
+   profile_picture_url: "https://app.viima.com/static/media/user_profiles/user-icon.png"
+},
+{
+   id: 3,
+   fullname: "Hank Smith",
+   email: "hank.smith@viima.com",
+   profile_picture_url: "https://app.viima.com/static/media/user_profiles/user-icon.png"
+},
+{
+   id: 4,
+   fullname: "Todd Brown",
+   email: "todd.brown@viima.com",
+   profile_picture_url: "https://app.viima.com/static/media/user_profiles/user-icon.png"
+},
+{
+   id: 5,
+   fullname: "Administrator",
+   email: "administrator@viima.com",
+   profile_picture_url: "https://app.viima.com/static/media/user_profiles/user-icon.png"
+},
+{
+   id: 6,
+   fullname: "Simon Powell",
+   email: "simon.powell@viima.com",
+   profile_picture_url: "https://app.viima.com/static/media/user_profiles/user-icon.png"
+},
+]

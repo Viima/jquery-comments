@@ -36,6 +36,9 @@
 					textareaRows: 1,
 					enableAttachments: true,
 					enableHashtags: true,
+					getUsers: function(success, error) {
+						return usersArray
+					},
 					getComments: function(success, error) {
 						setTimeout(function() {
 							success(commentsArray);
