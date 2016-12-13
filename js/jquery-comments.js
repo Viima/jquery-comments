@@ -1329,6 +1329,29 @@
                 }
             }
 
+            textarea.textcomplete([{
+                match: /(^|\s)@((\w|\s)*)$/,
+                search: function (term, callback) {
+                    term = term.replace('\u00a0', ' ');  // Convert non-breaking spaces to reguar spaces
+                    var words = $.unique(self.getComments().map(function(obj){return obj.fullname}));
+
+                    // TODO: sort
+                    callback($.map(words, function (word) {
+                        return word.toLowerCase().indexOf(term.toLowerCase()) != -1 ? word : null;
+                    }));
+                },
+                template: function(value) {
+                    return '@' + value;
+                },
+                replace: function (word) {
+                    return ' @' + word + ' ';
+                },
+            }], {
+                appendTo: '.' + this.$el[0].className,
+                dropdownClassName: 'dropdown',
+                maxCount: 5,
+            });
+
             return commentingField;
         },
 
