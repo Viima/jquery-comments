@@ -289,7 +289,7 @@ describe('Basic features', function() {
             mostPopularComment.find('.reply').first().click();
             var replyField = mostPopularComment.find('.commenting-field');
             expect(replyField.length).toBe(1);
-            expect(replyField.find('.reply-to.badge').length).toBe(0);
+            expect(replyField.find('.reply-to.tag').length).toBe(0);
 
             // Check that the field is last child
             var lastChild = mostPopularComment.find('.child-comments').children().last();
@@ -337,7 +337,7 @@ describe('Basic features', function() {
             var childComment = mostPopularComment.find('.child-comments li.comment[data-id=9]');
             childComment.find('.reply').first().click();
             var replyField = mostPopularComment.find('.commenting-field');
-            expect(replyField.find('.reply-to.badge').val()).toBe('@Bryan Connery');
+            expect(replyField.find('.reply-to.tag').val()).toBe('@Bryan Connery');
 
             // Check that the field is last child
             var lastChild = mostPopularComment.find('.child-comments').children().last();
@@ -375,7 +375,7 @@ describe('Basic features', function() {
             childComment.find('.reply').first().click();
 
             var replyField = mostPopularComment.find('.commenting-field');
-            expect(replyField.find('.reply-to.badge').val()).toBe('@Jack Hemsworth');
+            expect(replyField.find('.reply-to.tag').val()).toBe('@Jack Hemsworth');
 
             var replyText = 'This is a re-reply\nwith a new line';
             replyField.find('.textarea').append(replyText).trigger('input');
@@ -403,7 +403,7 @@ describe('Basic features', function() {
             });
         });
 
-        it('Should reply to original user when erasing the reply-to badge', function() {
+        it('Should reply to original user when erasing the reply-to tag', function() {
             var childComment = mostPopularComment.find('.child-comments li.comment').last();
             childComment.find('.reply').first().click();
             var replyField = mostPopularComment.find('.commenting-field');
@@ -520,7 +520,7 @@ describe('Basic features', function() {
                 expect(saveButton.hasClass('enabled')).toBe(false);
 
                 // Save button should be enabled
-                textarea.find('.reply-to.badge').remove();
+                textarea.find('.reply-to.tag').remove();
                 textarea.trigger('input');
                 expect(saveButton.hasClass('enabled')).toBe(true);
 
