@@ -79,6 +79,7 @@
             'click li.comment button.upvote' : 'upvoteComment',
             'click li.comment button.delete.enabled' : 'deleteComment',
             'click li.comment .hashtag' : 'hashtagClicked',
+            'click li.comment .ping' : 'pingClicked',
 
             // Other
             'click li.comment ul.child-comments .toggle-all': 'toggleReplies',
@@ -186,6 +187,7 @@
                 deleteComment: function(commentJSON, success, error) {success()},     
                 upvoteComment: function(commentJSON, success, error) {success(commentJSON)},      
                 hashtagClicked: function(hashtag) {},      
+                pingClicked: function(email) {},      
                 uploadAttachments: function(commentArray, success, error) {success(commentArray)},        
                 refresh: function() {},       
                 timeFormatter: function(time) {return new Date(time).toLocaleDateString()}
@@ -935,6 +937,12 @@
             var el = $(ev.currentTarget);
             var hashtag = el.attr('data-value').slice(1);
             this.options.hashtagClicked(hashtag);
+        },
+
+        pingClicked: function(ev) {
+            var el = $(ev.currentTarget);
+            var email = el.attr('data-value').slice(1);
+            this.options.pingClicked(email);
         },
 
         fileInputChanged: function(ev, files) {
