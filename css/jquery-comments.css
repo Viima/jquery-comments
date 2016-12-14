@@ -207,7 +207,7 @@ http://viima.github.io/jquery-comments/*/
 	padding-right: calc(2em + 15px);	/* Because of scrollbar */
 }
 
-.jquery-comments .textarea-wrapper .textarea .reply-to-badge {
+.jquery-comments .textarea-wrapper .textarea .badge {
 	background: #EEE;
 	border: 1px solid #DDD;
 	margin-right: .5em;
@@ -369,6 +369,11 @@ http://viima.github.io/jquery-comments/*/
 	display: block;
 	padding: 0.5rem;
 	font-weight: normal;
+	cursor: pointer;
+}
+
+.jquery-comments ul.dropdown li.active {
+	background: #EEE;
 }
 
 .jquery-comments ul.dropdown li a {
@@ -397,7 +402,7 @@ http://viima.github.io/jquery-comments/*/
 }
 
 .jquery-comments ul.dropdown li .details .email {
-	color: #CCC;
+	color: #AAA;
 }
 
 .jquery-comments ul.navigation .navigation-wrapper.responsive ul.dropdown {

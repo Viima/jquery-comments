@@ -179,7 +179,7 @@
                     userHasUpvoted: 'user_has_upvoted'        
                 },        
                 
-                getUsers: function(success, error) {success([])},       //TODO: async  
+                getUsers: function(success, error) {success([])},
                 getComments: function(success, error) {success([])},      
                 postComment: function(commentJSON, success, error) {success(commentJSON)},        
                 putComment: function(commentJSON, success, error) {success(commentJSON)},     
@@ -767,8 +767,8 @@
             var content = this.getTextareaContent(textarea);
             var saveButton = textarea.siblings('.control-row').find('.save');
 
-            // Update parent id if reply-to-badge was removed
-            if(!textarea.find('.reply-to-badge').length) {
+            // Update parent id if reply-to badge was removed
+            if(!textarea.find('.reply-to.badge').length) {
                 var commentId = textarea.attr('data-comment');
 
                 // Case: editing comment
@@ -1320,12 +1320,8 @@
                     textarea.html('&nbsp;');    // Needed to set the cursor to correct place
 
                     // Creating the reply-to badge
-                    var replyToBadge = $('<input/>', {
-                        'class': 'reply-to-badge highlight-font-bold',
-                        type: 'button'
-                    });
                     var replyToName = '@' + parentModel.fullname;
-                    replyToBadge.val(replyToName);
+                    var replyToBadge = this.createBadgeElement(replyToName, 'reply-to');
                     textarea.prepend(replyToBadge);
                 }
             }
@@ -1336,9 +1332,10 @@
                     term = term.replace('\u00a0', ' ');  // Convert non-breaking spaces to reguar spaces
                     var users = self.options.getUsers();
 
-                    // TODO: sort
                     callback($.map(users, function (user) {
-                        return user.fullname.toLowerCase().indexOf(term.toLowerCase()) != -1 ? user : null;
+                        var lowercaseTerm = term.toLowerCase();
+                        var nameMatch = user.fullname.toLowerCase().indexOf(lowercaseTerm) != -1;
+                        return nameMatch ? user : null;
                     }));
                 },
                 template: function(user) {
@@ -1364,7 +1361,8 @@
                     return wrapper.html();
                 },
                 replace: function (user) {
-                    return ' @' + user.fullname + ' ';
+                    var badge = self.createBadgeElement('@' + user.fullname);
+                    return ' ' + badge[0].outerHTML + ' ';
                 },
             }], {
                 appendTo: '.' + this.$el[0].className,
@@ -1737,6 +1735,16 @@
             })).append(upvoteIcon);
 
             return upvoteEl;
+        },
+
+        createBadgeElement: function(value, extraClasses) {
+            var badgeEl = $('<input/>', {
+                'class': 'badge highlight-font-bold',
+                type: 'button'
+            });
+            if(extraClasses) badgeEl.addClass(extraClasses);
+            badgeEl.val(value);
+            return badgeEl;
         },
 
         reRenderComment: function(id) {
