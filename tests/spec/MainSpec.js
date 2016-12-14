@@ -10,9 +10,13 @@ describe('Basic features', function() {
             roundProfilePictures: true,
             enableAttachments: true,
             enableHashtags: true,
+            enablePinging: true,
             enableDeletingCommentWithReplies: true,
             textareaRows: 1,
             textareaMaxRows: 4,
+            getUsers: function(success, error) {
+                return usersArray
+            },
             getComments: function(success, error) {
                 success(commentsArray);
             },
@@ -844,10 +848,6 @@ describe('Uploading attachments', function() {
         var replyTo = nameContainer.find('.reply-to').text();
         var fullname = replyTo.length ? nameContainer.text().split(replyTo)[0] : nameContainer.text();
 
-        // Get content without edited timestamp
-        var content = commentEl.find('.content').first().clone().children('time').remove().end().text();
-        var dateUI = new Date(commentEl.find('time').first().attr('data-original'));
-
         // Model that we are testing against
         var commentModel = commentEl.data().model;
 
@@ -860,12 +860,27 @@ describe('Uploading attachments', function() {
             var link = commentEl.find('a');
             expect(link.attr('href')).toBe(commentModel.fileURL);
         } else {
+            var content = getTextContentFromCommentElement(commentEl);
             expect(content).toBe(commentModel.content);
         }
 
         // Check time
+        var dateUI = new Date(commentEl.find('time').first().attr('data-original'));
         var modelCreatedDate = new Date(commentModel.created);
         compareDates(dateUI, modelCreatedDate);
+    }
+
+    function getTextContentFromCommentElement(commentEl)  {
+        var content = commentEl.find('.content').first().clone();
+        
+        // Remove edited timestamp
+        content.children('time').remove().end();
+
+        // Replace inputs with respective values
+        content.find('.tag').replaceWith(function() {
+            return $(this).attr('data-value');
+        });
+        return content.text();
     }
 
     function compareDates(dateA, dateB) {
