@@ -1326,49 +1326,52 @@
                 }
             }
 
-            textarea.textcomplete([{
-                match: /(^|\s)@((\w|\s)*)$/,
-                search: function (term, callback) {
-                    term = term.replace('\u00a0', ' ');  // Convert non-breaking spaces to reguar spaces
-                    var users = self.options.getUsers();
+            // Pinging users
+            if(this.options.enablePinging) {
+                textarea.textcomplete([{
+                    match: /(^|\s)@((\w|\s)*)$/,
+                    search: function (term, callback) {
+                        term = term.replace('\u00a0', ' ');  // Convert non-breaking spaces to reguar spaces
+                        var users = self.options.getUsers();
 
-                    callback($.map(users, function (user) {
-                        var lowercaseTerm = term.toLowerCase();
-                        var nameMatch = user.fullname.toLowerCase().indexOf(lowercaseTerm) != -1;
-                        return nameMatch ? user : null;
-                    }));
-                },
-                template: function(user) {
-                    var wrapper = $('<div/>');
+                        callback($.map(users, function (user) {
+                            var lowercaseTerm = term.toLowerCase();
+                            var nameMatch = user.fullname.toLowerCase().indexOf(lowercaseTerm) != -1;
+                            return nameMatch ? user : null;
+                        }));
+                    },
+                    template: function(user) {
+                        var wrapper = $('<div/>');
 
-                    var profilePictureEl = $('<img/>', {
-                        src: user.profile_picture_url,
-                        'class': 'profile-picture round'
-                    });
-                    var detailsEl = $('<div/>', {
-                        'class': 'details',
-                    });
-                    var nameEl = $('<div/>', {
-                        'class': 'name',
-                    }).html(user.fullname);
+                        var profilePictureEl = $('<img/>', {
+                            src: user.profile_picture_url,
+                            'class': 'profile-picture round'
+                        });
+                        var detailsEl = $('<div/>', {
+                            'class': 'details',
+                        });
+                        var nameEl = $('<div/>', {
+                            'class': 'name',
+                        }).html(user.fullname);
 
-                    var emailEl = $('<div/>', {
-                        'class': 'email',
-                    }).html(user.email);
+                        var emailEl = $('<div/>', {
+                            'class': 'email',
+                        }).html(user.email);
 
-                    detailsEl.append(nameEl).append(emailEl);
-                    wrapper.append(profilePictureEl).append(detailsEl);
-                    return wrapper.html();
-                },
-                replace: function (user) {
-                    var badge = self.createBadgeElement('@' + user.fullname);
-                    return ' ' + badge[0].outerHTML + ' ';
-                },
-            }], {
-                appendTo: '.' + this.$el[0].className,
-                dropdownClassName: 'dropdown',
-                maxCount: 5,
-            });
+                        detailsEl.append(nameEl).append(emailEl);
+                        wrapper.append(profilePictureEl).append(detailsEl);
+                        return wrapper.html();
+                    },
+                    replace: function (user) {
+                        var badge = self.createBadgeElement('@' + user.fullname);
+                        return ' ' + badge[0].outerHTML + ' ';
+                    },
+                }], {
+                    appendTo: '.' + this.$el[0].className,
+                    dropdownClassName: 'dropdown',
+                    maxCount: 5,
+                });
+            }
 
             return commentingField;
         },
