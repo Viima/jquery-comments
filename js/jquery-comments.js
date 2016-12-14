@@ -933,7 +933,7 @@
 
         hashtagClicked: function(ev) {
             var el = $(ev.currentTarget);
-            var hashtag = el.data('tag');
+            var hashtag = el.attr('data-value').slice(1);
             this.options.hashtagClicked(hashtag);
         },
 
@@ -1363,8 +1363,7 @@
                         return wrapper.html();
                     },
                     replace: function (user) {
-                        var tag = self.createTagElement('@' + user.fullname, 'ping');
-                        tag.attr('data-value', '@' + user.email);
+                        var tag = self.createTagElement('@' + user.fullname, 'ping', '@' + user.email);
                         return ' ' + tag[0].outerHTML + ' ';
                     },
                 }], {
@@ -1742,13 +1741,14 @@
             return upvoteEl;
         },
 
-        createTagElement: function(value, extraClasses) {
+        createTagElement: function(text, extraClasses, value) {
             var tagEl = $('<input/>', {
                 'class': 'tag',
                 type: 'button'
             });
             if(extraClasses) tagEl.addClass(extraClasses);
-            tagEl.val(value);
+            tagEl.val(text);
+            tagEl.attr('data-value', value ? value : text);
             return tagEl;
         },
 
@@ -2010,7 +2010,7 @@
             var regex = /(^|\s)#([a-zäöüß\d-_]+)/gim;
 
             var __createTag = function(tag) {
-                var tag = self.createTagElement('#' + tag, 'hashtag');
+                var tag = self.createTagElement('#' + tag, 'hashtag', '#' + tag);
                 return tag[0].outerHTML;
             }
             return text.replace(regex, function($0, $1, $2){
@@ -2025,7 +2025,7 @@
             var __createTag = function(email) {
                 var user = self.getUserByEmail(email);
                 var value = user ? user.fullname : email;
-                var tag = self.createTagElement('@' + value, 'ping');
+                var tag = self.createTagElement('@' + value, 'ping', '@' + email);
                 return tag[0].outerHTML;
             }
             return text.replace(regex, function($0, $1, $2){
