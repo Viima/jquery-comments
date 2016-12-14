@@ -1364,7 +1364,7 @@
                     },
                     replace: function (user) {
                         var tag = self.createTagElement('@' + user.fullname, 'ping');
-                        tag.attr('data-id', user.email);
+                        tag.attr('data-value', '@' + user.email);
                         return ' ' + tag[0].outerHTML + ' ';
                     },
                 }], {
@@ -1638,7 +1638,8 @@
             // Case: regular comment
             } else {
                 var html = this.linkify(this.escape(commentModel.content));
-                if(this.options.enableHashtags) html = this.highlightTags(html);
+                if(this.options.enableHashtags) html = this.highlightHashtags(html);
+                if(this.options.enablePinging) html = this.highlightPings(html);
                 content.html(html);
             }
 
@@ -1831,6 +1832,15 @@
         // Utilities
         // =========
 
+        getUserByEmail: function(email) {
+            var users = this.options.getUsers().filter(function(user){return user.email == email});
+            if(users.length == 1) {
+                return users[0];
+            } else {
+                return null;
+            }
+        },
+
         getComments: function() {
             var self = this;
             return Object.keys(this.commentsById).map(function(id){return self.commentsById[id]});
@@ -1942,7 +1952,14 @@
         },
 
         getTextareaContent: function(textarea) {
-            var ce = $('<pre/>').html(textarea.html());
+            var textareaClone = textarea.clone();
+
+            // Replace tags with text values
+            textareaClone.find('.tag').replaceWith(function(){
+                return $(this).attr('data-value');
+            });
+
+            var ce = $('<pre/>').html(textareaClone.html());
             ce.find('div, p, br').replaceWith(function() { return '\n' + this.innerHTML; });
 
             // Trim leading spaces
@@ -1988,8 +2005,32 @@
             return $('<pre/>').text(inputText).html();
         },
 
-        highlightTags: function(inputText) {
-            return inputText.replace(/(^|\s)#([a-zäöüß\d-_]+)/ig, '$1<a class="tag hashtag" data-tag="$2">#$2</a>');
+        highlightHashtags: function(text) {
+            var self = this;
+            var regex = /(^|\s)#([a-zäöüß\d-_]+)/gim;
+
+            var __createTag = function(tag) {
+                var tag = self.createTagElement('#' + tag, 'hashtag');
+                return tag[0].outerHTML;
+            }
+            return text.replace(regex, function($0, $1, $2){
+                return $1 + __createTag($2);
+            });
+        },
+
+        highlightPings: function(text) {
+            var self = this;
+            var regex = /(^|\s)@(([a-zA-Z0-9\-\_\.])+@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim;
+
+            var __createTag = function(email) {
+                var user = self.getUserByEmail(email);
+                var value = user ? user.fullname : email;
+                var tag = self.createTagElement('@' + value, 'ping');
+                return tag[0].outerHTML;
+            }
+            return text.replace(regex, function($0, $1, $2){
+                return $1 + __createTag($2);
+            });
         },
 
         linkify: function(inputText) {
