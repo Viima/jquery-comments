@@ -1644,9 +1644,9 @@
 
             // Case: regular comment
             } else {
-                var html = this.linkify(this.escape(commentModel.content));
-                if(this.options.enableHashtags) html = this.highlightHashtags(html);
-                if(this.options.enablePinging) html = this.highlightPings(html);
+                var html = this.escape(commentModel.content);
+                html = this.linkify(html);
+                html = this.highlightTags(html);
                 content.html(html);
             }
 
@@ -1981,6 +1981,7 @@
         getTextareaContentAsEscapedHTML: function(html) {
             // Escaping HTML except the new lines
             var escaped = this.escape(html);
+            escaped = this.highlightTags(escaped);
             return escaped.replace(/(?:\n)/g, '<br>');
         },
 
@@ -2014,6 +2015,12 @@
 
         escape: function(inputText) {
             return $('<pre/>').text(inputText).html();
+        },
+
+        highlightTags: function(text) {
+            if(this.options.enableHashtags) text = this.highlightHashtags(text);
+            if(this.options.enablePinging) text = this.highlightPings(text);
+            return text;
         },
 
         highlightHashtags: function(text) {
