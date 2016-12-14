@@ -1962,6 +1962,9 @@
         getTextareaContent: function(textarea) {
             var textareaClone = textarea.clone();
 
+            // Remove reply-to tag
+            textareaClone.find('.reply-to.tag').remove();
+
             // Replace tags with text values
             textareaClone.find('.tag').replaceWith(function(){
                 return $(this).attr('data-value');
