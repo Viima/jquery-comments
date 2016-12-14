@@ -767,8 +767,8 @@
             var content = this.getTextareaContent(textarea);
             var saveButton = textarea.siblings('.control-row').find('.save');
 
-            // Update parent id if reply-to badge was removed
-            if(!textarea.find('.reply-to.badge').length) {
+            // Update parent id if reply-to tag was removed
+            if(!textarea.find('.reply-to.tag').length) {
                 var commentId = textarea.attr('data-comment');
 
                 // Case: editing comment
@@ -1314,15 +1314,15 @@
                 // Set the parent id to the field if necessary
                 textarea.attr('data-parent', parentId);
 
-                // Append reply-to badge if necessary
+                // Append reply-to tag if necessary
                 var parentModel = this.commentsById[parentId];
                 if(parentModel.parent) {
                     textarea.html('&nbsp;');    // Needed to set the cursor to correct place
 
-                    // Creating the reply-to badge
+                    // Creating the reply-to tag
                     var replyToName = '@' + parentModel.fullname;
-                    var replyToBadge = this.createBadgeElement(replyToName, 'reply-to');
-                    textarea.prepend(replyToBadge);
+                    var replyToTag = this.createTagElement(replyToName, 'reply-to');
+                    textarea.prepend(replyToTag);
                 }
             }
 
@@ -1363,8 +1363,9 @@
                         return wrapper.html();
                     },
                     replace: function (user) {
-                        var badge = self.createBadgeElement('@' + user.fullname);
-                        return ' ' + badge[0].outerHTML + ' ';
+                        var tag = self.createTagElement('@' + user.fullname, 'ping');
+                        tag.attr('data-id', user.email);
+                        return ' ' + tag[0].outerHTML + ' ';
                     },
                 }], {
                     appendTo: '.' + this.$el[0].className,
@@ -1740,14 +1741,14 @@
             return upvoteEl;
         },
 
-        createBadgeElement: function(value, extraClasses) {
-            var badgeEl = $('<input/>', {
-                'class': 'badge highlight-font-bold',
+        createTagElement: function(value, extraClasses) {
+            var tagEl = $('<input/>', {
+                'class': 'tag',
                 type: 'button'
             });
-            if(extraClasses) badgeEl.addClass(extraClasses);
-            badgeEl.val(value);
-            return badgeEl;
+            if(extraClasses) tagEl.addClass(extraClasses);
+            tagEl.val(value);
+            return tagEl;
         },
 
         reRenderComment: function(id) {

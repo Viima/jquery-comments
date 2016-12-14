@@ -207,16 +207,6 @@ http://viima.github.io/jquery-comments/*/
 	padding-right: calc(2em + 15px);	/* Because of scrollbar */
 }
 
-.jquery-comments .textarea-wrapper .textarea .badge {
-	background: #EEE;
-	border: 1px solid #DDD;
-	margin-right: .5em;
-	vertical-align: baseline;
-	line-height: 1.4em;
-	padding: 0 .5em;
-	font-size: .8em;
-}
-
 .jquery-comments .textarea-wrapper .control-row > span {
 	float: right;
 
