@@ -36,8 +36,11 @@
 					textareaRows: 1,
 					enableAttachments: true,
 					enableHashtags: true,
+					enablePinging: true,
 					getUsers: function(success, error) {
-						return usersArray
+						setTimeout(function() {
+							success(usersArray);
+						}, 500);
 					},
 					getComments: function(success, error) {
 						setTimeout(function() {
