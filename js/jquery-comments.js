@@ -39,6 +39,7 @@
         // ==================
 
         $el: null,
+        usersById: {},
         commentsById: {},
         currentSortKey: '',
         options: {},
@@ -263,13 +264,19 @@
         fetchDataAndRender: function () {
             var self = this;
 
+            this.usersById = {};
+            this.commentsById = {};
+
             this.$el.empty();
             this.createHTML();
 
-            // Get comments
-            this.commentsById = {};
+            // Render after data has been fetched
+            var done = this.after(this.options.enablePinging ? 2 : 1, this.render);
 
-            var success = function(commentsArray) {
+            // Comments
+            // ========
+
+            var commentsFetched = function(commentsArray) {
                 // Convert comments to custom data model
                 var commentModels = commentsArray.map(function(commentsJSON){
                     return self.createCommentModel(commentsJSON)
@@ -283,14 +290,22 @@
                     self.addCommentToDataModel(commentModel);
                 });
 
-                self.render();
+                done();
             };
+            this.options.getComments(commentsFetched, done);
 
-            var error = function() {
-                success([]);
-            };
+            // Users
+            // =====
 
-            this.options.getComments(success, error);
+            if(this.options.enablePinging) {
+                var usersFetched = function(userArray) {
+                    $(userArray).each(function(index, user) {
+                        self.usersById[user.email] = user;
+                    });
+                    done();
+                }
+                this.options.getUsers(usersFetched, done);
+            }
         },
 
         fetchNext: function() {
@@ -1340,7 +1355,7 @@
                     match: /(^|\s)@((\w|\s)*)$/,
                     search: function (term, callback) {
                         term = term.replace('\u00a0', ' ');  // Convert non-breaking spaces to reguar spaces
-                        var users = self.options.getUsers();
+                        var users = self.getUsers();
 
                         callback($.map(users, function (user) {
                             var lowercaseTerm = term.toLowerCase();
@@ -1840,13 +1855,9 @@
         // Utilities
         // =========
 
-        getUserByEmail: function(email) {
-            var users = this.options.getUsers().filter(function(user){return user.email == email});
-            if(users.length == 1) {
-                return users[0];
-            } else {
-                return null;
-            }
+        getUsers: function() {
+            var self = this;
+            return Object.keys(this.usersById).map(function(id){return self.usersById[id]});
         },
 
         getComments: function() {
@@ -2017,6 +2028,16 @@
             return $('<pre/>').text(inputText).html();
         },
 
+        after: function(times, func) {
+            var self = this;
+            return function() {
+                times--;
+                if (times == 0) {
+                    return func.apply(self, arguments);
+                }
+            }
+        },
+
         highlightTags: function(text) {
             if(this.options.enableHashtags) text = this.highlightHashtags(text);
             if(this.options.enablePinging) text = this.highlightPings(text);
@@ -2041,7 +2062,7 @@
             var regex = /(^|\s)@(([a-zA-Z0-9\-\_\.])+@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim;
 
             var __createTag = function(email) {
-                var user = self.getUserByEmail(email);
+                var user = self.usersById[email];
                 var value = user ? user.fullname : email;
                 var tag = self.createTagElement('@' + value, 'ping', '@' + email);
                 return tag[0].outerHTML;
