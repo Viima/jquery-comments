@@ -1375,7 +1375,7 @@
                         return ' ' + tag[0].outerHTML + ' ';
                     },
                 }], {
-                    appendTo: '.' + this.$el[0].className,
+                    appendTo: '.jquery-comments',
                     dropdownClassName: 'dropdown',
                     maxCount: 5,
                 });
