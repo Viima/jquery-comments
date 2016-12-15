@@ -15,7 +15,7 @@ describe('Basic features', function() {
             textareaRows: 1,
             textareaMaxRows: 4,
             getUsers: function(success, error) {
-                return usersArray
+                success(usersArray);
             },
             getComments: function(success, error) {
                 success(commentsArray);
