@@ -41,6 +41,7 @@
         $el: null,
         usersById: {},
         commentsById: {},
+        dataFetched: false,
         currentSortKey: '',
         options: {},
         events: {
@@ -271,7 +272,10 @@
             this.createHTML();
 
             // Render after data has been fetched
-            var done = this.after(this.options.enablePinging ? 2 : 1, this.render);
+            var dataFetched = this.after(this.options.enablePinging ? 2 : 1, function() {
+                self.dataFetched = true;
+                self.render();
+            });
 
             // Comments
             // ========
@@ -290,9 +294,9 @@
                     self.addCommentToDataModel(commentModel);
                 });
 
-                done();
+                dataFetched();
             };
-            this.options.getComments(commentsFetched, done);
+            this.options.getComments(commentsFetched, dataFetched);
 
             // Users
             // =====
@@ -302,9 +306,9 @@
                     $(userArray).each(function(index, user) {
                         self.usersById[user.email] = user;
                     });
-                    done();
+                    dataFetched();
                 }
-                this.options.getUsers(usersFetched, done);
+                this.options.getUsers(usersFetched, dataFetched);
             }
         },
 
@@ -353,6 +357,9 @@
 
         render: function() {
             var self = this;
+
+            // Prevent re-rendering if data hasn't been fetched
+            if(!this.dataFetched) return;
 
             // Show active container
             this.showActiveContainer();
