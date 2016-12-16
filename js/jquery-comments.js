@@ -1060,7 +1060,7 @@
             textarea.attr('data-comment', commentModel.id);
 
             // Escaping HTML
-            textarea.append(this.getFormattedCommentContent(commentModel));
+            textarea.append(this.getFormattedCommentContent(commentModel, true));
 
             // Move cursor to end
             this.moveCursorToEnd(textarea);
@@ -2001,16 +2001,16 @@
             return text;
         },
 
-        getFormattedCommentContent: function(commentModel) {
+        getFormattedCommentContent: function(commentModel, replaceNewLines) {
             var html = this.escape(commentModel.content);
             html = this.linkify(html);
             html = this.highlightTags(commentModel, html);
-            html = html.replace(/(?:\n)/g, '<br>'); // Keep new lines
+            if(replaceNewLines) html = html.replace(/(?:\n)/g, '<br>');
             return html;
         },
 
         getPings: function(textarea) {
-            return textarea.find('.ping').map(function(index, el){return $(el).attr('data-value')});
+            return $.map(textarea.find('.ping'), function(el){return $(el).attr('data-value')});
         },
 
         moveCursorToEnd: function(el) {

@@ -5,6 +5,17 @@ describe('Basic features', function() {
     beforeEach(function() {
         var commentsContainer = $('<div/>');
 
+        var saveComment = function(data) {
+
+            // Convert pings to human readable format
+            $(data.pings).each(function(index, id) {
+                var user = usersArray.filter(function(user){return user.id == id})[0];
+                data.content = data.content.replace('@' + id, '@' + user.fullname);
+            });
+
+            return data;
+        }
+
         commentsContainer.comments({
             profilePictureURL: 'https://viima-app.s3.amazonaws.com/media/user_profiles/user-icon.png',
             roundProfilePictures: true,
@@ -22,7 +33,7 @@ describe('Basic features', function() {
             },
             postComment: function(data, success, error) {
                 setTimeout(function() {
-                    success(data);
+                    success(saveComment(data));
                 }, 10);
             },
             uploadAttachments: function(data, success, error) {
@@ -32,7 +43,7 @@ describe('Basic features', function() {
             },
             putComment: function(data, success, error) {
                 setTimeout(function() {
-                    success(data);
+                    success(saveComment(data));
                 }, 10);
             },
             deleteComment: function(data, success, error) {
@@ -878,7 +889,7 @@ describe('Uploading attachments', function() {
 
         // Replace inputs with respective values
         content.find('.tag').replaceWith(function() {
-            return $(this).attr('data-value');
+            return $(this).val();
         });
         return content.text();
     }
@@ -934,6 +945,8 @@ describe('Uploading attachments', function() {
             $(Object.keys(ownCommentModel)).each(function(index, key) {
                 if(key == 'content' || key == 'modified') {
                     expect(ownCommentModel[key]).not.toBe(ownCommentModelBefore[key]);
+                } else if(key == 'pings') {
+                    expect(JSON.stringify(ownCommentModel[key])).toBe(JSON.stringify(ownCommentModelBefore[key]));
                 } else {
                     expect(ownCommentModel[key]).toBe(ownCommentModelBefore[key]);
                 }
