@@ -39,10 +39,10 @@
         // ==================
 
         $el: null,
-        usersById: {},
         commentsById: {},
         dataFetched: false,
         currentSortKey: '',
+        users: {},
         options: {},
         events: {
             // Close dropdowns
@@ -265,8 +265,20 @@
         fetchDataAndRender: function () {
             var self = this;
 
-            this.usersById = {};
             this.commentsById = {};
+            this.users = {
+                byId: {},
+                pingedUsersRegex: '',
+                get: function(id) {
+                    return this.byId[id];
+                },
+                getAll: function() {
+                    var self = this;
+                    return Object.keys(this.byId).map(function(id){
+                        return self.byId[id];
+                    });
+                },
+            };
 
             this.$el.empty();
             this.createHTML();
@@ -304,8 +316,12 @@
             if(this.options.enablePinging) {
                 var usersFetched = function(userArray) {
                     $(userArray).each(function(index, user) {
-                        self.usersById[user.email] = user;
+                        self.users.byId[user.email] = user;
                     });
+
+                    var fullnames = userArray.map(function(user){return user.fullname});
+                    self.users.pingedUsersRegex = new RegExp('(^|\\s)@(' + fullnames.join('|') + ')');
+
                     dataFetched();
                 }
                 this.options.getUsers(usersFetched, dataFetched);
@@ -1362,7 +1378,7 @@
                     match: /(^|\s)@((\w|\s)*)$/,
                     search: function (term, callback) {
                         term = term.replace('\u00a0', ' ');  // Convert non-breaking spaces to reguar spaces
-                        var users = self.getUsers();
+                        var users = self.users.getAll();
 
                         callback($.map(users, function (user) {
                             var lowercaseTerm = term.toLowerCase();
@@ -1862,11 +1878,6 @@
         // Utilities
         // =========
 
-        getUsers: function() {
-            var self = this;
-            return Object.keys(this.usersById).map(function(id){return self.usersById[id]});
-        },
-
         getComments: function() {
             var self = this;
             return Object.keys(this.commentsById).map(function(id){return self.commentsById[id]});
@@ -2053,30 +2064,46 @@
 
         highlightHashtags: function(text) {
             var self = this;
-            var regex = /(^|\s)#([a-zäöüß\d-_]+)/gim;
 
-            var __createTag = function(tag) {
-                var tag = self.createTagElement('#' + tag, 'hashtag', '#' + tag);
-                return tag[0].outerHTML;
+            if(text.indexOf('#') != -1) {            
+                var regex = /(^|\s)#([a-zäöüß\d-_]+)/gim;
+
+                var __createTag = function(tag) {
+                    var tag = self.createTagElement('#' + tag, 'hashtag', '#' + tag);
+                    return tag[0].outerHTML;
+                }
+                text = text.replace(regex, function($0, $1, $2){
+                    return $1 + __createTag($2);
+                });
             }
-            return text.replace(regex, function($0, $1, $2){
-                return $1 + __createTag($2);
-            });
+            return text;
         },
 
         highlightPings: function(text) {
             var self = this;
-            var regex = /(^|\s)@(([a-zA-Z0-9\-\_\.])+@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim;
 
-            var __createTag = function(email) {
-                var user = self.usersById[email];
-                var value = user ? user.fullname : email;
-                var tag = self.createTagElement('@' + value, 'ping', '@' + email);
-                return tag[0].outerHTML;
+            if(text.indexOf('@') != -1) {            
+                var regex = /(^|\s)@(([a-zA-Z0-9\-\_\.]+)@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim;
+
+                var __createTag = function(email) {
+                    var user = self.users.get(email);
+                    var value = user ? user.fullname : email;
+                    var tag = self.createTagElement('@' + value, 'ping', '@' + email);
+                    return tag[0].outerHTML;
+                }
+                
+                // Highlight pings in format @<email>
+                text = text.replace(regex, function($0, $1, $2){
+                    return $1 + __createTag($2);
+                });
+
+                // Highlight pings in format @<fullname>
+                text = text.replace(self.users.pingedUsersRegex, function($0, $1, $2){
+                    return $1 + __createTag($2);
+                });
             }
-            return text.replace(regex, function($0, $1, $2){
-                return $1 + __createTag($2);
-            });
+            return text;
+
         },
 
         linkify: function(inputText) {
@@ -2091,7 +2118,7 @@
             replacedText = replacedText.replace(replacePattern2, '$1<a href="http://$2" target="_blank">$2</a>');
 
             // Change email addresses to mailto:: links.
-            replacePattern3 = /(^|\s)(([a-zA-Z0-9\-\_\.])+@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim;
+            replacePattern3 = /(^|\s)(([a-zA-Z0-9\-\_\.]+)@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim;
             replacedText = replacedText.replace(replacePattern3, '$1<a href="mailto:$2">$2</a>');
 
             // If there are hrefs in the original text, let's split
