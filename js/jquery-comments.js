@@ -43,7 +43,6 @@
         usersById: {},
         dataFetched: false,
         currentSortKey: '',
-        users: {},
         options: {},
         events: {
             // Close dropdowns
