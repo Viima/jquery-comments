@@ -39,6 +39,7 @@ http://viima.github.io/jquery-comments/*/
 }
 
 .jquery-comments .tag {
+	color: inherit;
 	font-size: 0.9em;
 	line-height: 1.2em;
 	background: #ddd;
