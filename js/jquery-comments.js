@@ -2010,7 +2010,7 @@
         },
 
         getPings: function(textarea) {
-            return $.map(textarea.find('.ping'), function(el){return $(el).attr('data-value')});
+            return $.map(textarea.find('.ping'), function(el){return parseInt($(el).attr('data-value'))});
         },
 
         moveCursorToEnd: function(el) {
