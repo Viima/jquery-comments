@@ -110,6 +110,7 @@
                 // User        
                 profilePictureURL: '',        
                 currentUserIsAdmin: false,        
+                currentUserId: null,        
                 
                 // Font awesome icon overrides        
                 spinnerIconURL: '',       
@@ -1366,7 +1367,7 @@
                     match: /(^|\s)@((\w|\s)*)$/,
                     search: function (term, callback) {
                         term = term.replace('\u00a0', ' ');  // Convert non-breaking spaces to reguar spaces
-                        var users = self.getUsers();
+                        var users = self.getUsers().filter(function(user){return user.id != self.options.currentUserId});
 
                         callback($.map(users, function (user) {
                             var lowercaseTerm = term.toLowerCase();
