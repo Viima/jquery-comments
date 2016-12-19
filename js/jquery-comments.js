@@ -2106,9 +2106,11 @@
                 }
 
                 $(commentModel.pings).each(function(index, id) {
-                    var user = self.usersById[id];
-                    var pingText = '@' + user.fullname;
-                    html = html.replace(pingText, __createTag(user))
+                    if(id in self.usersById) {
+                        var user = self.usersById[id];
+                        var pingText = '@' + user.fullname;
+                        html = html.replace(pingText, __createTag(user))
+                    }
                 });
 
             }
