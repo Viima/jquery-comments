@@ -1378,8 +1378,13 @@
                     search: function (term, callback) {
                         term = term.replace('\u00a0', ' ');  // Convert non-breaking spaces to reguar spaces
 
-                        // Other users
-                        var users = self.getUsers().filter(function(user){return user.id != self.options.currentUserId});
+                        // Users excluding self and already pinged users
+                        var pings = self.getPings(textarea);
+                        var users = self.getUsers().filter(function(user) {
+                            var isSelf = user.id == self.options.currentUserId;
+                            var alreadyPinged = pings.indexOf(user.id) != -1;
+                            return !isSelf && !alreadyPinged;
+                        });
 
                         // Sort users
                         self.sortUsers(users);
