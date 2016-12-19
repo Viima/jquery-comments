@@ -2003,10 +2003,12 @@
 
             // Replace tags with text values
             textareaClone.find('.tag.hashtag').replaceWith(function(){
-                return '#' + humanReadable ? $(this).val() : $(this).attr('data-value');
+                var value = humanReadable ? $(this).val() : $(this).attr('data-value');
+                return '#' + value;
             });
             textareaClone.find('.tag.ping').replaceWith(function(){
-                return '@' + humanReadable ? $(this).val() : $(this).attr('data-value');
+                var value = humanReadable ? $(this).val() : $(this).attr('data-value');
+                return '@' + value;
             });
 
             var ce = $('<pre/>').html(textareaClone.html());
@@ -2112,7 +2114,6 @@
                         html = html.replace(pingText, __createTag(user))
                     }
                 });
-
             }
             return html;
         },
