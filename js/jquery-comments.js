@@ -671,6 +671,16 @@
             }
         },
 
+        sortUsers: function(users) {
+            users.sort(function(a,b) {
+                var nameA = a.fullname.toLowerCase().trim();
+                var nameB = b.fullname.toLowerCase().trim();
+                if(nameA < nameB) return -1;
+                if(nameA > nameB) return 1;
+                return 0;
+            });
+        },
+
         sortAndReArrangeComments: function(sortKey) {
             var commentList = this.$el.find('#comment-list');
 
@@ -1367,7 +1377,12 @@
                     match: /(^|\s)@((\w|\s)*)$/,
                     search: function (term, callback) {
                         term = term.replace('\u00a0', ' ');  // Convert non-breaking spaces to reguar spaces
+
+                        // Other users
                         var users = self.getUsers().filter(function(user){return user.id != self.options.currentUserId});
+
+                        // Sort users
+                        self.sortUsers(users);
 
                         callback($.map(users, function (user) {
                             var lowercaseTerm = term.toLowerCase();
