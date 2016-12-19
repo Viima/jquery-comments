@@ -1980,7 +1980,7 @@
             textarea.empty().trigger('input');
         },
 
-        getTextareaContent: function(textarea) {
+        getTextareaContent: function(textarea, humanReadable) {
             var textareaClone = textarea.clone();
 
             // Remove reply-to tag
@@ -1988,10 +1988,10 @@
 
             // Replace tags with text values
             textareaClone.find('.tag.hashtag').replaceWith(function(){
-                return '#' + $(this).attr('data-value');
+                return '#' + humanReadable ? $(this).val() : $(this).attr('data-value');
             });
             textareaClone.find('.tag.ping').replaceWith(function(){
-                return '@' + $(this).attr('data-value');
+                return '@' + humanReadable ? $(this).val() : $(this).attr('data-value');
             });
 
             var ce = $('<pre/>').html(textareaClone.html());
