@@ -175,6 +175,7 @@
                     file: 'file',     
                     fileURL: 'file_url',      
                     fileMimeType: 'file_mime_type',       
+                    creator: 'creator',     
                     fullname: 'fullname',     
                     profileURL: 'profile_url',        
                     profilePictureURL: 'profile_picture_url',     
@@ -1355,7 +1356,7 @@
 
                     // Creating the reply-to tag
                     var replyToName = '@' + parentModel.fullname;
-                    var replyToTag = this.createTagElement(replyToName, 'reply-to');
+                    var replyToTag = this.createTagElement(replyToName, 'reply-to', parentModel.creator);
                     textarea.prepend(replyToTag);
                 }
             }
@@ -1779,7 +1780,7 @@
             });
             if(extraClasses) tagEl.addClass(extraClasses);
             tagEl.val(text);
-            tagEl.attr('data-value', value ? value : text);
+            tagEl.attr('data-value', value);
             return tagEl;
         },
 

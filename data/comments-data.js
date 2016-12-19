@@ -6,6 +6,7 @@ var commentsArray = [
    "modified": "2015-01-01",
    "content": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed posuere interdum sem. Quisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu.",
    "pings": [],
+   "creator": 6,
    "fullname": "Simon Powell",
    "profile_picture_url": "https://app.viima.com/static/media/user_profiles/user-icon.png",
    "created_by_admin": false,
@@ -20,6 +21,7 @@ var commentsArray = [
    "modified": "2015-01-02",
    "content": "Sed posuere interdum sem. Quisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu.",
    "pings": [],
+   "creator": 5,
    "fullname": "Administrator",
    "profile_picture_url": "https://app.viima.com/static/media/user_profiles/admin-user-icon.png",
    "created_by_admin": true,
@@ -32,8 +34,9 @@ var commentsArray = [
    "parent": null,
    "created": "2015-01-03",
    "modified": "2015-01-03",
-   "content": "Sed posuere #interdum sem.\nQuisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu. Sed arcu lectus auctor vitae, consectetuer et venenatis eget velit.",
-   "pings": [],
+   "content": "@Hank Smith sed posuere interdum sem.\nQuisque ligula eros ullamcorper https://www.google.com/ quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu. Sed arcu lectus auctor vitae, consectetuer et venenatis eget #velit.",
+   "pings": [3],
+   "creator": 1,
    "fullname": "You",
    "profile_picture_url": "https://app.viima.com/static/media/user_profiles/user-icon.png",
    "created_by_admin": false,
@@ -48,6 +51,7 @@ var commentsArray = [
    "modified": "2015-01-04",
    "file_url": "http://www.w3schools.com/html/mov_bbb.mp4",
    "file_mime_type": "video/mp4",
+   "creator": 4,
    "fullname": "Todd Brown",
    "profile_picture_url": "https://app.viima.com/static/media/user_profiles/user-icon.png",
    "created_by_admin": false,
@@ -62,6 +66,7 @@ var commentsArray = [
    "modified": "2015-01-05",
    "content": "Quisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu. Sed arcu lectus auctor vitae, consectetuer et venenatis eget velit.",
    "pings": [],
+   "creator": 3,
    "fullname": "Hank Smith",
    "profile_picture_url": "https://app.viima.com/static/media/user_profiles/user-icon.png",
    "created_by_admin": false,
@@ -76,6 +81,7 @@ var commentsArray = [
    "modified": "2015-01-06",
    "content": "Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Sed posuere interdum sem. Quisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu.",
    "pings": [],
+   "creator": 2,
    "fullname": "Jack Hemsworth",
    "profile_picture_url": "https://app.viima.com/static/media/user_profiles/user-icon.png",
    "created_by_admin": false,
@@ -90,6 +96,7 @@ var commentsArray = [
    "modified": "2015-01-07",
    "content": "Sed posuere interdum sem. Quisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu. Sed arcu lectus auctor vitae, consectetuer et venenatis eget velit.",
    "pings": [],
+   "creator": 5,
    "fullname": "Administrator",
    "profile_picture_url": "https://app.viima.com/static/media/user_profiles/admin-user-icon.png",
    "created_by_admin": true,
@@ -104,6 +111,7 @@ var commentsArray = [
    "modified": "2015-01-08",
    "content": "Sed posuere interdum sem. Quisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu.",
    "pings": [],
+   "creator": 1,
    "fullname": "You",
    "profile_picture_url": "https://app.viima.com/static/media/user_profiles/user-icon.png",
    "created_by_admin": false,
@@ -118,6 +126,7 @@ var commentsArray = [
    "modified": "2015-01-10",
    "content": "Quisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu. Sed arcu lectus auctor vitae, consectetuer et venenatis eget velit.",
    "pings": [],
+   "creator": 7,
    "fullname": "Bryan Connery",
    "profile_picture_url": "https://app.viima.com/static/media/user_profiles/user-icon.png",
    "created_by_admin": false,
@@ -132,6 +141,7 @@ var commentsArray = [
    "modified": "2015-01-10",
    "content": "Quisque ligula eros ullamcorper quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu. Sed arcu lectus auctor vitae, consectetuer et venenatis eget velit.",
    "pings": [],
+   "creator": 1,
    "fullname": "You",
    "profile_picture_url": "https://app.viima.com/static/media/user_profiles/user-icon.png",
    "created_by_admin": false,
@@ -142,40 +152,46 @@ var commentsArray = [
 ]
 
 var usersArray = [
-{
-   id: 1,
-   fullname: "Bryan Connery",
-   email: "bryan.connery@viima.com",
-   profile_picture_url: "https://app.viima.com/static/media/user_profiles/user-icon.png"
-},
-{
-   id: 2,
-   fullname: "Jack Hemsworth",
-   email: "jack.hemsworth@viima.com",
-   profile_picture_url: "https://app.viima.com/static/media/user_profiles/user-icon.png"
-},
-{
-   id: 3,
-   fullname: "Hank Smith",
-   email: "hank.smith@viima.com",
-   profile_picture_url: "https://app.viima.com/static/media/user_profiles/user-icon.png"
-},
-{
-   id: 4,
-   fullname: "Todd Brown",
-   email: "todd.brown@viima.com",
-   profile_picture_url: "https://app.viima.com/static/media/user_profiles/user-icon.png"
-},
-{
-   id: 5,
-   fullname: "Administrator",
-   email: "administrator@viima.com",
-   profile_picture_url: "https://app.viima.com/static/media/user_profiles/user-icon.png"
-},
-{
-   id: 6,
-   fullname: "Simon Powell",
-   email: "simon.powell@viima.com",
-   profile_picture_url: "https://app.viima.com/static/media/user_profiles/user-icon.png"
-},
+   {
+      id: 1,
+      fullname: "Current User",
+      email: "current.user@viima.com",
+      profile_picture_url: "https://app.viima.com/static/media/user_profiles/user-icon.png"
+   },
+   {
+      id: 2,
+      fullname: "Jack Hemsworth",
+      email: "jack.hemsworth@viima.com",
+      profile_picture_url: "https://app.viima.com/static/media/user_profiles/user-icon.png"
+   },
+   {
+      id: 3,
+      fullname: "Hank Smith",
+      email: "hank.smith@viima.com",
+      profile_picture_url: "https://app.viima.com/static/media/user_profiles/user-icon.png"
+   },
+   {
+      id: 4,
+      fullname: "Todd Brown",
+      email: "todd.brown@viima.com",
+      profile_picture_url: "https://app.viima.com/static/media/user_profiles/user-icon.png"
+   },
+   {
+      id: 5,
+      fullname: "Administrator",
+      email: "administrator@viima.com",
+      profile_picture_url: "https://app.viima.com/static/media/user_profiles/user-icon.png"
+   },
+   {
+      id: 6,
+      fullname: "Simon Powell",
+      email: "simon.powell@viima.com",
+      profile_picture_url: "https://app.viima.com/static/media/user_profiles/user-icon.png"
+   },
+   {
+      id: 7,
+      fullname: "Bryan Connery",
+      email: "bryan.connery@viima.com",
+      profile_picture_url: "https://app.viima.com/static/media/user_profiles/user-icon.png"
+   }
 ]
