@@ -99,10 +99,10 @@
             'dragover .droppable-overlay' : 'handleDragOverForOverlay',
             'drop .droppable-overlay' : 'handleDrop',
 
-            // Dropdown
-            'click .dropdown': 'stopPropagation',
-            'mousedown .dropdown': 'stopPropagation',
-            'touchstart .dropdown': 'stopPropagation',
+            // Prevent propagating the click event into buttons under the autocomplete dropdown
+            'click .dropdown.autocomplete': 'stopPropagation',
+            'mousedown .dropdown.autocomplete': 'stopPropagation',
+            'touchstart .dropdown.autocomplete': 'stopPropagation',
         },
 
 
@@ -1432,7 +1432,7 @@
                     },
                 }], {
                     appendTo: '.jquery-comments',
-                    dropdownClassName: 'dropdown',
+                    dropdownClassName: 'dropdown autocomplete',
                     maxCount: 5,
                 });
             }
