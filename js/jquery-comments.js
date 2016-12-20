@@ -1376,7 +1376,7 @@
                 textarea.textcomplete([{
                     match: /(^|\s)@((\w|\s)*)$/,
                     search: function (term, callback) {
-                        term = term.replace('\u00a0', ' ');  // Convert non-breaking spaces to reguar spaces
+                        term = self.normalizeSpaces(term);
 
                         // Users excluding self and already pinged users
                         var pings = self.getPings(textarea);
@@ -2065,7 +2065,11 @@
         },
 
         escape: function(inputText) {
-            return $('<pre/>').text(inputText).html();
+            return $('<pre/>').text(this.normalizeSpaces(inputText)).html();
+        },
+
+        normalizeSpaces: function(inputText) {
+            return inputText.replace('\u00a0', ' ');  // Convert non-breaking spaces to reguar spaces
         },
 
         after: function(times, func) {
