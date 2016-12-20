@@ -200,11 +200,6 @@ http://viima.github.io/jquery-comments/*/
 	padding-right: 2em;
 }
 
-.jquery-comments .textarea-wrapper .textarea * {
-	margin: 0;
-	padding: 0;
-}
-
 .jquery-comments:not(.mobile) .scrollable .textarea-wrapper .textarea {
 	padding-right: calc(2em + 15px);	/* Because of scrollbar */
 }
