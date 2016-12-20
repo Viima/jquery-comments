@@ -97,7 +97,12 @@
             'dragleave .droppable-overlay .droppable' : 'handleDragLeaveForDroppable',
 
             'dragover .droppable-overlay' : 'handleDragOverForOverlay',
-            'drop .droppable-overlay' : 'handleDrop'
+            'drop .droppable-overlay' : 'handleDrop',
+
+            // Dropdown
+            'click .dropdown': 'stopPropagation',
+            'mousedown .dropdown': 'stopPropagation',
+            'touchstart .dropdown': 'stopPropagation',
         },
 
 
@@ -1134,6 +1139,10 @@
             // Hide the overlay and upload the files
             this.hideDroppableOverlay();
             this.uploadAttachments(ev.originalEvent.dataTransfer.files);
+        },
+
+        stopPropagation: function(ev) {
+            ev.stopPropagation();
         },
 
 
