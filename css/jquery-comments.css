@@ -354,6 +354,7 @@ http://viima.github.io/jquery-comments/*/
 
 .jquery-comments ul.dropdown li {
 	display: block;
+	white-space: nowrap;
 	clear: both;
 	padding: 0.5em 1em;
 	font-weight: normal;
@@ -379,9 +380,6 @@ http://viima.github.io/jquery-comments/*/
 
 .jquery-comments ul.dropdown li .details {
 	display: inline-block;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
 .jquery-comments ul.dropdown li .name {
