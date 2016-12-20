@@ -197,7 +197,7 @@
                 deleteComment: function(commentJSON, success, error) {success()},     
                 upvoteComment: function(commentJSON, success, error) {success(commentJSON)},      
                 hashtagClicked: function(hashtag) {},      
-                pingClicked: function(email) {},      
+                pingClicked: function(userId) {},      
                 uploadAttachments: function(commentArray, success, error) {success(commentArray)},        
                 refresh: function() {},       
                 timeFormatter: function(time) {return new Date(time).toLocaleDateString()}
