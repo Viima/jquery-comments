@@ -2017,12 +2017,10 @@
 
             // Replace tags with text values
             textareaClone.find('.tag.hashtag').replaceWith(function(){
-                var value = humanReadable ? $(this).val() : $(this).attr('data-value');
-                return '#' + value;
+                return humanReadable ? $(this).val() : '#' + $(this).attr('data-value');
             });
             textareaClone.find('.tag.ping').replaceWith(function(){
-                var value = humanReadable ? $(this).val() : $(this).attr('data-value');
-                return '@' + value;
+                return humanReadable ? $(this).val() : '@' + $(this).attr('data-value');
             });
 
             var ce = $('<pre/>').html(textareaClone.html());
