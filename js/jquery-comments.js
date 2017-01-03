@@ -1383,7 +1383,7 @@
             // Pinging users
             if(this.options.enablePinging) {
                 textarea.textcomplete([{
-                    match: /(^|\s)@((\w|\s)*)$/,
+                    match: /(^|\s)@(([a-zäöüß]|\s)*)$/im,
                     search: function (term, callback) {
                         term = self.normalizeSpaces(term);
 
