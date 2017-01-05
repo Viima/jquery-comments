@@ -153,6 +153,7 @@
                 enableDeleting: true,     
                 enableAttachments: false,     
                 enableHashtags: false,     
+                enablePinging: false,     
                 enableDeletingCommentWithReplies: false,      
                 enableNavigation: true,       
                 postCommentOnEnter: false,        
