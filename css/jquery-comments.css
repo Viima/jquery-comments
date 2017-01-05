@@ -10,12 +10,12 @@ http://viima.github.io/jquery-comments/*/
 	text-shadow: none;
 }
 
-.jquery-comments a {
+.jquery-comments a[href] {
 	color: #2793e6;
 	text-decoration: none;
 }
 
-.jquery-comments a:hover {
+.jquery-comments a[href]:hover {
 	text-decoration: underline;
 }
 
@@ -40,10 +40,11 @@ http://viima.github.io/jquery-comments/*/
 
 .jquery-comments .tag {
 	color: inherit;
+	font-size: 0.9em;
+	line-height: 1.2em;
 	background: #ddd;
 	border: 1px solid #ccc;
 	padding: 0.05em 0.4em;
-	font-size: 0.9em;
 	cursor: pointer;
 	font-weight: normal;
 	border-radius: 1em;
@@ -51,7 +52,6 @@ http://viima.github.io/jquery-comments/*/
 }
 
 .jquery-comments .tag:hover {
-	color: inherit;
 	text-decoration: none;
 	background-color: #d8edf8;
 	border-color: #2793e6;
@@ -200,23 +200,8 @@ http://viima.github.io/jquery-comments/*/
 	padding-right: 2em;
 }
 
-.jquery-comments .textarea-wrapper .textarea * {
-	margin: 0;
-	padding: 0;
-}
-
 .jquery-comments:not(.mobile) .scrollable .textarea-wrapper .textarea {
 	padding-right: calc(2em + 15px);	/* Because of scrollbar */
-}
-
-.jquery-comments .textarea-wrapper .textarea .reply-to-badge {
-	background: #EEE;
-	border: 1px solid #DDD;
-	margin-right: .5em;
-	vertical-align: baseline;
-	line-height: 1.4em;
-	padding: 0 .5em;
-	font-size: .8em;
 }
 
 .jquery-comments .textarea-wrapper .control-row > span {
@@ -353,26 +338,71 @@ http://viima.github.io/jquery-comments/*/
 	border-top-color: #000;
 }
 
-.jquery-comments ul.navigation .navigation-wrapper.responsive ul.dropdown {
+.jquery-comments ul.dropdown {
 	display: none;
 	position: absolute;
-	left: 0;
-	width: 100%;
-
 	background: #FFF;
-	border: 1px solid;
 	z-index: 99;
+	line-height: 1.2em;
+
+	border: 1px solid #CCC;
 	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
 	-webkit-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
 	-moz-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
 	-ms-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
 }
 
-.jquery-comments ul.navigation .navigation-wrapper.responsive ul.dropdown li {
+.jquery-comments ul.dropdown.autocomplete {
+	margin-top: 0.25em;
+}
+
+.jquery-comments ul.dropdown li {
 	display: block;
-	color: #000;
+	white-space: nowrap;
+	clear: both;
+	padding: 0.5em 1em;
 	font-weight: normal;
-	padding: 0.25em 0;
+	cursor: pointer;
+}
+
+.jquery-comments ul.dropdown li.active {
+	background: #EEE;
+}
+
+.jquery-comments ul.dropdown li a {
+	display: block;
+	text-decoration: none;
+	color: inherit;
+}
+
+.jquery-comments ul.dropdown li .profile-picture {
+	float: left;
+	width: 2.4em;
+	height: 2.4em;
+	margin-right: 0.5em;
+}
+
+.jquery-comments ul.dropdown li .details {
+	display: inline-block;
+}
+
+.jquery-comments ul.dropdown li .name {
+	font-weight: bold;
+}
+
+.jquery-comments ul.dropdown li .email {
+	color: #AAA;
+	font-size: 0.95em;
+	margin-top: 0.1em;
+}
+
+.jquery-comments ul.navigation .navigation-wrapper.responsive ul.dropdown {
+	left: 0;
+	width: 100%;
+}
+
+.jquery-comments ul.navigation .navigation-wrapper.responsive ul.dropdown li {
+	color: #000;
 }
 
 .jquery-comments ul.navigation .navigation-wrapper.responsive ul.dropdown li.active {

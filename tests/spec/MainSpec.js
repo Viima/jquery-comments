@@ -5,20 +5,35 @@ describe('Basic features', function() {
     beforeEach(function() {
         var commentsContainer = $('<div/>');
 
+        var saveComment = function(data) {
+
+            // Convert pings to human readable format
+            $(data.pings).each(function(index, id) {
+                var user = usersArray.filter(function(user){return user.id == id})[0];
+                data.content = data.content.replace('@' + id, '@' + user.fullname);
+            });
+
+            return data;
+        }
+
         commentsContainer.comments({
             profilePictureURL: 'https://viima-app.s3.amazonaws.com/media/user_profiles/user-icon.png',
             roundProfilePictures: true,
             enableAttachments: true,
             enableHashtags: true,
+            enablePinging: true,
             enableDeletingCommentWithReplies: true,
             textareaRows: 1,
             textareaMaxRows: 4,
+            getUsers: function(success, error) {
+                success(usersArray);
+            },
             getComments: function(success, error) {
                 success(commentsArray);
             },
             postComment: function(data, success, error) {
                 setTimeout(function() {
-                    success(data);
+                    success(saveComment(data));
                 }, 10);
             },
             uploadAttachments: function(data, success, error) {
@@ -28,7 +43,7 @@ describe('Basic features', function() {
             },
             putComment: function(data, success, error) {
                 setTimeout(function() {
-                    success(data);
+                    success(saveComment(data));
                 }, 10);
             },
             deleteComment: function(data, success, error) {
@@ -289,7 +304,7 @@ describe('Basic features', function() {
             mostPopularComment.find('.reply').first().click();
             var replyField = mostPopularComment.find('.commenting-field');
             expect(replyField.length).toBe(1);
-            expect(replyField.find('.reply-to-badge').length).toBe(0);
+            expect(replyField.find('.reply-to.tag').length).toBe(0);
 
             // Check that the field is last child
             var lastChild = mostPopularComment.find('.child-comments').children().last();
@@ -337,7 +352,7 @@ describe('Basic features', function() {
             var childComment = mostPopularComment.find('.child-comments li.comment[data-id=9]');
             childComment.find('.reply').first().click();
             var replyField = mostPopularComment.find('.commenting-field');
-            expect(replyField.find('.reply-to-badge').val()).toBe('@Bryan Connery');
+            expect(replyField.find('.reply-to.tag').val()).toBe('@Bryan Connery');
 
             // Check that the field is last child
             var lastChild = mostPopularComment.find('.child-comments').children().last();
@@ -375,7 +390,7 @@ describe('Basic features', function() {
             childComment.find('.reply').first().click();
 
             var replyField = mostPopularComment.find('.commenting-field');
-            expect(replyField.find('.reply-to-badge').val()).toBe('@Jack Hemsworth');
+            expect(replyField.find('.reply-to.tag').val()).toBe('@Jack Hemsworth');
 
             var replyText = 'This is a re-reply\nwith a new line';
             replyField.find('.textarea').append(replyText).trigger('input');
@@ -403,7 +418,7 @@ describe('Basic features', function() {
             });
         });
 
-        it('Should reply to original user when erasing the reply-to badge', function() {
+        it('Should reply to original user when erasing the reply-to tag', function() {
             var childComment = mostPopularComment.find('.child-comments li.comment').last();
             childComment.find('.reply').first().click();
             var replyField = mostPopularComment.find('.commenting-field');
@@ -462,7 +477,7 @@ describe('Basic features', function() {
 
             // Check the content
             var contentFromModel = ownComment.data().model.content;
-            var contentFromUI = comments.getTextareaContent(textarea);
+            var contentFromUI = comments.getTextareaContent(textarea, true);
             expect(contentFromModel).toBe(contentFromUI);
 
             // Closing the field
@@ -520,7 +535,7 @@ describe('Basic features', function() {
                 expect(saveButton.hasClass('enabled')).toBe(false);
 
                 // Save button should be enabled
-                textarea.find('.reply-to-badge').remove();
+                textarea.find('.reply-to.tag').remove();
                 textarea.trigger('input');
                 expect(saveButton.hasClass('enabled')).toBe(true);
 
@@ -844,10 +859,6 @@ describe('Uploading attachments', function() {
         var replyTo = nameContainer.find('.reply-to').text();
         var fullname = replyTo.length ? nameContainer.text().split(replyTo)[0] : nameContainer.text();
 
-        // Get content without edited timestamp
-        var content = commentEl.find('.content').first().clone().children('time').remove().end().text();
-        var dateUI = new Date(commentEl.find('time').first().attr('data-original'));
-
         // Model that we are testing against
         var commentModel = commentEl.data().model;
 
@@ -860,12 +871,27 @@ describe('Uploading attachments', function() {
             var link = commentEl.find('a');
             expect(link.attr('href')).toBe(commentModel.fileURL);
         } else {
+            var content = getTextContentFromCommentElement(commentEl);
             expect(content).toBe(commentModel.content);
         }
 
         // Check time
+        var dateUI = new Date(commentEl.find('time').first().attr('data-original'));
         var modelCreatedDate = new Date(commentModel.created);
         compareDates(dateUI, modelCreatedDate);
+    }
+
+    function getTextContentFromCommentElement(commentEl)  {
+        var content = commentEl.find('.content').first().clone();
+        
+        // Remove edited timestamp
+        content.children('time').remove().end();
+
+        // Replace inputs with respective values
+        content.find('.tag').replaceWith(function() {
+            return $(this).val();
+        });
+        return content.text();
     }
 
     function compareDates(dateA, dateB) {
@@ -919,6 +945,8 @@ describe('Uploading attachments', function() {
             $(Object.keys(ownCommentModel)).each(function(index, key) {
                 if(key == 'content' || key == 'modified') {
                     expect(ownCommentModel[key]).not.toBe(ownCommentModelBefore[key]);
+                } else if(key == 'pings') {
+                    expect(JSON.stringify(ownCommentModel[key])).toBe(JSON.stringify(ownCommentModelBefore[key]));
                 } else {
                     expect(ownCommentModel[key]).toBe(ownCommentModelBefore[key]);
                 }
