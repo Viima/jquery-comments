@@ -1434,7 +1434,32 @@
                     appendTo: '.jquery-comments',
                     dropdownClassName: 'dropdown autocomplete',
                     maxCount: 5,
+                    rightEdgeOffset: 0,
                 });
+
+                // Make sure that the dropdown won't overflow the container
+                textarea.on({
+                    'textComplete:show': function(e) {
+                        var dropdownEl = $(this).data('textComplete').dropdown.$el;
+                        dropdownEl.hide();
+
+                        var condition = function() {
+                            return !dropdownEl.is(':empty');
+                        }
+                        var callback = function() {
+                            var originalLeft = parseInt(dropdownEl.css('left'));
+
+                            // Position left affects to the width of the element
+                            dropdownEl.css('left', 0);
+
+                            var maxLeft = self.$el.width() - dropdownEl.width();
+                            var left = Math.min(maxLeft, originalLeft);
+                            dropdownEl.css('left', left);
+                            dropdownEl.show();
+                        }
+                        self.waitUntil(condition, callback);
+                    }
+                })
             }
 
             return commentingField;
@@ -2165,6 +2190,18 @@
                 return combinedReplacedText;
             } else {
                 return replacedText;
+            }
+        },
+
+        waitUntil: function(condition, callback) {
+            var self = this;
+
+            if(condition()) {
+                callback();
+            } else {
+                setTimeout(function() {
+                    self.waitUntil(condition, callback);
+                }, 100);
             }
         },
 
