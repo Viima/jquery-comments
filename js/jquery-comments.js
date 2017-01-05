@@ -807,7 +807,6 @@
 
         textareaContentChanged: function(ev) {
             var textarea = $(ev.currentTarget);
-            var content = this.getTextareaContent(textarea);
             var saveButton = textarea.siblings('.control-row').find('.save');
 
             // Update parent id if reply-to tag was removed
@@ -839,6 +838,7 @@
 
             // Check if content or parent has changed if editing
             var contentOrParentChangedIfEditing = true;
+            var content = this.getTextareaContent(textarea, true);
             if(commentId = textarea.attr('data-comment')) {
                 var contentChanged = content != this.commentsById[commentId].content;
                 var parentFromModel;
