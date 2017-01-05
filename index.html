@@ -134,6 +134,7 @@
 				<li>Deleting comments</li>
 				<li>Upvoting comments</li>
 				<li>Uploading attachments</li>
+                <li>Pinging users</li>
 				<li>Enabling/disabling functionalities</li>
 				<li>Localization</li>
 				<li>Time formatting</li>
@@ -821,6 +822,37 @@ $('#comments-container').comments({
 
 
 <tr>
+<td><code>enablePinging</code></td>
+<td>
+<p>
+A <code>boolean</code> value determing whether pinging users is enabled. Enabling this functionality highlights the pings and the <code>pingClicked</code> callback function will be executed once the user has clicked a ping.
+<br>
+<br>
+<label>N.B.</label>
+<br>
+<ul>
+<li>The feature is depended on a javascript library called <a href="https://github.com/yuku-t/jquery-textcomplete">jquery-textcomplete</a></li>
+<li>You need to provide the list of users who can be pinged using the <code>getUsers</code> callback function</li>
+<li>jquery-comments assumes that the pings are sent to the server in format <code>@&lt;user_id&gt;</code>, for example <code>@145</code></li>
+<li>jquery-comments assumes that the pings are returned from the server in format <code>@&lt;user_fullname&gt;</code>, for example <code>@Bryan Connery</code> together with array of pinged user ids in same order they appear in the comment</li>
+</ul>
+
+<i>Switching the ping format is required in order to keep the link between the user model and the ping so that the ping won't get broken in case the user changes her name for example. On the other hand, we expect the server to return the ping in user friendly format so that the API will always return comments in a format that can be displayed without processing.</i>
+
+</p>
+<label>DEFAULT</label>  
+<code>false</code>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    enablePinging: true
+});
+</pre>
+</td>
+</tr>
+
+
+<tr>
 <td><code>enableNavigation</code></td>
 <td>
 <p>
@@ -910,6 +942,8 @@ content                 // Either content or fileURL must be present
 fileURL                 // Either content or fileURL must be present
 file                    // Required when uploading an attachment
 fileMimeType            // Optional
+pings                   // Required if pinging is enabled
+creator                 // Required if pinging is enabled
 fullname                // Required
 profileURL              // Optional
 profilePictureURL       // Optional
@@ -929,6 +963,8 @@ fieldMappings: {
     file: 'file',
     fileURL: 'file_url',
     fileMimeType: 'file_mime_type',
+    pings: 'pings',
+    creator: 'creator',
     fullname: 'fullname',
     profileURL: 'profile_url',
     profilePictureURL: 'profile_picture_url',
@@ -1007,6 +1043,37 @@ $('#comments-container').comments({
 </pre>
 </td>
 </tr>
+
+<tr>
+<td><code>getUsers</code></td>
+<td>
+<p>
+A callback <code>function</code> that is used to fetch the user array from the server. The callback provides both <code>success</code> and <code>error</code> callbacks which should be called based on the result from the server. The success callback takes the user array as a parameter.
+</p>
+<label>DEFAULT</label>  
+<pre class="prettyprint linemus">
+function(success, error) {
+    success([]);
+}
+</pre>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    getUsers: function(success, error) {
+        $.ajax({
+            type: 'get',
+            url: '/api/users/',
+            success: function(userArray) {
+                success(userArray)
+            },
+            error: error
+        });
+    }
+});
+</pre>
+</td>
+</tr>
+
 
 <tr>
 <td><code>postComment</code></td>
@@ -1225,14 +1292,36 @@ A callback <code>function</code> that is called after user has clicked a hashtag
 </p>
 <label>DEFAULT</label>  
 <pre class="prettyprint linemus">
-function(hashtag) {
-    location.hash = 'tags/' + hashtag
-}
+function(hashtag) {}
 </pre>
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    hashtagClicked: function(hashtag) {}
+    hashtagClicked: function(hashtag) {
+        location.hash = 'tags/' + hashtag
+    }
+});
+</pre>
+</td>
+</tr>
+
+
+<tr>
+<td><code>pingClicked</code></td>
+<td>
+<p>
+A callback <code>function</code> that is called after user has clicked a ping
+</p>
+<label>DEFAULT</label>  
+<pre class="prettyprint linemus">
+function(ping) {}
+</pre>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+    pingClicked: function(ping) {
+        location.hash = 'users/' + ping
+    }
 });
 </pre>
 </td>
@@ -1403,8 +1492,9 @@ $('#comments-container').comments({
             <a id="dependencies" class="anchor" href="#dependencies" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dependencies</h3>
 
             <ul>
-            <li>jQuery &gt;= 1.9.0</li>
-            <li>Font Awesome (optional)</li>
+            <li><a href="https://github.com/jquery/jquery">jQuery</a> &gt;= 1.9.0</li>
+            <li><a href="https://github.com/FortAwesome/Font-Awesome">Font Awesome</a> (optional)</li>
+            <li><a href="https://github.com/yuku-t/jquery-textcomplete">jquery-textcomplete</a> (optional)</li>
             </ul>
 
             <h3>
@@ -1423,7 +1513,7 @@ $('#comments-container').comments({
             <h3>
             <a id="copyright-and-license" class="anchor" href="#copyright-and-license" aria-hidden="true"><span class="octicon octicon-link"></span></a>Copyright and license</h3>
 
-            <p>Code and documentation copyright 2016 <a href="https://www.viima.com/">Viima Solutions Oy</a>. Code released under <a href="https://github.com/Viima/jquery-comments/blob/master/LICENSE">the MIT license</a>.</p>
+            <p>Code and documentation copyright 2017 <a href="https://www.viima.com/">Viima Solutions Oy</a>. Code released under <a href="https://github.com/Viima/jquery-comments/blob/master/LICENSE">the MIT license</a>.</p>
 
                   <footer class="site-footer">
                     <span class="site-footer-owner"><a href="https://github.com/Viima/jquery-comments">jquery-comments</a> is maintained by <a href="https://github.com/Viima">Viima</a>.</span>
