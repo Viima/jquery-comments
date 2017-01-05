@@ -352,6 +352,10 @@ http://viima.github.io/jquery-comments/*/
 	-ms-box-shadow: 0 6px 12px rgba(0, 0, 0, 0.175);
 }
 
+.jquery-comments ul.dropdown.autocomplete {
+	margin-top: 0.25em;
+}
+
 .jquery-comments ul.dropdown li {
 	display: block;
 	white-space: nowrap;
