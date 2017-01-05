@@ -1,6 +1,6 @@
-//     jquery-comments.js 1.1.3
+//     jquery-comments.js 1.2
 
-//     (c) 2016 Joona Tykkyläinen, Viima Solutions Oy
+//     (c) 2017 Joona Tykkyläinen, Viima Solutions Oy
 //     jquery-comments may be freely distributed under the MIT license.
 //     For all details and documentation:
 //     http://viima.github.io/jquery-comments/
@@ -40,6 +40,8 @@
 
         $el: null,
         commentsById: {},
+        usersById: {},
+        dataFetched: false,
         currentSortKey: '',
         options: {},
         events: {
@@ -79,6 +81,7 @@
             'click li.comment button.upvote' : 'upvoteComment',
             'click li.comment button.delete.enabled' : 'deleteComment',
             'click li.comment .hashtag' : 'hashtagClicked',
+            'click li.comment .ping' : 'pingClicked',
 
             // Other
             'click li.comment ul.child-comments .toggle-all': 'toggleReplies',
@@ -94,7 +97,12 @@
             'dragleave .droppable-overlay .droppable' : 'handleDragLeaveForDroppable',
 
             'dragover .droppable-overlay' : 'handleDragOverForOverlay',
-            'drop .droppable-overlay' : 'handleDrop'
+            'drop .droppable-overlay' : 'handleDrop',
+
+            // Prevent propagating the click event into buttons under the autocomplete dropdown
+            'click .dropdown.autocomplete': 'stopPropagation',
+            'mousedown .dropdown.autocomplete': 'stopPropagation',
+            'touchstart .dropdown.autocomplete': 'stopPropagation',
         },
 
 
@@ -107,6 +115,7 @@
                 // User        
                 profilePictureURL: '',        
                 currentUserIsAdmin: false,        
+                currentUserId: null,        
                 
                 // Font awesome icon overrides        
                 spinnerIconURL: '',       
@@ -144,6 +153,7 @@
                 enableDeleting: true,     
                 enableAttachments: false,     
                 enableHashtags: false,     
+                enablePinging: false,     
                 enableDeletingCommentWithReplies: false,      
                 enableNavigation: true,       
                 postCommentOnEnter: false,        
@@ -170,6 +180,8 @@
                     file: 'file',     
                     fileURL: 'file_url',      
                     fileMimeType: 'file_mime_type',       
+                    pings: 'pings',       
+                    creator: 'creator',     
                     fullname: 'fullname',     
                     profileURL: 'profile_url',        
                     profilePictureURL: 'profile_picture_url',     
@@ -179,12 +191,14 @@
                     userHasUpvoted: 'user_has_upvoted'        
                 },        
                 
+                getUsers: function(success, error) {success([])},
                 getComments: function(success, error) {success([])},      
                 postComment: function(commentJSON, success, error) {success(commentJSON)},        
                 putComment: function(commentJSON, success, error) {success(commentJSON)},     
                 deleteComment: function(commentJSON, success, error) {success()},     
                 upvoteComment: function(commentJSON, success, error) {success(commentJSON)},      
                 hashtagClicked: function(hashtag) {},      
+                pingClicked: function(userId) {},      
                 uploadAttachments: function(commentArray, success, error) {success(commentArray)},        
                 refresh: function() {},       
                 timeFormatter: function(time) {return new Date(time).toLocaleDateString()}
@@ -260,13 +274,22 @@
         fetchDataAndRender: function () {
             var self = this;
 
+            this.commentsById = {};
+            this.usersById = {};
+
             this.$el.empty();
             this.createHTML();
 
-            // Get comments
-            this.commentsById = {};
+            // Render after data has been fetched
+            var dataFetched = this.after(this.options.enablePinging ? 2 : 1, function() {
+                self.dataFetched = true;
+                self.render();
+            });
 
-            var success = function(commentsArray) {
+            // Comments
+            // ========
+
+            var commentsFetched = function(commentsArray) {
                 // Convert comments to custom data model
                 var commentModels = commentsArray.map(function(commentsJSON){
                     return self.createCommentModel(commentsJSON)
@@ -280,14 +303,23 @@
                     self.addCommentToDataModel(commentModel);
                 });
 
-                self.render();
+                dataFetched();
             };
+            this.options.getComments(commentsFetched, dataFetched);
 
-            var error = function() {
-                success([]);
-            };
+            // Users
+            // =====
 
-            this.options.getComments(success, error);
+            if(this.options.enablePinging) {
+                var usersFetched = function(userArray) {
+                    $(userArray).each(function(index, user) {
+                        self.usersById[user.id] = user;
+                    });
+
+                    dataFetched();
+                }
+                this.options.getUsers(usersFetched, dataFetched);
+            }
         },
 
         fetchNext: function() {
@@ -335,6 +367,9 @@
 
         render: function() {
             var self = this;
+
+            // Prevent re-rendering if data hasn't been fetched
+            if(!this.dataFetched) return;
 
             // Show active container
             this.showActiveContainer();
@@ -642,6 +677,16 @@
             }
         },
 
+        sortUsers: function(users) {
+            users.sort(function(a,b) {
+                var nameA = a.fullname.toLowerCase().trim();
+                var nameB = b.fullname.toLowerCase().trim();
+                if(nameA < nameB) return -1;
+                if(nameA > nameB) return 1;
+                return 0;
+            });
+        },
+
         sortAndReArrangeComments: function(sortKey) {
             var commentList = this.$el.find('#comment-list');
 
@@ -763,11 +808,10 @@
 
         textareaContentChanged: function(ev) {
             var textarea = $(ev.currentTarget);
-            var content = this.getTextareaContent(textarea);
             var saveButton = textarea.siblings('.control-row').find('.save');
 
-            // Update parent id if reply-to-badge was removed
-            if(!textarea.find('.reply-to-badge').length) {
+            // Update parent id if reply-to tag was removed
+            if(!textarea.find('.reply-to.tag').length) {
                 var commentId = textarea.attr('data-comment');
 
                 // Case: editing comment
@@ -795,6 +839,7 @@
 
             // Check if content or parent has changed if editing
             var contentOrParentChangedIfEditing = true;
+            var content = this.getTextareaContent(textarea, true);
             if(commentId = textarea.attr('data-comment')) {
                 var contentChanged = content != this.commentsById[commentId].content;
                 var parentFromModel;
@@ -874,6 +919,7 @@
             $.extend(commentJSON, {
                 parent: textarea.attr('data-parent') || null,
                 content: this.getTextareaContent(textarea),
+                pings: this.getPings(textarea),
                 modified: new Date().getTime()
             });
 
@@ -932,8 +978,14 @@
 
         hashtagClicked: function(ev) {
             var el = $(ev.currentTarget);
-            var hashtag = el.data('tag');
-            this.options.hashtagClicked(hashtag);
+            var value = el.attr('data-value');
+            this.options.hashtagClicked(value);
+        },
+
+        pingClicked: function(ev) {
+            var el = $(ev.currentTarget);
+            var value = el.attr('data-value');
+            this.options.pingClicked(value);
         },
 
         fileInputChanged: function(ev, files) {
@@ -1025,7 +1077,7 @@
             textarea.attr('data-comment', commentModel.id);
 
             // Escaping HTML
-            textarea.append(this.getTextareaContentAsEscapedHTML(commentModel.content));
+            textarea.append(this.getFormattedCommentContent(commentModel, true));
 
             // Move cursor to end
             this.moveCursorToEnd(textarea);
@@ -1088,6 +1140,10 @@
             // Hide the overlay and upload the files
             this.hideDroppableOverlay();
             this.uploadAttachments(ev.originalEvent.dataTransfer.files);
+        },
+
+        stopPropagation: function(ev) {
+            ev.stopPropagation();
         },
 
 
@@ -1313,20 +1369,98 @@
                 // Set the parent id to the field if necessary
                 textarea.attr('data-parent', parentId);
 
-                // Append reply-to badge if necessary
+                // Append reply-to tag if necessary
                 var parentModel = this.commentsById[parentId];
                 if(parentModel.parent) {
                     textarea.html('&nbsp;');    // Needed to set the cursor to correct place
 
-                    // Creating the reply-to badge
-                    var replyToBadge = $('<input/>', {
-                        'class': 'reply-to-badge highlight-font-bold',
-                        type: 'button'
-                    });
+                    // Creating the reply-to tag
                     var replyToName = '@' + parentModel.fullname;
-                    replyToBadge.val(replyToName);
-                    textarea.prepend(replyToBadge);
+                    var replyToTag = this.createTagElement(replyToName, 'reply-to', parentModel.creator);
+                    textarea.prepend(replyToTag);
                 }
+            }
+
+            // Pinging users
+            if(this.options.enablePinging) {
+                textarea.textcomplete([{
+                    match: /(^|\s)@(([a-zäöüß]|\s)*)$/im,
+                    search: function (term, callback) {
+                        term = self.normalizeSpaces(term);
+
+                        // Users excluding self and already pinged users
+                        var pings = self.getPings(textarea);
+                        var users = self.getUsers().filter(function(user) {
+                            var isSelf = user.id == self.options.currentUserId;
+                            var alreadyPinged = pings.indexOf(user.id) != -1;
+                            return !isSelf && !alreadyPinged;
+                        });
+
+                        // Sort users
+                        self.sortUsers(users);
+
+                        callback($.map(users, function (user) {
+                            var lowercaseTerm = term.toLowerCase();
+                            var nameMatch = user.fullname.toLowerCase().indexOf(lowercaseTerm) != -1;
+                            return nameMatch ? user : null;
+                        }));
+                    },
+                    template: function(user) {
+                        var wrapper = $('<div/>');
+
+                        var profilePictureEl = $('<img/>', {
+                            src: user.profile_picture_url,
+                            'class': 'profile-picture round'
+                        });
+                        var detailsEl = $('<div/>', {
+                            'class': 'details',
+                        });
+                        var nameEl = $('<div/>', {
+                            'class': 'name',
+                        }).html(user.fullname);
+
+                        var emailEl = $('<div/>', {
+                            'class': 'email',
+                        }).html(user.email);
+
+                        detailsEl.append(nameEl).append(emailEl);
+                        wrapper.append(profilePictureEl).append(detailsEl);
+                        return wrapper.html();
+                    },
+                    replace: function (user) {
+                        var tag = self.createTagElement('@' + user.fullname, 'ping', user.id);
+                        return ' ' + tag[0].outerHTML + ' ';
+                    },
+                }], {
+                    appendTo: '.jquery-comments',
+                    dropdownClassName: 'dropdown autocomplete',
+                    maxCount: 5,
+                    rightEdgeOffset: 0,
+                });
+
+                // Make sure that the dropdown won't overflow the container
+                textarea.on({
+                    'textComplete:show': function(e) {
+                        var dropdownEl = $(this).data('textComplete').dropdown.$el;
+                        dropdownEl.hide();
+
+                        var condition = function() {
+                            return !dropdownEl.is(':empty');
+                        }
+                        var callback = function() {
+                            var originalLeft = parseInt(dropdownEl.css('left'));
+
+                            // Position left affects to the width of the element
+                            dropdownEl.css('left', 0);
+
+                            var maxLeft = self.$el.width() - dropdownEl.width();
+                            var left = Math.min(maxLeft, originalLeft);
+                            dropdownEl.css('left', left);
+                            dropdownEl.show();
+                        }
+                        self.waitUntil(condition, callback);
+                    }
+                })
             }
 
             return commentingField;
@@ -1592,9 +1726,7 @@
 
             // Case: regular comment
             } else {
-                var html = this.linkify(this.escape(commentModel.content));
-                if(this.options.enableHashtags) html = this.highlightTags(html);
-                content.html(html);
+                content.html(this.getFormattedCommentContent(commentModel));
             }
 
             // Edited timestamp
@@ -1696,6 +1828,17 @@
             return upvoteEl;
         },
 
+        createTagElement: function(text, extraClasses, value) {
+            var tagEl = $('<input/>', {
+                'class': 'tag',
+                type: 'button'
+            });
+            if(extraClasses) tagEl.addClass(extraClasses);
+            tagEl.val(text);
+            tagEl.attr('data-value', value);
+            return tagEl;
+        },
+
         reRenderComment: function(id) {
             var commentModel = this.commentsById[id];
             var commentElements = this.$el.find('li.comment[data-id="'+commentModel.id+'"]');
@@ -1781,6 +1924,11 @@
             return Object.keys(this.commentsById).map(function(id){return self.commentsById[id]});
         },
 
+        getUsers: function() {
+            var self = this;
+            return Object.keys(this.usersById).map(function(id){return self.usersById[id]});
+        },
+
         getChildComments: function(parentId) {
             return this.getComments().filter(function(comment){return comment.parent == parentId});
         },
@@ -1806,6 +1954,7 @@
                 created: time,
                 modified: time,
                 content: this.getTextareaContent(textarea),
+                pings: this.getPings(textarea),
                 fullname: this.options.textFormatter(this.options.youText),
                 profilePictureURL: this.options.profilePictureURL,
                 createdByCurrentUser: true,
@@ -1886,8 +2035,21 @@
             textarea.empty().trigger('input');
         },
 
-        getTextareaContent: function(textarea) {
-            var ce = $('<pre/>').html(textarea.html());
+        getTextareaContent: function(textarea, humanReadable) {
+            var textareaClone = textarea.clone();
+
+            // Remove reply-to tag
+            textareaClone.find('.reply-to.tag').remove();
+
+            // Replace tags with text values
+            textareaClone.find('.tag.hashtag').replaceWith(function(){
+                return humanReadable ? $(this).val() : '#' + $(this).attr('data-value');
+            });
+            textareaClone.find('.tag.ping').replaceWith(function(){
+                return humanReadable ? $(this).val() : '@' + $(this).attr('data-value');
+            });
+
+            var ce = $('<pre/>').html(textareaClone.html());
             ce.find('div, p, br').replaceWith(function() { return '\n' + this.innerHTML; });
 
             // Trim leading spaces
@@ -1895,10 +2057,16 @@
             return text;
         },
 
-        getTextareaContentAsEscapedHTML: function(html) {
-            // Escaping HTML except the new lines
-            var escaped = this.escape(html);
-            return escaped.replace(/(?:\n)/g, '<br>');
+        getFormattedCommentContent: function(commentModel, replaceNewLines) {
+            var html = this.escape(commentModel.content);
+            html = this.linkify(html);
+            html = this.highlightTags(commentModel, html);
+            if(replaceNewLines) html = html.replace(/(?:\n)/g, '<br>');
+            return html;
+        },
+
+        getPings: function(textarea) {
+            return $.map(textarea.find('.ping'), function(el){return parseInt($(el).attr('data-value'))});
         },
 
         moveCursorToEnd: function(el) {
@@ -1930,27 +2098,82 @@
         },
 
         escape: function(inputText) {
-            return $('<pre/>').text(inputText).html();
+            return $('<pre/>').text(this.normalizeSpaces(inputText)).html();
         },
 
-        highlightTags: function(inputText) {
-            return inputText.replace(/(^|\s)#([a-zäöüß\d-_]+)/ig, '$1<a class="tag hashtag" data-tag="$2">#$2</a>');
+        normalizeSpaces: function(inputText) {
+            return inputText.replace('\u00a0', ' ');  // Convert non-breaking spaces to reguar spaces
+        },
+
+        after: function(times, func) {
+            var self = this;
+            return function() {
+                times--;
+                if (times == 0) {
+                    return func.apply(self, arguments);
+                }
+            }
+        },
+
+        highlightTags: function(commentModel, html) {
+            if(this.options.enableHashtags) html = this.highlightHashtags(commentModel, html);
+            if(this.options.enablePinging) html = this.highlightPings(commentModel, html);
+            return html;
+        },
+
+        highlightHashtags: function(commentModel, html) {
+            var self = this;
+
+            if(html.indexOf('#') != -1) {
+
+                var __createTag = function(tag) {
+                    var tag = self.createTagElement('#' + tag, 'hashtag', tag);
+                    return tag[0].outerHTML;
+                }
+
+                var regex = /(^|\s)#([a-zäöüß\d-_]+)/gim;
+                html = html.replace(regex, function($0, $1, $2){
+                    return $1 + __createTag($2);
+                });
+            }
+            return html;
+        },
+
+        highlightPings: function(commentModel, html) {
+            var self = this;
+
+            if(html.indexOf('@') != -1) {
+
+                var __createTag = function(user) {
+                    var tag = self.createTagElement('@' + user.fullname, 'ping', user.id);
+                    return tag[0].outerHTML;
+                }
+
+                $(commentModel.pings).each(function(index, id) {
+                    if(id in self.usersById) {
+                        var user = self.usersById[id];
+                        var pingText = '@' + user.fullname;
+                        html = html.replace(pingText, __createTag(user))
+                    }
+                });
+            }
+            return html;
         },
 
         linkify: function(inputText) {
             var replacedText, replacePattern1, replacePattern2, replacePattern3;
 
             // URLs starting with http://, https://, file:// or ftp://
-            replacePattern1 = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
-            replacedText = inputText.replace(replacePattern1, '<a href="$1" target="_blank">$1</a>');
+            replacePattern1 = /(^|\s)((https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
+            replacedText = inputText.replace(replacePattern1, '$1<a href="$2" target="_blank">$2</a>');
 
             // URLs starting with "www." (without // before it, or it'd re-link the ones done above).
-            replacePattern2 = /(^|[^\/f])(www\.[\S]+(\b|$))/gim;
+            replacePattern2 = /(^|\s)(www\.[\S]+(\b|$))/gim;
             replacedText = replacedText.replace(replacePattern2, '$1<a href="http://$2" target="_blank">$2</a>');
 
             // Change email addresses to mailto:: links.
-            replacePattern3 = /(([a-zA-Z0-9\-\_\.])+@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim;
-            replacedText = replacedText.replace(replacePattern3, '<a href="mailto:$1">$1</a>');
+            replacePattern3 = /(^|\s)(([a-zA-Z0-9\-\_\.]+)@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim;
+            replacedText = replacedText.replace(replacePattern3, '$1<a href="mailto:$2">$2</a>');
 
             // If there are hrefs in the original text, let's split
             // the text up and only work on the parts that don't have urls yet.
@@ -1968,6 +2191,18 @@
                 return combinedReplacedText;
             } else {
                 return replacedText;
+            }
+        },
+
+        waitUntil: function(condition, callback) {
+            var self = this;
+
+            if(condition()) {
+                callback();
+            } else {
+                setTimeout(function() {
+                    self.waitUntil(condition, callback);
+                }, 100);
             }
         },
 

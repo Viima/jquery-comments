@@ -12,6 +12,7 @@ Features
 - Upvoting comments
 - Uploading attachments
 - Hashtags
+- Pinging users
 - Enabling/disabling functionalities
 - Localization
 - Time formatting
@@ -66,6 +67,7 @@ Dependencies
 ------------
 - jQuery >= 1.9.0
 - Font Awesome (optional)
+- jquery-textcomplete (optional)
 
 Documentation
 -------------
@@ -81,4 +83,4 @@ IE9+ and all modern browsers
 
 Copyright and license
 ---------------------
-Code and documentation copyright 2016 [Viima Solutions Oy](https://www.viima.com/). Code released under [the MIT license](https://github.com/Viima/jquery-comments/blob/master/LICENSE).
+Code and documentation copyright 2017 [Viima Solutions Oy](https://www.viima.com/). Code released under [the MIT license](https://github.com/Viima/jquery-comments/blob/master/LICENSE).

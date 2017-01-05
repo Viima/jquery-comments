@@ -15,6 +15,7 @@
 
 		<!-- Libraries -->
 		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery.textcomplete/1.8.0/jquery.textcomplete.js"></script>
 		<script type="text/javascript" src="js/jquery-comments.js"></script>
 
 		<style type="text/css">
@@ -29,12 +30,29 @@
 		<!-- Init jquery-comments -->
 		<script type="text/javascript">
 			$(function() {
+				var saveComment = function(data) {
+
+					// Convert pings to human readable format
+					$(data.pings).each(function(index, id) {
+						var user = usersArray.filter(function(user){return user.id == id})[0];
+						data.content = data.content.replace('@' + id, '@' + user.fullname);
+					});
+
+					return data;
+				}
 				$('#comments-container').comments({
 					profilePictureURL: 'https://viima-app.s3.amazonaws.com/media/user_profiles/user-icon.png',
+					currentUserId: 1,
 					roundProfilePictures: true,
 					textareaRows: 1,
 					enableAttachments: true,
 					enableHashtags: true,
+					enablePinging: true,
+					getUsers: function(success, error) {
+						setTimeout(function() {
+							success(usersArray);
+						}, 500);
+					},
 					getComments: function(success, error) {
 						setTimeout(function() {
 							success(commentsArray);
@@ -42,12 +60,12 @@
 					},
 					postComment: function(data, success, error) {
 						setTimeout(function() {
-							success(data);
+							success(saveComment(data));
 						}, 500);
 					},
 					putComment: function(data, success, error) {
 						setTimeout(function() {
-							success(data);
+							success(saveComment(data));
 						}, 500);
 					},
 					deleteComment: function(data, success, error) {
