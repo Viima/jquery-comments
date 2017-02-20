@@ -179,7 +179,7 @@
                     content: 'content',       
                     file: 'file',     
                     fileURL: 'file_url',      
-                    fileMimeType: 'file_mime_type',       
+                    fileMimeType: 'file_mime_type',
                     pings: 'pings',       
                     creator: 'creator',     
                     fullname: 'fullname',     
@@ -1831,7 +1831,8 @@
         createTagElement: function(text, extraClasses, value) {
             var tagEl = $('<input/>', {
                 'class': 'tag',
-                type: 'button'
+                'type': 'button',
+                'data-role': 'none',
             });
             if(extraClasses) tagEl.addClass(extraClasses);
             tagEl.val(text);
