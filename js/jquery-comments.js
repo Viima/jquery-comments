@@ -596,14 +596,21 @@
         updateToggleAllButton: function(parentEl) {
             // Don't hide replies if maxRepliesVisible has negative value
             if (this.options.maxRepliesVisible < 0) return;
-            
+
             var childCommentsEl = parentEl.find('.child-comments');
             var childComments = childCommentsEl.find('.comment');
             var toggleAllButton = childCommentsEl.find('li.toggle-all');
             childComments.removeClass('hidden-reply');
 
+            // Assign all child comments to be hidden
+            var hiddenReplies = childComments;
+
+            // Select the proper number of replies to be hidden only if necessary
+            if (this.options.maxRepliesVisible !== 0) {
+                var hiddenReplies = childComments.slice(0, -this.options.maxRepliesVisible);
+            }
+
             // Add identifying class for hidden replies so they can be toggled
-            var hiddenReplies = childComments.slice(0, -this.options.maxRepliesVisible);
             hiddenReplies.addClass('hidden-reply');
 
             // Show all replies if replies are expanded
