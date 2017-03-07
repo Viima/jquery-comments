@@ -2060,6 +2060,9 @@
 
             // Trim leading spaces
             var text = ce.text().replace(/^\s+/g, '');
+
+            // Normalize spaces
+            var text = this.normalizeSpaces(text);
             return text;
         },
 
@@ -2108,7 +2111,7 @@
         },
 
         normalizeSpaces: function(inputText) {
-            return inputText.replace('\u00a0', ' ');  // Convert non-breaking spaces to reguar spaces
+            return inputText.replace(new RegExp('\u00a0', 'g'), ' ');   // Convert non-breaking spaces to reguar spaces
         },
 
         after: function(times, func) {
