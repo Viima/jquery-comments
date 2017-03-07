@@ -390,6 +390,10 @@ http://viima.github.io/jquery-comments/*/
 	font-weight: bold;
 }
 
+.jquery-comments ul.dropdown li .details.no-email {
+	line-height: 2.4em;
+}
+
 .jquery-comments ul.dropdown li .email {
 	color: #AAA;
 	font-size: 0.95em;

@@ -1422,8 +1422,14 @@
                         var emailEl = $('<div/>', {
                             'class': 'email',
                         }).html(user.email);
+                            
+                        if (user.email) {
+                            detailsEl.append(nameEl).append(emailEl);
+                        } else {
+                            detailsEl.addClass('no-email')
+                            detailsEl.append(nameEl)
+                        }
 
-                        detailsEl.append(nameEl).append(emailEl);
                         wrapper.append(profilePictureEl).append(detailsEl);
                         return wrapper.html();
                     },
