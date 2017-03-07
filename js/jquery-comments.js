@@ -1837,8 +1837,7 @@
         createTagElement: function(text, extraClasses, value) {
             var tagEl = $('<input/>', {
                 'class': 'tag',
-                'type': 'button',
-                'data-role': 'none',
+                type: 'button'
             });
             if(extraClasses) tagEl.addClass(extraClasses);
             tagEl.val(text);
