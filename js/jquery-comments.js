@@ -594,19 +594,18 @@
         },
 
         updateToggleAllButton: function(parentEl) {
-            // Don't hide replies if maxRepliesVisible has negative value
-            if (this.options.maxRepliesVisible < 0) return;
+            // Don't hide replies if maxRepliesVisible is null or undefined
+            if (this.options.maxRepliesVisible == null) return;
 
             var childCommentsEl = parentEl.find('.child-comments');
             var childComments = childCommentsEl.find('.comment');
             var toggleAllButton = childCommentsEl.find('li.toggle-all');
             childComments.removeClass('hidden-reply');
 
-            // Assign all child comments to be hidden
-            var hiddenReplies = childComments;
-
-            // Select the proper number of replies to be hidden only if necessary
-            if (this.options.maxRepliesVisible !== 0) {
+            // Select replies to be hidden
+            if (this.options.maxRepliesVisible === 0) {
+                var hiddenReplies = childComments;
+            } else {
                 var hiddenReplies = childComments.slice(0, -this.options.maxRepliesVisible);
             }
 
