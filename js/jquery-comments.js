@@ -11,13 +11,13 @@
         define(['jquery'], factory);
     } else if (typeof module === 'object' && module.exports) {
         // Node/CommonJS
-        module.exports = function( root, jQuery ) {
-            if ( jQuery === undefined ) {
+        module.exports = function(root, jQuery) {
+            if (jQuery === undefined) {
                 // require('jQuery') returns a factory that requires window to
                 // build a jQuery instance, we normalize how we use modules
                 // that require this pattern but the window provided is a noop
                 // if it's defined (how jquery works)
-                if ( typeof window !== 'undefined' ) {
+                if (typeof window !== 'undefined') {
                     jQuery = require('jquery');
                 }
                 else {
@@ -594,13 +594,22 @@
         },
 
         updateToggleAllButton: function(parentEl) {
+            // Don't hide replies if maxRepliesVisible is null or undefined
+            if (this.options.maxRepliesVisible == null) return;
+
             var childCommentsEl = parentEl.find('.child-comments');
             var childComments = childCommentsEl.find('.comment');
             var toggleAllButton = childCommentsEl.find('li.toggle-all');
             childComments.removeClass('hidden-reply');
 
+            // Select replies to be hidden
+            if (this.options.maxRepliesVisible === 0) {
+                var hiddenReplies = childComments;
+            } else {
+                var hiddenReplies = childComments.slice(0, -this.options.maxRepliesVisible);
+            }
+
             // Add identifying class for hidden replies so they can be toggled
-            var hiddenReplies = childComments.slice(0, -this.options.maxRepliesVisible);
             hiddenReplies.addClass('hidden-reply');
 
             // Show all replies if replies are expanded
