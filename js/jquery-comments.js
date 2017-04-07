@@ -2167,13 +2167,21 @@
                     return tag[0].outerHTML;
                 }
 
+                var highlightedHtml = '';
                 $(commentModel.pings).each(function(index, id) {
                     if(id in self.usersById) {
                         var user = self.usersById[id];
                         var pingText = '@' + user.fullname;
-                        html = html.replace(pingText, __createTag(user))
+
+                        var endIndex = html.indexOf(pingText) + pingText.length;
+                        var current = html.slice(0, endIndex);
+                        highlightedHtml += current.replace(pingText, __createTag(user));
+
+                        html = html.slice(endIndex);
                     }
                 });
+                highlightedHtml += html;
+                return highlightedHtml;
             }
             return html;
         },
