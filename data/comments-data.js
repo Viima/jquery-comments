@@ -12,7 +12,8 @@ var commentsArray = [
    "created_by_admin": false,
    "created_by_current_user": false,
    "upvote_count": 3,
-   "user_has_upvoted": false
+   "user_has_upvoted": false,
+   "is_new": false
 },
 {  
    "id": 2,
@@ -27,7 +28,8 @@ var commentsArray = [
    "created_by_admin": true,
    "created_by_current_user": false,
    "upvote_count": 2,
-   "user_has_upvoted": false
+   "user_has_upvoted": false,
+   "is_new": false
 },
 {  
    "id": 3,
@@ -42,7 +44,8 @@ var commentsArray = [
    "created_by_admin": false,
    "created_by_current_user": true,
    "upvote_count": 2,
-   "user_has_upvoted": true
+   "user_has_upvoted": true,
+   "is_new": false
 },
 {  
    "id": 4,
@@ -57,7 +60,8 @@ var commentsArray = [
    "created_by_admin": false,
    "created_by_current_user": false,
    "upvote_count": 0,
-   "user_has_upvoted": false
+   "user_has_upvoted": false,
+   "is_new": true
 },
 {  
    "id": 5,
@@ -72,7 +76,8 @@ var commentsArray = [
    "created_by_admin": false,
    "created_by_current_user": false,
    "upvote_count": 0,
-   "user_has_upvoted": false
+   "user_has_upvoted": false,
+   "is_new": true
 },
 {  
    "id": 6,
@@ -87,7 +92,8 @@ var commentsArray = [
    "created_by_admin": false,
    "created_by_current_user": false,
    "upvote_count": 1,
-   "user_has_upvoted": false
+   "user_has_upvoted": false,
+   "is_new": false
 },
 {  
    "id": 7,
@@ -102,7 +108,8 @@ var commentsArray = [
    "created_by_admin": true,
    "created_by_current_user": false,
    "upvote_count": 0,
-   "user_has_upvoted": false
+   "user_has_upvoted": false,
+   "is_new": false
 },
 {  
    "id": 8,
@@ -117,7 +124,8 @@ var commentsArray = [
    "created_by_admin": false,
    "created_by_current_user": true,
    "upvote_count": 0,
-   "user_has_upvoted": false
+   "user_has_upvoted": false,
+   "is_new": false
 },
 {  
    "id": 9,
@@ -132,7 +140,8 @@ var commentsArray = [
    "created_by_admin": false,
    "created_by_current_user": false,
    "upvote_count": 0,
-   "user_has_upvoted": false
+   "user_has_upvoted": false,
+   "is_new": false
 },
 {  
    "id": 10,
@@ -147,7 +156,8 @@ var commentsArray = [
    "created_by_admin": false,
    "created_by_current_user": true,
    "upvote_count": 0,
-   "user_has_upvoted": false
+   "user_has_upvoted": false,
+   "is_new": false
 }
 ]
 

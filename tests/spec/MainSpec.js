@@ -853,11 +853,13 @@ describe('Uploading attachments', function() {
 
     function checkCommentElementData(commentEl) {
         var nameContainer = commentEl.find('.name').first();
+        var nameContainerStripped = nameContainer.clone();
+        nameContainerStripped.children().remove();
 
         // Fields to be tested
         var profilePicture = commentEl.find('img.profile-picture').first().attr('src');
         var replyTo = nameContainer.find('.reply-to').text();
-        var fullname = replyTo.length ? nameContainer.text().split(replyTo)[0] : nameContainer.text();
+        var fullname = nameContainerStripped.text();
 
         // Model that we are testing against
         var commentModel = commentEl.data().model;

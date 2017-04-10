@@ -492,6 +492,16 @@ http://viima.github.io/jquery-comments/*/
 	margin-right: .25em;
 }
 
+.jquery-comments ul.main li.comment .name .new {
+	margin-left: .5em;
+	background: #2793e6;
+	font-size: 0.8em;
+	padding: 0.2em 0.6em;
+	color: #fff;
+	font-weight: normal;
+	border-radius: 1em;
+}
+
 .jquery-comments ul.main li.comment .wrapper{
 	line-height: 1.3em;
 	overflow: hidden;
