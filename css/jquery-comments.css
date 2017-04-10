@@ -49,6 +49,7 @@ http://viima.github.io/jquery-comments/*/
 	font-weight: normal;
 	border-radius: 1em;
 	transition: all 0.2s linear;
+	vertical-align: bottom;
 }
 
 .jquery-comments .tag:hover {
@@ -500,10 +501,11 @@ http://viima.github.io/jquery-comments/*/
 	color: #fff;
 	font-weight: normal;
 	border-radius: 1em;
+	vertical-align: bottom;
 }
 
 .jquery-comments ul.main li.comment .wrapper{
-	line-height: 1.3em;
+	line-height: 1.4em;
 	overflow: hidden;
 }
 
