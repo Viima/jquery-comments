@@ -49,7 +49,6 @@ http://viima.github.io/jquery-comments/*/
 	font-weight: normal;
 	border-radius: 1em;
 	transition: all 0.2s linear;
-	vertical-align: bottom;
 }
 
 .jquery-comments .tag:hover {
