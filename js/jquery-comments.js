@@ -166,6 +166,7 @@
                 highlightColor: '#2793e6',
                 deleteButtonColor: '#C9302C',
                 
+                scrollContainer: this.$el,
                 roundProfilePictures: false,
                 textareaRows: 2,
                 textareaRowsOnFocus: 2,
@@ -1070,6 +1071,15 @@
                 // Move cursor to end
                 var textarea = replyField.find('.textarea');
                 this.moveCursorToEnd(textarea)
+
+                // Make sure the reply field will be displayed
+                var scrollTop = this.options.scrollContainer.scrollTop();
+                var endOfReply = scrollTop + replyField.position().top + replyField.outerHeight();
+                var endOfScrollable = scrollTop + this.options.scrollContainer.outerHeight();
+                if(endOfReply > endOfScrollable) {
+                    var newScrollTop = scrollTop + (endOfReply - endOfScrollable);
+                    this.options.scrollContainer.scrollTop(newScrollTop);
+                }
             }
         },
 
@@ -1455,29 +1465,50 @@
                     rightEdgeOffset: 0,
                 });
 
-                // Make sure that the dropdown won't overflow the container
-                textarea.on({
-                    'textComplete:show': function(e) {
-                        var dropdownEl = $(this).data('textComplete').dropdown.$el;
-                        dropdownEl.hide();
 
-                        var condition = function() {
-                            return !dropdownEl.is(':empty');
-                        }
-                        var callback = function() {
-                            var originalLeft = parseInt(dropdownEl.css('left'));
+                // OVERIDE TEXTCOMPLETE DROPDOWN POSITIONING
 
-                            // Position left affects to the width of the element
-                            dropdownEl.css('left', 0);
-
-                            var maxLeft = self.$el.width() - dropdownEl.width();
-                            var left = Math.min(maxLeft, originalLeft);
-                            dropdownEl.css('left', left);
-                            dropdownEl.show();
-                        }
-                        self.waitUntil(condition, callback);
+                $.fn.textcomplete.Dropdown.prototype.render = function(zippedData) {
+                    var contentsHtml = this._buildContents(zippedData);
+                    var unzippedData = $.map(zippedData, function (d) { return d.value; });
+                    if (zippedData.length) {
+                      var strategy = zippedData[0].strategy;
+                      if (strategy.id) {
+                        this.$el.attr('data-strategy', strategy.id);
+                      } else {
+                        this.$el.removeAttr('data-strategy');
+                      }
+                      this._renderHeader(unzippedData);
+                      this._renderFooter(unzippedData);
+                      if (contentsHtml) {
+                        this._renderContents(contentsHtml);
+                        this._fitToBottom();
+                        this._fitToRight();
+                        this._activateIndexedItem();
+                      }
+                      this._setScroll();
+                    } else if (this.noResultsMessage) {
+                      this._renderNoResultsMessage(unzippedData);
+                    } else if (this.shown) {
+                      this.deactivate();
                     }
-                })
+
+                    // CUSTOM CODE
+                    // ===========
+
+                    // Adjust vertical position
+                    var top = parseInt(this.$el.css('top')) + self.options.scrollContainer.scrollTop();
+                    this.$el.css('top', top);
+
+                    // Adjust horizontal position
+                    var originalLeft = this.$el.css('left');
+                    this.$el.css('left', 0);    // Left must be set to 0 in order to get the real width of the el
+                    var maxLeft = self.$el.width() - this.$el.outerWidth();
+                    var left = Math.min(maxLeft, parseInt(originalLeft));
+                    this.$el.css('left', left);
+
+                    // ===========
+                }
             }
 
             return commentingField;
