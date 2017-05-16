@@ -936,7 +936,7 @@ A <code>dictionary</code> that is used to map the fields between jquery-comments
 <label>FIELDS</label>  
 <pre class="prettyprint linemus">
 id                      // Required
-parent                  // Required if replying is enabled
+parentId                  // Required if replying is enabled
 created                 // Required
 modified                // Required if editing is enabled
 content                 // Either content or fileURL must be present
@@ -958,7 +958,7 @@ userHasUpvoted          // Required if upvoting is enabled
 <pre class="prettyprint linemus">
 fieldMappings: {
     id: 'id',
-    parent: 'parent',
+    parentId: 'parent',
     created: 'created',
     modified: 'modified',
     content: 'content',
@@ -981,7 +981,7 @@ fieldMappings: {
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
     fieldMappings: {
-       parent: 'comment_id',
+       parentId: 'comment_id',
        modified: 'edited',
        fullname: 'name',
        profilePictureURL: 'user_image',
