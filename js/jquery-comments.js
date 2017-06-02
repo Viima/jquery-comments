@@ -932,7 +932,7 @@
                 parent: textarea.attr('data-parent') || null,
                 content: this.getTextareaContent(textarea),
                 pings: this.getPings(textarea),
-                modified: new Date().getTime()
+                modified: new Date().toISOString()
             });
 
             // Reverse mapping
