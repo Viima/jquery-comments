@@ -1407,7 +1407,7 @@
                             return !isSelf && !alreadyPinged;
                         });
 
-                        // Sort users
+                        // Sort users alphabetically
                         users.sort(function(a,b) {
                             var nameA = a.fullname.toLowerCase().trim();
                             var nameB = b.fullname.toLowerCase().trim();
