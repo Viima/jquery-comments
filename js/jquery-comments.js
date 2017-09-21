@@ -689,16 +689,6 @@
             }
         },
 
-        sortUsers: function(users) {
-            users.sort(function(a,b) {
-                var nameA = a.fullname.toLowerCase().trim();
-                var nameB = b.fullname.toLowerCase().trim();
-                if(nameA < nameB) return -1;
-                if(nameA > nameB) return 1;
-                return 0;
-            });
-        },
-
         sortAndReArrangeComments: function(sortKey) {
             var commentList = this.$el.find('#comment-list');
 
@@ -1418,12 +1408,36 @@
                         });
 
                         // Sort users
-                        self.sortUsers(users);
+                        users.sort(function(a,b) {
+                            var nameA = a.fullname.toLowerCase().trim();
+                            var nameB = b.fullname.toLowerCase().trim();
+                            if(nameA < nameB) return -1;
+                            if(nameA > nameB) return 1;
+                            return 0;
+                        });
 
+                        // Filter users by search term
                         callback($.map(users, function (user) {
-                            var lowercaseTerm = term.toLowerCase();
-                            var nameMatch = user.fullname.toLowerCase().indexOf(lowercaseTerm) != -1;
-                            return nameMatch ? user : null;
+                            var wordsInSearchTerm = term.split(' ');
+                            var wordsInName = user.fullname.split(' ');
+
+                            // Loop all words in search term and ensure that they are found in the words of the fullname
+                            var allSearchWordsFound = true;
+                            $(wordsInSearchTerm).each(function(index, searchWord) {
+                                var trimmedSearchWord = searchWord.toLowerCase().trim();
+                                var trimmedSearchWordFound = false;
+
+                                // Loop all words in the name and ensure that at least one of those starts with the search word
+                                $(wordsInName).each(function(index, wordInName) {
+                                    var trimmedWordInName = wordInName.toLowerCase().trim();
+                                    if(trimmedWordInName.indexOf(trimmedSearchWord) == 0) trimmedSearchWordFound = true;
+                                });
+
+                                // Mark search as failed if even one search word was not found in the name
+                                if(!trimmedSearchWordFound) allSearchWordsFound = false;
+                            });
+
+                            return allSearchWordsFound ? user : null;
                         }));
                     },
                     template: function(user) {
