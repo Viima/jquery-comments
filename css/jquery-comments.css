@@ -143,16 +143,15 @@ http://viima.github.io/jquery-comments/*/
 	border-left-color: rgba(0, 0, 0, 0);
 }
 
-.jquery-comments .textarea-wrapper .close {
+.jquery-comments .textarea-wrapper .inline-button {
 	cursor: pointer;
-	width: 1em;
-	height: 1em;
 	right: 0;
 	z-index: 10;
 	position: absolute;
 	border: .5em solid rgba(0,0,0,0);
 	box-sizing: content-box;
 	font-size: inherit;
+	overflow: hidden;
 	opacity: 0.5;
 
 	-webkit-user-select: none;
@@ -161,12 +160,32 @@ http://viima.github.io/jquery-comments/*/
 	user-select: none;
 }
 
-.jquery-comments .textarea-wrapper .close:hover {
+.jquery-comments .textarea-wrapper .inline-button:hover {
 	opacity: 1;
 }
 
-.jquery-comments:not(.mobile) .scrollable .textarea-wrapper .close {
+.jquery-comments:not(.mobile) .scrollable .textarea-wrapper .inline-button {
 	margin-right: 15px;	/* Because of scrollbar */
+}
+
+.jquery-comments .textarea-wrapper .upload.inline-button i {
+	font-size: 1.3em;
+}
+
+.jquery-comments .textarea-wrapper .upload input {
+	cursor: pointer;
+	position: absolute;
+	top: 0;
+	right: 0;
+	margin: 0;
+	padding: 0;
+	opacity: 0;
+	height: 100%;
+}
+
+.jquery-comments .textarea-wrapper .close {
+	width: 1em;
+	height: 1em;
 }
 
 .jquery-comments .textarea-wrapper .close span {
@@ -235,19 +254,7 @@ http://viima.github.io/jquery-comments/*/
 
 .jquery-comments .textarea-wrapper .control-row > span.upload {
 	position: relative;
-	overflow: hidden;
 	background-color: #999;
-}
-
-.jquery-comments .textarea-wrapper .control-row > span.upload input {
-	cursor: pointer;
-	position: absolute;
-	top: 0;
-	right: 0;
-	margin: 0;
-	padding: 0;
-	opacity: 0;
-	height: 100%;
 }
 
 .jquery-comments ul.navigation {
@@ -296,6 +303,10 @@ http://viima.github.io/jquery-comments/*/
 
 .jquery-comments ul.navigation li[data-sort-key="attachments"] {
 	float: right;
+}
+
+.jquery-comments ul.navigation li[data-sort-key="attachments"] i {
+	margin-right: 0.25em;
 }
 
 .jquery-comments ul.navigation .navigation-wrapper.responsive {

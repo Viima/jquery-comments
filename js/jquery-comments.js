@@ -787,6 +787,7 @@
             var mainTextarea = $(ev.currentTarget);
             mainTextarea.siblings('.control-row').show();
             mainTextarea.parent().find('.close').show();
+            mainTextarea.parent().find('.upload.inline-button').hide();
             mainTextarea.focus();
         },
 
@@ -800,6 +801,7 @@
 
             mainControlRow.hide();
             closeButton.hide();
+            mainTextarea.parent().find('.upload.inline-button').show();
             mainTextarea.blur();
         },
 
@@ -1165,8 +1167,7 @@
             var self = this;
 
             // Commenting field
-            var mainCommentingField = this.createCommentingFieldElement();
-            mainCommentingField.addClass('main');
+            var mainCommentingField = this.createMainCommentingFieldElement();
             this.$el.append(mainCommentingField);
 
             // Hide control row and close button
@@ -1246,7 +1247,7 @@
                 });
 
                 var uploadIcon = $('<i/>', {
-                    'class': 'fa fa-upload fa-4x'
+                    'class': 'fa fa-paperclip fa-4x'
                 });
                 if(this.options.uploadIconURL.length) {
                     uploadIcon.css('background-image', 'url("'+this.options.uploadIconURL+'")');
@@ -1279,13 +1280,18 @@
             return profilePicture;
         },
 
-        createCommentingFieldElement: function(parentId, existingCommentId) {
+        createMainCommentingFieldElement: function() {
+            return this.createCommentingFieldElement(undefined, undefined, true);
+        },
+
+        createCommentingFieldElement: function(parentId, existingCommentId, isMain) {
             var self = this;
 
             // Commenting field
             var commentingField = $('<div/>', {
                 'class': 'commenting-field'
             });
+            if(isMain) commentingField.addClass('main');
 
             // Profile picture
             if(existingCommentId) {
@@ -1317,7 +1323,7 @@
 
             // Close button
             var closeButton = $('<span/>', {
-                'class': 'close'
+                'class': 'close inline-button'
             }).append($('<span class="left"/>')).append($('<span class="right"/>'));
 
             // Save button text
@@ -1343,7 +1349,7 @@
                         'class': 'enabled upload'
                     });
                     var uploadIcon = $('<i/>', {
-                        'class': 'fa fa-upload'
+                        'class': 'fa fa-paperclip'
                     });
                     var fileInput = $('<input/>', {
                         type: 'file',
@@ -1358,7 +1364,14 @@
                         uploadIcon.addClass('image');
                     }
                     uploadButton.append(uploadIcon).append(fileInput);
-                    controlRow.append(uploadButton);
+                    
+                    // Main uload button
+                    controlRow.append(uploadButton.clone());
+
+                    // Inline upload button for main commenting field
+                    if(isMain) {
+                        textareaWrapper.append(uploadButton.clone().addClass('inline-button'));;
+                    }
                 }
             }
 
