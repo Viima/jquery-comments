@@ -1365,7 +1365,7 @@
                     }
                     uploadButton.append(uploadIcon).append(fileInput);
                     
-                    // Main uload button
+                    // Main upload button
                     controlRow.append(uploadButton.clone());
 
                     // Inline upload button for main commenting field
