@@ -255,6 +255,7 @@ http://viima.github.io/jquery-comments/*/
 
 .jquery-comments .textarea-wrapper .control-row > span.upload {
 	position: relative;
+	overflow: hidden;
 	background-color: #999;
 }
 
