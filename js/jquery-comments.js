@@ -1370,7 +1370,7 @@
 
                     // Inline upload button for main commenting field
                     if(isMain) {
-                        textareaWrapper.append(uploadButton.clone().addClass('inline-button'));;
+                        textareaWrapper.append(uploadButton.clone().addClass('inline-button'));
                     }
                 }
             }
