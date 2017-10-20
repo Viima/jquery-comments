@@ -528,11 +528,11 @@
         uploadAttachments: function(files, commentingField) {
             var self = this;
             if(!commentingField) commentingField = this.$el.find('.commenting-field.main');
+            var uploadButton = commentingField.find('.upload');
             var isReply = !commentingField.hasClass('main');
             var fileCount = files.length;
 
             if(fileCount) {
-                var uploadButton = commentingField.find('.upload');
                 var textarea = commentingField.find('.textarea');
 
                 // Disable upload button and append spinners while request is pending
