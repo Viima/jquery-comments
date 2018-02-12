@@ -1420,38 +1420,71 @@
                             return !isSelf && !alreadyPinged;
                         });
 
-                        // Sort users alphabetically
-                        users.sort(function(a,b) {
-                            var nameA = a.fullname.toLowerCase().trim();
-                            var nameB = b.fullname.toLowerCase().trim();
-                            if(nameA < nameB) return -1;
-                            if(nameA > nameB) return 1;
-                            return 0;
-                        });
-
-                        // Filter users by search term
-                        callback($.map(users, function (user) {
-                            var wordsInSearchTerm = term.split(' ');
-                            var wordsInName = user.fullname.split(' ');
-
-                            // Loop all words in search term and ensure that they are found in the words of the fullname
-                            var allSearchWordsFound = true;
-                            $(wordsInSearchTerm).each(function(index, searchWord) {
-                                var trimmedSearchWord = searchWord.toLowerCase().trim();
-                                var trimmedSearchWordFound = false;
-
-                                // Loop all words in the name and ensure that at least one of those starts with the search word
-                                $(wordsInName).each(function(index, wordInName) {
-                                    var trimmedWordInName = wordInName.toLowerCase().trim();
-                                    if(trimmedWordInName.indexOf(trimmedSearchWord) == 0) trimmedSearchWordFound = true;
-                                });
-
-                                // Mark search as failed if even one search word was not found in the name
-                                if(!trimmedSearchWordFound) allSearchWordsFound = false;
+                        // Case: return all users sorted alphabetically
+                        if(term.length == 0) {
+                            var filteredUsers = users;
+                            filteredUsers.sort(function(a,b) {
+                                var nameA = a.fullname.toLowerCase().trim();
+                                var nameB = b.fullname.toLowerCase().trim();
+                                if(nameA < nameB) return -1;
+                                if(nameA > nameB) return 1;
+                                return 0;
                             });
 
-                            return allSearchWordsFound ? user : null;
-                        }));
+                        // Case: filter users by search term and sort by similarity
+                        } else {
+                            var filteredUsers = $.map(users, function (user) {
+                                user.points = 0;
+                                var wordsInSearchTerm = term.split(' ');
+                                var wordsInName = user.fullname.split(' ');
+
+                                // Order words in name by priority (first name, last name, middle names)
+                                wordsInName.splice(1, 0, wordsInName.splice(wordsInName.length -1, 1)[0]);
+
+                                // Loop all words in search term and ensure that they are found in the words of the fullname
+                                var allSearchWordsFound = true;
+                                $(wordsInSearchTerm).each(function(index, searchWord) {
+                                    var trimmedSearchWord = searchWord.toLowerCase().trim();
+                                    var trimmedSearchWordFound = false;
+
+                                    // Loop all words in the name and ensure that at least one of those starts with the search word
+                                    $(wordsInName).each(function(index, wordInName) {
+                                        var trimmedWordInName = wordInName.toLowerCase().trim();
+                                        if(trimmedWordInName.indexOf(trimmedSearchWord) == 0) {
+                                            trimmedSearchWordFound = true;
+
+                                            // Case: first name
+                                            if(index == 0) {
+                                                var multiplier = 0.5;
+
+                                            // Case: last name
+                                            } else if(index == 1) {
+                                                var multiplier = 0.4;
+
+                                            // Case: middle name
+                                            } else {
+                                                var multiplier = 0.1;
+                                            }
+
+                                            // Calculate the points for the match based on similarity
+                                            user.points += (trimmedSearchWord.length / trimmedWordInName.length) * multiplier;
+                                        }
+                                    });
+
+                                    // Mark search as failed if even one search word was not found in the name
+                                    if(!trimmedSearchWordFound) allSearchWordsFound = false;
+                                });
+
+                                return allSearchWordsFound ? user : null;
+                            });
+                            
+                            // Sort by similarity points
+                            filteredUsers.sort(function(a,b) {
+                                return b.points - a.points;
+                            });
+                        }
+
+                        callback(filteredUsers);
                     },
                     template: function(user) {
                         var wrapper = $('<div/>');
