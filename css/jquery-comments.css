@@ -210,6 +210,7 @@ http://viima.github.io/jquery-comments/*/
 	margin: 0;
 	outline: 0;
 	overflow-y: auto;
+	overflow-x: hidden;
 	cursor: text;
 
 	border: 1px solid #CCC;;
