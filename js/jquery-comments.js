@@ -755,6 +755,12 @@
 
         checkEditableContentForChange: function(ev) {
             var el = $(ev.currentTarget);
+
+            // Fix jquery-textcomplete on IE, empty text nodes will break up the autocomplete feature
+            $(el[0].childNodes).each(function() {
+                if(this.nodeType == Node.TEXT_NODE && this.length == 0 && this.removeNode) this.removeNode();
+            });
+
             if (el.data('before') != el.html()) {
                 el.data('before', el.html());
                 el.trigger('change');
@@ -1408,7 +1414,8 @@
             // Pinging users
             if(this.options.enablePinging) {
                 textarea.textcomplete([{
-                    match: /(^|\s)@(([a-zäöüß]|\s)*)$/im,
+                    match: /(^|\s)@([^@]*)$/i,
+                    index: 2,
                     search: function (term, callback) {
                         term = self.normalizeSpaces(term);
 
