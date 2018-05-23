@@ -112,12 +112,12 @@
         getDefaultOptions: function() {
             return {
 
-                // User        
+                // User
                 profilePictureURL: '',
                 currentUserIsAdmin: false,
                 currentUserId: null,
-                
-                // Font awesome icon overrides        
+
+                // Font awesome icon overrides
                 spinnerIconURL: '',
                 upvoteIconURL: '',
                 replyIconURL: '',
@@ -125,8 +125,8 @@
                 attachmentIconURL: '',
                 fileIconURL: '',
                 noCommentsIconURL: '',
-                
-                // Strings to be formatted (for example localization)     
+
+                // Strings to be formatted (for example localization)
                 textareaPlaceholderText: 'Add a comment',
                 newestText: 'Newest',
                 oldestText: 'Oldest',
@@ -146,8 +146,8 @@
                 noAttachmentsText: 'No attachments',
                 attachmentDropText: 'Drop files here',
                 textFormatter: function(text) {return text},
-                
-                // Functionalities        
+
+                // Functionalities
                 enableReplying: true,
                 enableEditing: true,
                 enableUpvoting: true,
@@ -161,18 +161,18 @@
                 forceResponsive: false,
                 readOnly: false,
                 defaultNavigationSortKey: 'newest',
-                
-                // Colors     
+
+                // Colors
                 highlightColor: '#2793e6',
                 deleteButtonColor: '#C9302C',
-                
+
                 scrollContainer: this.$el,
                 roundProfilePictures: false,
                 textareaRows: 2,
                 textareaRowsOnFocus: 2,
                 textareaMaxRows: 5,
                 maxRepliesVisible: 2,
-                
+
                 fieldMappings: {
                     id: 'id',
                     parent: 'parent',
@@ -193,7 +193,7 @@
                     upvoteCount: 'upvote_count',
                     userHasUpvoted: 'user_has_upvoted'
                 },
-                
+
                 getUsers: function(success, error) {success([])},
                 getComments: function(success, error) {success([])},
                 postComment: function(commentJSON, success, error) {success(commentJSON)},
@@ -381,7 +381,7 @@
             this.createComments();
 
             // Create attachments if enabled
-            if(this.options.enableAttachments) this.createAttachments(); 
+            if(this.options.enableAttachments) this.createAttachments();
 
             // Remove spinner
             this.$el.find('> .spinner').remove();
@@ -718,7 +718,7 @@
              } else {
                 var defaultDropdownEl = this.$el.find('.navigation ul.dropdown').children().first();
                 titleEl.find('header').html(defaultDropdownEl.html());
-             } 
+             }
 
             // Show active container
             this.showActiveContainer();
@@ -739,7 +739,7 @@
             // Save comment on cmd/ctrl + enter
             if(ev.keyCode == 13) {
                 var metaKey = ev.metaKey || ev.ctrlKey;
-                if(this.options.postCommentOnEnter || metaKey) {                
+                if(this.options.postCommentOnEnter || metaKey) {
                     var el = $(ev.currentTarget);
                     el.siblings('.control-row').find('.save').trigger('click');
                     ev.stopPropagation();
@@ -1122,7 +1122,7 @@
             count--;
             $(ev.currentTarget).data('dnd-count', count);
 
-            if(count == 0) {            
+            if(count == 0) {
                 $(ev.currentTarget).removeClass('drag-over');
                 if(callback) callback();
             }
@@ -1210,7 +1210,7 @@
                 noCommentsIcon.css('background-image', 'url("'+this.options.noCommentsIconURL+'")');
                 noCommentsIcon.addClass('image');
             }
-            noComments.prepend($('<br/>')).prepend(noCommentsIcon);            
+            noComments.prepend($('<br/>')).prepend(noCommentsIcon);
             commentsContainer.append(noComments);
 
             // Attachments
@@ -1273,8 +1273,8 @@
 
         createProfilePictureElement: function(src) {
             if(src) {
-                var profilePicture = $('<img/>', {
-                    src: src
+              var profilePicture = $('<div/>').css({
+                  'background-image': 'url(' + src + ')'
                 });
             } else {
                 var profilePicture = $('<i/>', {
@@ -1370,7 +1370,7 @@
                         uploadIcon.addClass('image');
                     }
                     uploadButton.append(uploadIcon).append(fileInput);
-                    
+
                     // Main upload button
                     controlRow.append(uploadButton.clone());
 
@@ -1484,7 +1484,7 @@
 
                                 return allSearchWordsFound ? user : null;
                             });
-                            
+
                             // Sort by similarity points
                             filteredUsers.sort(function(a,b) {
                                 return b.points - a.points;
@@ -1510,7 +1510,7 @@
                         var emailEl = $('<div/>', {
                             'class': 'email',
                         }).html(user.email);
-                            
+
                         if (user.email) {
                             detailsEl.append(nameEl).append(emailEl);
                         } else {
@@ -1821,7 +1821,7 @@
                     // Icon
                     var availableIcons = ['archive', 'audio', 'code', 'excel', 'image', 'movie', 'pdf', 'photo',
                         'picture', 'powerpoint', 'sound', 'video', 'word', 'zip'];
-                    
+
                     var iconClass = 'fa fa-file-o';
                     if(availableIcons.indexOf(format) > 0) {
                         iconClass = 'fa fa-file-' + format + '-o';

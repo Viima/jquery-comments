@@ -92,6 +92,9 @@ http://viima.github.io/jquery-comments/*/
 	height: 3.6rem;
 	max-width: 50px;
 	max-height: 50px;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center center;
 }
 
 .jquery-comments i.profile-picture {
