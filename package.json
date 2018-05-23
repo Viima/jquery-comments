@@ -8,6 +8,9 @@
   "description": "jQuery plugin for implementing an out-of-the-box commenting solution to any web application with an existing backend",
   "license": "MIT",
   "main": "js/jquery-comments.js",
+  "scripts": {
+    "minify": "uglifyjs js/jquery-comments.js --comments '/^!/' --output js/jquery-comments.min.js"
+  },
   "homepage": "https://www.viima.com/",
   "keywords": [
     "jquery",
@@ -23,5 +26,8 @@
   },
   "dependencies": {
     "jquery": ">=1.9.0"
+  },
+  "devDependencies": {
+    "uglify-js": "latest"
   }
 }
