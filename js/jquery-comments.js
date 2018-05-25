@@ -1413,7 +1413,9 @@
 
                     // Creating the reply-to tag
                     var replyToName = '@' + parentModel.fullname;
-                    var replyToTag = this.createTagElement(replyToName, 'reply-to', parentModel.creator);
+                    var replyToTag = this.createTagElement(replyToName, 'reply-to', parentModel.creator, {
+                        'data-user-id': parentModel.creator
+                    });
                     textarea.prepend(replyToTag);
                 }
             }
@@ -1751,7 +1753,8 @@
                 if(parent.parent) {
                     var replyTo = $('<span/>', {
                         'class': 'reply-to',
-                        text: parent.fullname
+                        'text': parent.fullname,
+                        'data-user-id': parent.creator
                     });
 
                     // reply icon
