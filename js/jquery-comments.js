@@ -1272,7 +1272,7 @@
             }
         },
 
-        createProfilePictureElement: function(src) {
+        createProfilePictureElement: function(src, userId) {
             if(src) {
               var profilePicture = $('<div/>').css({
                   'background-image': 'url(' + src + ')'
@@ -1283,6 +1283,7 @@
                 });
             }
             profilePicture.addClass('profile-picture');
+            profilePicture.attr('data-user-id', userId);
             if(this.options.roundProfilePictures) profilePicture.addClass('round');
             return profilePicture;
         },
@@ -1300,13 +1301,18 @@
             });
             if(isMain) commentingField.addClass('main');
 
-            // Profile picture
+            // Comment was modified, use existing data
             if(existingCommentId) {
                 var profilePictureURL = this.commentsById[existingCommentId].profilePictureURL;
+                var userId = this.commentsById[existingCommentId].creator;
+
+            // New comment was created
             } else {
                 var profilePictureURL = this.options.profilePictureURL;
+                var userId = this.options.creator;
             }
-            var profilePicture = this.createProfilePictureElement(profilePictureURL);
+
+            var profilePicture = this.createProfilePictureElement(profilePictureURL, userId);
 
             // New comment
             var textareaWrapper = $('<div/>', {
@@ -1523,7 +1529,9 @@
                         return wrapper.html();
                     },
                     replace: function (user) {
-                        var tag = self.createTagElement('@' + user.fullname, 'ping', user.id);
+                        var tag = self.createTagElement('@' + user.fullname, 'ping', user.id, {
+                            'data-user-id': user.id
+                        });
                         return ' ' + tag[0].outerHTML + ' ';
                     },
                 }], {
@@ -1710,7 +1718,7 @@
             });
 
             // Profile picture
-            var profilePicture = this.createProfilePictureElement(commentModel.profilePictureURL);
+            var profilePicture = this.createProfilePictureElement(commentModel.profilePictureURL, commentModel.creator);
 
             // Time
             var time = $('<time/>', {
@@ -1721,7 +1729,8 @@
             // Name
             var nameText = commentModel.createdByCurrentUser ? this.options.textFormatter(this.options.youText) : commentModel.fullname;
             var name = $('<div/>', {
-                'class': 'name'
+                'class': 'name',
+                'data-user-id': commentModel.creator
             });
             if(commentModel.profileURL) {
                 var link = $('<a/>', {
@@ -1953,7 +1962,7 @@
             return upvoteEl;
         },
 
-        createTagElement: function(text, extraClasses, value) {
+        createTagElement: function(text, extraClasses, value, extraAttributes) {
             var tagEl = $('<input/>', {
                 'class': 'tag',
                 'type': 'button',
@@ -1962,6 +1971,7 @@
             if(extraClasses) tagEl.addClass(extraClasses);
             tagEl.val(text);
             tagEl.attr('data-value', value);
+            if (extraAttributes) tagEl.attr(extraAttributes);
             return tagEl;
         },
 
@@ -2274,7 +2284,9 @@
             if(html.indexOf('@') != -1) {
 
                 var __createTag = function(user) {
-                    var tag = self.createTagElement('@' + user.fullname, 'ping', user.id);
+                    var tag = self.createTagElement('@' + user.fullname, 'ping', user.id, {
+                        'data-user-id': user.id
+                    });
                     return tag[0].outerHTML;
                 }
 
