@@ -1728,24 +1728,26 @@
                 'data-original': commentModel.created
             });
 
-            // Name
-            var nameText = commentModel.createdByCurrentUser ? this.options.textFormatter(this.options.youText) : commentModel.fullname;
-            var name = $('<div/>', {
-                'class': 'name',
-                'data-user-id': commentModel.creator
+            // Name element
+            var name = $('<span/>', {
+                'data-user-id': commentModel.creator,
+                'text': commentModel.createdByCurrentUser ? this.options.textFormatter(this.options.youText) : commentModel.fullname
             });
+
             if(commentModel.profileURL) {
-                var link = $('<a/>', {
-                    href: commentModel.profileURL,
-                    text: nameText
+                name = $('<a/>', {
+                    'href': commentModel.profileURL,
+                    'html': name
                 });
-                name.html(link);
-            } else {
-                name.text(nameText);
             }
 
+            var nameEl = $('<div/>', {
+                'class': 'name',
+                'html': name
+            });
+
             // Highlight admin names
-            if(commentModel.createdByAdmin) name.addClass('highlight-font-bold');
+            if(commentModel.createdByAdmin) nameEl.addClass('highlight-font-bold');
 
             // Show reply-to name if parent of parent exists
             if(commentModel.parent) {
@@ -1767,7 +1769,7 @@
                     }
 
                     replyTo.prepend(replyIcon);
-                    name.append(replyTo);
+                    nameEl.append(replyTo);
                 }
             }
 
@@ -1777,7 +1779,7 @@
                     'class': 'new highlight-background',
                     text: this.options.newText
                 });
-                name.append(newTag);
+                nameEl.append(newTag);
             }
 
             // Wrapper
@@ -1940,7 +1942,7 @@
 
             wrapper.append(content);
             wrapper.append(actions);
-            commentWrapper.append(profilePicture).append(time).append(name).append(wrapper);
+            commentWrapper.append(profilePicture).append(time).append(nameEl).append(wrapper);
             return commentWrapper;
         },
 
@@ -2359,7 +2361,6 @@
         },
 
         applyInternalMappings: function(commentJSON) {
-
             // Inverting field mappings
             var invertedMappings = {};
             var mappings = this.options.fieldMappings;
