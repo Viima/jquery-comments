@@ -1,4 +1,4 @@
-/*!     jquery-comments.js 1.2.0
+/*!     jquery-comments.js 1.3.0
  *
  *     (c) 2017 Joona Tykkyläinen, Viima Solutions Oy
  *     jquery-comments may be freely distributed under the MIT license.
