@@ -1927,6 +1927,7 @@
                 } else if(!isAttachment && this.options.enableEditing) {
                     var editButton = $('<button/>', {
                         'class': 'action edit',
+                        'type': 'button',
                         text: this.options.textFormatter(this.options.editText)
                     });
                     actions.append(editButton);
