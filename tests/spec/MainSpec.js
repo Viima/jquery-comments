@@ -17,7 +17,7 @@ describe('Basic features', function() {
         }
 
         commentsContainer.comments({
-            profilePictureURL: 'https://viima-app.s3.amazonaws.com/media/user_profiles/user-icon.png',
+            profilePictureURL: 'https://viima-app.s3.amazonaws.com/media/public/defaults/user-icon.png',
             roundProfilePictures: true,
             enableAttachments: true,
             enableHashtags: true,
@@ -60,7 +60,7 @@ describe('Basic features', function() {
 
         // Append element to DOM
         $('body').append(commentsContainer);
-        
+
         // Save the instance to global scope
         comments = $('.jquery-comments').data().comments;
     });
@@ -234,7 +234,7 @@ describe('Basic features', function() {
 
             expect(sendButton.is(':visible')).toBe(false);
             expect(sendButton.hasClass('enabled')).toBe(false);
-            
+
             // Show on click
             mainTextarea.trigger('click');
             expect(sendButton.is(':visible')).toBe(true);
@@ -255,7 +255,7 @@ describe('Basic features', function() {
             expect(sendButton.is(':visible')).toBe(false);
             expect(sendButton.hasClass('enabled')).toBe(false);
         });
-    
+
         it('Should able to add a new main level comment', function() {
             var newCommentText = 'New main level comment\nwith a new line';
             mainTextarea.html(newCommentText).trigger('input');
@@ -885,7 +885,7 @@ describe('Uploading attachments', function() {
 
     function getTextContentFromCommentElement(commentEl)  {
         var content = commentEl.find('.content').first().clone();
-        
+
         // Remove edited timestamp
         content.children('time').remove().end();
 
