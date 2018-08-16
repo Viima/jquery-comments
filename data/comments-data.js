@@ -104,7 +104,7 @@ var commentsArray = [
    "pings": [],
    "creator": 5,
    "fullname": "Administrator",
-   "profile_picture_url": "https://app.viima.com/static/media/user_profiles/admin-user-icon.png",
+   "profile_picture_url": "https://viima-app.s3.amazonaws.com/media/public/defaults/user-icon.png",
    "created_by_admin": true,
    "created_by_current_user": false,
    "upvote_count": 0,
