@@ -1777,7 +1777,7 @@
             if(commentModel.isNew) {
                 var newTag = $('<span/>', {
                     'class': 'new highlight-background',
-                    text: this.options.newText
+                    text: this.options.textFormatter(this.options.newText)
                 });
                 nameEl.append(newTag);
             }
