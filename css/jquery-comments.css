@@ -377,7 +377,7 @@ http://viima.github.io/jquery-comments/*/
 	display: block;
 	white-space: nowrap;
 	clear: both;
-	padding: 0.5em 1em;
+	padding: 0.6em;
 	font-weight: normal;
 	cursor: pointer;
 }
@@ -474,7 +474,7 @@ http://viima.github.io/jquery-comments/*/
 }
 
 .jquery-comments ul.main li.comment .comment-wrapper > .profile-picture {
-	margin-right: .5rem;
+	margin-right: 1rem;
 }
 
 .jquery-comments ul.main li.comment time {

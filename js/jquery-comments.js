@@ -1505,10 +1505,8 @@
                     template: function(user) {
                         var wrapper = $('<div/>');
 
-                        var profilePictureEl = $('<img/>', {
-                            src: user.profile_picture_url,
-                            'class': 'profile-picture round'
-                        });
+                        var profilePictureEl = self.createProfilePictureElement(user.profile_picture_url);
+
                         var detailsEl = $('<div/>', {
                             'class': 'details',
                         });
@@ -2317,28 +2315,31 @@
         linkify: function(inputText) {
             var replacedText, replacePattern1, replacePattern2, replacePattern3;
 
-            // URLs starting with http://, https://, file:// or ftp://
-            replacePattern1 = /(^|\s)((https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
-            replacedText = inputText.replace(replacePattern1, '$1<a href="$2" target="_blank">$2</a>');
+            // URLs starting with http://, https://, ftp:// or file://
+            replacePattern1 = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
+            replacedText = inputText.replace(replacePattern1, '<a href="$1" target="_blank">$1</a>');
 
-            // URLs starting with "www." (without // before it, or it'd re-link the ones done above).
-            replacePattern2 = /(^|\s)(www\.[\S]+(\b|$))/gim;
+            // URLs starting with "www." (without // before it, or it would re-link the ones done above).
+            replacePattern2 = /(^|[^\/f])(www\.[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
             replacedText = replacedText.replace(replacePattern2, '$1<a href="http://$2" target="_blank">$2</a>');
 
-            // Change email addresses to mailto:: links.
-            replacePattern3 = /(^|\s)(([a-zA-Z0-9\-\_\.]+)@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim;
-            replacedText = replacedText.replace(replacePattern3, '$1<a href="mailto:$2">$2</a>');
+            // Change email addresses to mailto: links.
+            replacePattern3 = /(([a-zA-Z0-9\-\_\.])+@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim;
+            replacedText = replacedText.replace(replacePattern3, '<a href="mailto:$1">$1</a>');
 
             // If there are hrefs in the original text, let's split
             // the text up and only work on the parts that don't have urls yet.
             var count = inputText.match(/<a href/g) || [];
 
-            if(count.length > 0){
+            if (count.length > 0) {
                 // Keep delimiter when splitting
                 var splitInput = inputText.split(/(<\/a>)/g);
-                for (var i = 0 ; i < splitInput.length ; i++){
-                    if(splitInput[i].match(/<a href/g) == null){
-                        splitInput[i] = splitInput[i].replace(replacePattern1, '<a href="$1" target="_blank">$1</a>').replace(replacePattern2, '$1<a href="http://$2" target="_blank">$2</a>').replace(replacePattern3, '<a href="mailto:$1">$1</a>');
+                for (var i = 0 ; i < splitInput.length ; i++) {
+                    if (splitInput[i].match(/<a href/g) == null) {
+                        splitInput[i] = splitInput[i]
+                            .replace(replacePattern1, '<a href="$1" target="_blank">$1</a>')
+                            .replace(replacePattern2, '$1<a href="http://$2" target="_blank">$2</a>')
+                            .replace(replacePattern3, '<a href="mailto:$1">$1</a>');
                     }
                 }
                 var combinedReplacedText = splitInput.join('');
