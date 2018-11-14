@@ -851,11 +851,11 @@
             // Check if content or parent has changed if editing
             var contentOrParentChangedIfEditing = true;
             var content = this.getTextareaContent(textarea, true);
-            if(commentId = textarea.attr('data-comment')) {
-                var contentChanged = content != this.commentsById[commentId].content;
+            if(commentModel = this.commentsById[textarea.attr('data-comment')]) {
+                var contentChanged = content != commentModel.content;
                 var parentFromModel;
-                if(this.commentsById[commentId].parent) {
-                    parentFromModel = this.commentsById[commentId].parent.toString();
+                if(commentModel.parent) {
+                    parentFromModel = commentModel.parent.toString();
                 }
                 var parentChanged = textarea.attr('data-parent') != parentFromModel;
                 contentOrParentChangedIfEditing = contentChanged || parentChanged;
@@ -1019,7 +1019,7 @@
                 newUpvoteCount = previousUpvoteCount + 1;
             }
 
-            // Show changes immediatelly
+            // Show changes immediately
             commentModel.userHasUpvoted = !commentModel.userHasUpvoted;
             commentModel.upvoteCount = newUpvoteCount;
             this.reRenderUpvotes(commentModel.id);
