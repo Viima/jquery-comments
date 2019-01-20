@@ -1,4 +1,4 @@
-/*jquery-comments.js 1.2.0
+/*jquery-comments.js 1.3.0
 
 (c) 2017 Joona Tykkyläinen, Viima Solutions Oy
 jquery-comments may be freely distributed under the MIT license.
@@ -49,7 +49,6 @@ http://viima.github.io/jquery-comments/*/
 	font-weight: normal;
 	border-radius: 1em;
 	transition: all 0.2s linear;
-	vertical-align: bottom;
 }
 
 .jquery-comments .tag:hover {
@@ -93,6 +92,9 @@ http://viima.github.io/jquery-comments/*/
 	height: 3.6rem;
 	max-width: 50px;
 	max-height: 50px;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-position: center center;
 }
 
 .jquery-comments i.profile-picture {
@@ -144,16 +146,15 @@ http://viima.github.io/jquery-comments/*/
 	border-left-color: rgba(0, 0, 0, 0);
 }
 
-.jquery-comments .textarea-wrapper .close {
+.jquery-comments .textarea-wrapper .inline-button {
 	cursor: pointer;
-	width: 1em;
-	height: 1em;
 	right: 0;
 	z-index: 10;
 	position: absolute;
 	border: .5em solid rgba(0,0,0,0);
 	box-sizing: content-box;
 	font-size: inherit;
+	overflow: hidden;
 	opacity: 0.5;
 
 	-webkit-user-select: none;
@@ -162,12 +163,33 @@ http://viima.github.io/jquery-comments/*/
 	user-select: none;
 }
 
-.jquery-comments .textarea-wrapper .close:hover {
+.jquery-comments .textarea-wrapper .inline-button:hover {
 	opacity: 1;
 }
 
-.jquery-comments:not(.mobile) .scrollable .textarea-wrapper .close {
+.jquery-comments:not(.mobile) .scrollable .textarea-wrapper .inline-button {
 	margin-right: 15px;	/* Because of scrollbar */
+}
+
+.jquery-comments .textarea-wrapper .upload.inline-button i {
+	font-size: 1.3em;
+}
+
+.jquery-comments .textarea-wrapper .upload input {
+	cursor: pointer;
+	position: absolute;
+	top: 0;
+	right: 0;
+	min-width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+	opacity: 0;
+}
+
+.jquery-comments .textarea-wrapper .close {
+	width: 1em;
+	height: 1em;
 }
 
 .jquery-comments .textarea-wrapper .close span {
@@ -191,6 +213,7 @@ http://viima.github.io/jquery-comments/*/
 	margin: 0;
 	outline: 0;
 	overflow-y: auto;
+	overflow-x: hidden;
 	cursor: text;
 
 	border: 1px solid #CCC;;
@@ -240,17 +263,6 @@ http://viima.github.io/jquery-comments/*/
 	background-color: #999;
 }
 
-.jquery-comments .textarea-wrapper .control-row > span.upload input {
-	cursor: pointer;
-	position: absolute;
-	top: 0;
-	right: 0;
-	margin: 0;
-	padding: 0;
-	opacity: 0;
-	height: 100%;
-}
-
 .jquery-comments ul.navigation {
 	clear: both;
 
@@ -297,6 +309,10 @@ http://viima.github.io/jquery-comments/*/
 
 .jquery-comments ul.navigation li[data-sort-key="attachments"] {
 	float: right;
+}
+
+.jquery-comments ul.navigation li[data-sort-key="attachments"] i {
+	margin-right: 0.25em;
 }
 
 .jquery-comments ul.navigation .navigation-wrapper.responsive {
@@ -361,7 +377,7 @@ http://viima.github.io/jquery-comments/*/
 	display: block;
 	white-space: nowrap;
 	clear: both;
-	padding: 0.5em 1em;
+	padding: 0.6em;
 	font-weight: normal;
 	cursor: pointer;
 }
@@ -458,7 +474,7 @@ http://viima.github.io/jquery-comments/*/
 }
 
 .jquery-comments ul.main li.comment .comment-wrapper > .profile-picture {
-	margin-right: .5rem;
+	margin-right: 1rem;
 }
 
 .jquery-comments ul.main li.comment time {

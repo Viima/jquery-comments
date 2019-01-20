@@ -1,9 +1,10 @@
-//     jquery-comments.js 1.2.0
-
-//     (c) 2017 Joona Tykkyläinen, Viima Solutions Oy
-//     jquery-comments may be freely distributed under the MIT license.
-//     For all details and documentation:
-//     http://viima.github.io/jquery-comments/
+/*!     jquery-comments.js 1.3.0
+ *
+ *     (c) 2017 Joona Tykkyläinen, Viima Solutions Oy
+ *     jquery-comments may be freely distributed under the MIT license.
+ *     For all details and documentation:
+ *     http://viima.github.io/jquery-comments/
+ */
 
 (function (factory) {
     if (typeof define === 'function' && define.amd) {
@@ -112,12 +113,12 @@
         getDefaultOptions: function() {
             return {
 
-                // User        
+                // User
                 profilePictureURL: '',
                 currentUserIsAdmin: false,
                 currentUserId: null,
-                
-                // Font awesome icon overrides        
+
+                // Font awesome icon overrides
                 spinnerIconURL: '',
                 upvoteIconURL: '',
                 replyIconURL: '',
@@ -125,8 +126,8 @@
                 attachmentIconURL: '',
                 fileIconURL: '',
                 noCommentsIconURL: '',
-                
-                // Strings to be formatted (for example localization)     
+
+                // Strings to be formatted (for example localization)
                 textareaPlaceholderText: 'Add a comment',
                 newestText: 'Newest',
                 oldestText: 'Oldest',
@@ -146,8 +147,8 @@
                 noAttachmentsText: 'No attachments',
                 attachmentDropText: 'Drop files here',
                 textFormatter: function(text) {return text},
-                
-                // Functionalities        
+
+                // Functionalities
                 enableReplying: true,
                 enableEditing: true,
                 enableUpvoting: true,
@@ -161,17 +162,18 @@
                 forceResponsive: false,
                 readOnly: false,
                 defaultNavigationSortKey: 'newest',
-                
-                // Colors     
+
+                // Colors
                 highlightColor: '#2793e6',
                 deleteButtonColor: '#C9302C',
-                
+
+                scrollContainer: this.$el,
                 roundProfilePictures: false,
                 textareaRows: 2,
                 textareaRowsOnFocus: 2,
                 textareaMaxRows: 5,
                 maxRepliesVisible: 2,
-                
+
                 fieldMappings: {
                     id: 'id',
                     parent: 'parent',
@@ -192,7 +194,7 @@
                     upvoteCount: 'upvote_count',
                     userHasUpvoted: 'user_has_upvoted'
                 },
-                
+
                 getUsers: function(success, error) {success([])},
                 getComments: function(success, error) {success([])},
                 postComment: function(commentJSON, success, error) {success(commentJSON)},
@@ -380,7 +382,7 @@
             this.createComments();
 
             // Create attachments if enabled
-            if(this.options.enableAttachments) this.createAttachments(); 
+            if(this.options.enableAttachments) this.createAttachments();
 
             // Remove spinner
             this.$el.find('> .spinner').remove();
@@ -527,11 +529,11 @@
         uploadAttachments: function(files, commentingField) {
             var self = this;
             if(!commentingField) commentingField = this.$el.find('.commenting-field.main');
+            var uploadButton = commentingField.find('.upload');
             var isReply = !commentingField.hasClass('main');
             var fileCount = files.length;
 
             if(fileCount) {
-                var uploadButton = commentingField.find('.upload');
                 var textarea = commentingField.find('.textarea');
 
                 // Disable upload button and append spinners while request is pending
@@ -688,16 +690,6 @@
             }
         },
 
-        sortUsers: function(users) {
-            users.sort(function(a,b) {
-                var nameA = a.fullname.toLowerCase().trim();
-                var nameB = b.fullname.toLowerCase().trim();
-                if(nameA < nameB) return -1;
-                if(nameA > nameB) return 1;
-                return 0;
-            });
-        },
-
         sortAndReArrangeComments: function(sortKey) {
             var commentList = this.$el.find('#comment-list');
 
@@ -727,7 +719,7 @@
              } else {
                 var defaultDropdownEl = this.$el.find('.navigation ul.dropdown').children().first();
                 titleEl.find('header').html(defaultDropdownEl.html());
-             } 
+             }
 
             // Show active container
             this.showActiveContainer();
@@ -748,7 +740,7 @@
             // Save comment on cmd/ctrl + enter
             if(ev.keyCode == 13) {
                 var metaKey = ev.metaKey || ev.ctrlKey;
-                if(this.options.postCommentOnEnter || metaKey) {                
+                if(this.options.postCommentOnEnter || metaKey) {
                     var el = $(ev.currentTarget);
                     el.siblings('.control-row').find('.save').trigger('click');
                     ev.stopPropagation();
@@ -764,6 +756,12 @@
 
         checkEditableContentForChange: function(ev) {
             var el = $(ev.currentTarget);
+
+            // Fix jquery-textcomplete on IE, empty text nodes will break up the autocomplete feature
+            $(el[0].childNodes).each(function() {
+                if(this.nodeType == Node.TEXT_NODE && this.length == 0 && this.removeNode) this.removeNode();
+            });
+
             if (el.data('before') != el.html()) {
                 el.data('before', el.html());
                 el.trigger('change');
@@ -796,6 +794,7 @@
             var mainTextarea = $(ev.currentTarget);
             mainTextarea.siblings('.control-row').show();
             mainTextarea.parent().find('.close').show();
+            mainTextarea.parent().find('.upload.inline-button').hide();
             mainTextarea.focus();
         },
 
@@ -809,6 +808,7 @@
 
             mainControlRow.hide();
             closeButton.hide();
+            mainTextarea.parent().find('.upload.inline-button').show();
             mainTextarea.blur();
         },
 
@@ -851,11 +851,11 @@
             // Check if content or parent has changed if editing
             var contentOrParentChangedIfEditing = true;
             var content = this.getTextareaContent(textarea, true);
-            if(commentId = textarea.attr('data-comment')) {
-                var contentChanged = content != this.commentsById[commentId].content;
+            if(commentModel = this.commentsById[textarea.attr('data-comment')]) {
+                var contentChanged = content != commentModel.content;
                 var parentFromModel;
-                if(this.commentsById[commentId].parent) {
-                    parentFromModel = this.commentsById[commentId].parent.toString();
+                if(commentModel.parent) {
+                    parentFromModel = commentModel.parent.toString();
                 }
                 var parentChanged = textarea.attr('data-parent') != parentFromModel;
                 contentOrParentChangedIfEditing = contentChanged || parentChanged;
@@ -1019,7 +1019,7 @@
                 newUpvoteCount = previousUpvoteCount + 1;
             }
 
-            // Show changes immediatelly
+            // Show changes immediately
             commentModel.userHasUpvoted = !commentModel.userHasUpvoted;
             commentModel.upvoteCount = newUpvoteCount;
             this.reRenderUpvotes(commentModel.id);
@@ -1070,6 +1070,15 @@
                 // Move cursor to end
                 var textarea = replyField.find('.textarea');
                 this.moveCursorToEnd(textarea)
+
+                // Make sure the reply field will be displayed
+                var scrollTop = this.options.scrollContainer.scrollTop();
+                var endOfReply = scrollTop + replyField.position().top + replyField.outerHeight();
+                var endOfScrollable = scrollTop + this.options.scrollContainer.outerHeight();
+                if(endOfReply > endOfScrollable) {
+                    var newScrollTop = scrollTop + (endOfReply - endOfScrollable);
+                    this.options.scrollContainer.scrollTop(newScrollTop);
+                }
             }
         },
 
@@ -1114,7 +1123,7 @@
             count--;
             $(ev.currentTarget).data('dnd-count', count);
 
-            if(count == 0) {            
+            if(count == 0) {
                 $(ev.currentTarget).removeClass('drag-over');
                 if(callback) callback();
             }
@@ -1165,8 +1174,7 @@
             var self = this;
 
             // Commenting field
-            var mainCommentingField = this.createCommentingFieldElement();
-            mainCommentingField.addClass('main');
+            var mainCommentingField = this.createMainCommentingFieldElement();
             this.$el.append(mainCommentingField);
 
             // Hide control row and close button
@@ -1203,7 +1211,7 @@
                 noCommentsIcon.css('background-image', 'url("'+this.options.noCommentsIconURL+'")');
                 noCommentsIcon.addClass('image');
             }
-            noComments.prepend($('<br/>')).prepend(noCommentsIcon);            
+            noComments.prepend($('<br/>')).prepend(noCommentsIcon);
             commentsContainer.append(noComments);
 
             // Attachments
@@ -1246,7 +1254,7 @@
                 });
 
                 var uploadIcon = $('<i/>', {
-                    'class': 'fa fa-upload fa-4x'
+                    'class': 'fa fa-paperclip fa-4x'
                 });
                 if(this.options.uploadIconURL.length) {
                     uploadIcon.css('background-image', 'url("'+this.options.uploadIconURL+'")');
@@ -1264,10 +1272,10 @@
             }
         },
 
-        createProfilePictureElement: function(src) {
+        createProfilePictureElement: function(src, userId) {
             if(src) {
-                var profilePicture = $('<img/>', {
-                    src: src
+              var profilePicture = $('<div/>').css({
+                  'background-image': 'url(' + src + ')'
                 });
             } else {
                 var profilePicture = $('<i/>', {
@@ -1275,25 +1283,36 @@
                 });
             }
             profilePicture.addClass('profile-picture');
+            profilePicture.attr('data-user-id', userId);
             if(this.options.roundProfilePictures) profilePicture.addClass('round');
             return profilePicture;
         },
 
-        createCommentingFieldElement: function(parentId, existingCommentId) {
+        createMainCommentingFieldElement: function() {
+            return this.createCommentingFieldElement(undefined, undefined, true);
+        },
+
+        createCommentingFieldElement: function(parentId, existingCommentId, isMain) {
             var self = this;
 
             // Commenting field
             var commentingField = $('<div/>', {
                 'class': 'commenting-field'
             });
+            if(isMain) commentingField.addClass('main');
 
-            // Profile picture
+            // Comment was modified, use existing data
             if(existingCommentId) {
                 var profilePictureURL = this.commentsById[existingCommentId].profilePictureURL;
+                var userId = this.commentsById[existingCommentId].creator;
+
+            // New comment was created
             } else {
                 var profilePictureURL = this.options.profilePictureURL;
+                var userId = this.options.creator;
             }
-            var profilePicture = this.createProfilePictureElement(profilePictureURL);
+
+            var profilePicture = this.createProfilePictureElement(profilePictureURL, userId);
 
             // New comment
             var textareaWrapper = $('<div/>', {
@@ -1317,7 +1336,7 @@
 
             // Close button
             var closeButton = $('<span/>', {
-                'class': 'close'
+                'class': 'close inline-button'
             }).append($('<span class="left"/>')).append($('<span class="right"/>'));
 
             // Save button text
@@ -1343,7 +1362,7 @@
                         'class': 'enabled upload'
                     });
                     var uploadIcon = $('<i/>', {
-                        'class': 'fa fa-upload'
+                        'class': 'fa fa-paperclip'
                     });
                     var fileInput = $('<input/>', {
                         type: 'file',
@@ -1358,7 +1377,14 @@
                         uploadIcon.addClass('image');
                     }
                     uploadButton.append(uploadIcon).append(fileInput);
-                    controlRow.append(uploadButton);
+
+                    // Main upload button
+                    controlRow.append(uploadButton.clone());
+
+                    // Inline upload button for main commenting field
+                    if(isMain) {
+                        textareaWrapper.append(uploadButton.clone().addClass('inline-button'));
+                    }
                 }
             }
 
@@ -1387,7 +1413,9 @@
 
                     // Creating the reply-to tag
                     var replyToName = '@' + parentModel.fullname;
-                    var replyToTag = this.createTagElement(replyToName, 'reply-to', parentModel.creator);
+                    var replyToTag = this.createTagElement(replyToName, 'reply-to', parentModel.creator, {
+                        'data-user-id': parentModel.creator
+                    });
                     textarea.prepend(replyToTag);
                 }
             }
@@ -1395,7 +1423,8 @@
             // Pinging users
             if(this.options.enablePinging) {
                 textarea.textcomplete([{
-                    match: /(^|\s)@(([a-zäöüß]|\s)*)$/im,
+                    match: /(^|\s)@([^@]*)$/i,
+                    index: 2,
                     search: function (term, callback) {
                         term = self.normalizeSpaces(term);
 
@@ -1407,22 +1436,77 @@
                             return !isSelf && !alreadyPinged;
                         });
 
-                        // Sort users
-                        self.sortUsers(users);
+                        // Case: return all users sorted alphabetically
+                        if(term.length == 0) {
+                            var filteredUsers = users;
+                            filteredUsers.sort(function(a,b) {
+                                var nameA = a.fullname.toLowerCase().trim();
+                                var nameB = b.fullname.toLowerCase().trim();
+                                if(nameA < nameB) return -1;
+                                if(nameA > nameB) return 1;
+                                return 0;
+                            });
 
-                        callback($.map(users, function (user) {
-                            var lowercaseTerm = term.toLowerCase();
-                            var nameMatch = user.fullname.toLowerCase().indexOf(lowercaseTerm) != -1;
-                            return nameMatch ? user : null;
-                        }));
+                        // Case: filter users by search term and sort by similarity
+                        } else {
+                            var filteredUsers = $.map(users, function (user) {
+                                user.points = 0;
+                                var wordsInSearchTerm = term.split(' ');
+                                var wordsInName = user.fullname.split(' ');
+
+                                // Order words in name by priority (first name, last name, middle names)
+                                wordsInName.splice(1, 0, wordsInName.splice(wordsInName.length -1, 1)[0]);
+
+                                // Loop all words in search term and ensure that they are found in the words of the fullname
+                                var allSearchWordsFound = true;
+                                $(wordsInSearchTerm).each(function(index, searchWord) {
+                                    var trimmedSearchWord = searchWord.toLowerCase().trim();
+                                    var trimmedSearchWordFound = false;
+
+                                    // Loop all words in the name and ensure that at least one of those starts with the search word
+                                    $(wordsInName).each(function(index, wordInName) {
+                                        var trimmedWordInName = wordInName.toLowerCase().trim();
+                                        if(trimmedWordInName.indexOf(trimmedSearchWord) == 0) {
+                                            trimmedSearchWordFound = true;
+
+                                            // Case: first name
+                                            if(index == 0) {
+                                                var multiplier = 0.5;
+
+                                            // Case: last name
+                                            } else if(index == 1) {
+                                                var multiplier = 0.4;
+
+                                            // Case: middle name
+                                            } else {
+                                                var multiplier = 0.1;
+                                            }
+
+                                            // Calculate the points for the match based on similarity
+                                            user.points += (trimmedSearchWord.length / trimmedWordInName.length) * multiplier;
+                                        }
+                                    });
+
+                                    // Mark search as failed if even one search word was not found in the name
+                                    if(!trimmedSearchWordFound) allSearchWordsFound = false;
+                                });
+
+                                return allSearchWordsFound ? user : null;
+                            });
+
+                            // Sort by similarity points
+                            filteredUsers.sort(function(a,b) {
+                                return b.points - a.points;
+                            });
+                        }
+
+                        callback(filteredUsers);
                     },
                     template: function(user) {
                         var wrapper = $('<div/>');
 
-                        var profilePictureEl = $('<img/>', {
-                            src: user.profile_picture_url,
-                            'class': 'profile-picture round'
-                        });
+                        var profilePictureEl = self.createProfilePictureElement(user.profile_picture_url);
+
                         var detailsEl = $('<div/>', {
                             'class': 'details',
                         });
@@ -1433,7 +1517,7 @@
                         var emailEl = $('<div/>', {
                             'class': 'email',
                         }).html(user.email);
-                            
+
                         if (user.email) {
                             detailsEl.append(nameEl).append(emailEl);
                         } else {
@@ -1445,7 +1529,9 @@
                         return wrapper.html();
                     },
                     replace: function (user) {
-                        var tag = self.createTagElement('@' + user.fullname, 'ping', user.id);
+                        var tag = self.createTagElement('@' + user.fullname, 'ping', user.id, {
+                            'data-user-id': user.id
+                        });
                         return ' ' + tag[0].outerHTML + ' ';
                     },
                 }], {
@@ -1455,29 +1541,50 @@
                     rightEdgeOffset: 0,
                 });
 
-                // Make sure that the dropdown won't overflow the container
-                textarea.on({
-                    'textComplete:show': function(e) {
-                        var dropdownEl = $(this).data('textComplete').dropdown.$el;
-                        dropdownEl.hide();
 
-                        var condition = function() {
-                            return !dropdownEl.is(':empty');
-                        }
-                        var callback = function() {
-                            var originalLeft = parseInt(dropdownEl.css('left'));
+                // OVERIDE TEXTCOMPLETE DROPDOWN POSITIONING
 
-                            // Position left affects to the width of the element
-                            dropdownEl.css('left', 0);
-
-                            var maxLeft = self.$el.width() - dropdownEl.width();
-                            var left = Math.min(maxLeft, originalLeft);
-                            dropdownEl.css('left', left);
-                            dropdownEl.show();
-                        }
-                        self.waitUntil(condition, callback);
+                $.fn.textcomplete.Dropdown.prototype.render = function(zippedData) {
+                    var contentsHtml = this._buildContents(zippedData);
+                    var unzippedData = $.map(zippedData, function (d) { return d.value; });
+                    if (zippedData.length) {
+                      var strategy = zippedData[0].strategy;
+                      if (strategy.id) {
+                        this.$el.attr('data-strategy', strategy.id);
+                      } else {
+                        this.$el.removeAttr('data-strategy');
+                      }
+                      this._renderHeader(unzippedData);
+                      this._renderFooter(unzippedData);
+                      if (contentsHtml) {
+                        this._renderContents(contentsHtml);
+                        this._fitToBottom();
+                        this._fitToRight();
+                        this._activateIndexedItem();
+                      }
+                      this._setScroll();
+                    } else if (this.noResultsMessage) {
+                      this._renderNoResultsMessage(unzippedData);
+                    } else if (this.shown) {
+                      this.deactivate();
                     }
-                })
+
+                    // CUSTOM CODE
+                    // ===========
+
+                    // Adjust vertical position
+                    var top = parseInt(this.$el.css('top')) + self.options.scrollContainer.scrollTop();
+                    this.$el.css('top', top);
+
+                    // Adjust horizontal position
+                    var originalLeft = this.$el.css('left');
+                    this.$el.css('left', 0);    // Left must be set to 0 in order to get the real width of the el
+                    var maxLeft = self.$el.width() - this.$el.outerWidth();
+                    var left = Math.min(maxLeft, parseInt(originalLeft));
+                    this.$el.css('left', left);
+
+                    // ===========
+                }
             }
 
             return commentingField;
@@ -1611,7 +1718,7 @@
             });
 
             // Profile picture
-            var profilePicture = this.createProfilePictureElement(commentModel.profilePictureURL);
+            var profilePicture = this.createProfilePictureElement(commentModel.profilePictureURL, commentModel.creator);
 
             // Time
             var time = $('<time/>', {
@@ -1619,23 +1726,26 @@
                 'data-original': commentModel.created
             });
 
-            // Name
-            var nameText = commentModel.createdByCurrentUser ? this.options.textFormatter(this.options.youText) : commentModel.fullname;
-            var name = $('<div/>', {
-                'class': 'name'
+            // Name element
+            var name = $('<span/>', {
+                'data-user-id': commentModel.creator,
+                'text': commentModel.createdByCurrentUser ? this.options.textFormatter(this.options.youText) : commentModel.fullname
             });
+
             if(commentModel.profileURL) {
-                var link = $('<a/>', {
-                    href: commentModel.profileURL,
-                    text: nameText
+                name = $('<a/>', {
+                    'href': commentModel.profileURL,
+                    'html': name
                 });
-                name.html(link);
-            } else {
-                name.text(nameText);
             }
 
-            // Highlight name for own comments and admin
-            if(commentModel.createdByCurrentUser || commentModel.createdByAdmin) name.addClass('highlight-font-bold');
+            var nameEl = $('<div/>', {
+                'class': 'name',
+                'html': name
+            });
+
+            // Highlight admin names
+            if(commentModel.createdByAdmin) nameEl.addClass('highlight-font-bold');
 
             // Show reply-to name if parent of parent exists
             if(commentModel.parent) {
@@ -1643,7 +1753,8 @@
                 if(parent.parent) {
                     var replyTo = $('<span/>', {
                         'class': 'reply-to',
-                        text: parent.fullname
+                        'text': parent.fullname,
+                        'data-user-id': parent.creator
                     });
 
                     // reply icon
@@ -1656,7 +1767,7 @@
                     }
 
                     replyTo.prepend(replyIcon);
-                    name.append(replyTo);
+                    nameEl.append(replyTo);
                 }
             }
 
@@ -1664,9 +1775,9 @@
             if(commentModel.isNew) {
                 var newTag = $('<span/>', {
                     'class': 'new highlight-background',
-                    text: this.options.newText
+                    text: this.options.textFormatter(this.options.newText)
                 });
-                name.append(newTag);
+                nameEl.append(newTag);
             }
 
             // Wrapper
@@ -1723,7 +1834,7 @@
                     // Icon
                     var availableIcons = ['archive', 'audio', 'code', 'excel', 'image', 'movie', 'pdf', 'photo',
                         'picture', 'powerpoint', 'sound', 'video', 'word', 'zip'];
-                    
+
                     var iconClass = 'fa fa-file-o';
                     if(availableIcons.indexOf(format) > 0) {
                         iconClass = 'fa fa-file-' + format + '-o';
@@ -1829,7 +1940,7 @@
 
             wrapper.append(content);
             wrapper.append(actions);
-            commentWrapper.append(profilePicture).append(time).append(name).append(wrapper);
+            commentWrapper.append(profilePicture).append(time).append(nameEl).append(wrapper);
             return commentWrapper;
         },
 
@@ -1854,7 +1965,7 @@
             return upvoteEl;
         },
 
-        createTagElement: function(text, extraClasses, value) {
+        createTagElement: function(text, extraClasses, value, extraAttributes) {
             var tagEl = $('<input/>', {
                 'class': 'tag',
                 'type': 'button',
@@ -1863,6 +1974,7 @@
             if(extraClasses) tagEl.addClass(extraClasses);
             tagEl.val(text);
             tagEl.attr('data-value', value);
+            if (extraAttributes) tagEl.attr(extraAttributes);
             return tagEl;
         },
 
@@ -2175,7 +2287,9 @@
             if(html.indexOf('@') != -1) {
 
                 var __createTag = function(user) {
-                    var tag = self.createTagElement('@' + user.fullname, 'ping', user.id);
+                    var tag = self.createTagElement('@' + user.fullname, 'ping', user.id, {
+                        'data-user-id': user.id
+                    });
                     return tag[0].outerHTML;
                 }
 
@@ -2201,28 +2315,31 @@
         linkify: function(inputText) {
             var replacedText, replacePattern1, replacePattern2, replacePattern3;
 
-            // URLs starting with http://, https://, file:// or ftp://
-            replacePattern1 = /(^|\s)((https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
-            replacedText = inputText.replace(replacePattern1, '$1<a href="$2" target="_blank">$2</a>');
+            // URLs starting with http://, https://, ftp:// or file://
+            replacePattern1 = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
+            replacedText = inputText.replace(replacePattern1, '<a href="$1" target="_blank">$1</a>');
 
-            // URLs starting with "www." (without // before it, or it'd re-link the ones done above).
-            replacePattern2 = /(^|\s)(www\.[\S]+(\b|$))/gim;
+            // URLs starting with "www." (without // before it, or it would re-link the ones done above).
+            replacePattern2 = /(^|[^\/f])(www\.[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
             replacedText = replacedText.replace(replacePattern2, '$1<a href="http://$2" target="_blank">$2</a>');
 
-            // Change email addresses to mailto:: links.
-            replacePattern3 = /(^|\s)(([a-zA-Z0-9\-\_\.]+)@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim;
-            replacedText = replacedText.replace(replacePattern3, '$1<a href="mailto:$2">$2</a>');
+            // Change email addresses to mailto: links.
+            replacePattern3 = /(([a-zA-Z0-9\-\_\.])+@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim;
+            replacedText = replacedText.replace(replacePattern3, '<a href="mailto:$1">$1</a>');
 
             // If there are hrefs in the original text, let's split
             // the text up and only work on the parts that don't have urls yet.
             var count = inputText.match(/<a href/g) || [];
 
-            if(count.length > 0){
+            if (count.length > 0) {
                 // Keep delimiter when splitting
                 var splitInput = inputText.split(/(<\/a>)/g);
-                for (var i = 0 ; i < splitInput.length ; i++){
-                    if(splitInput[i].match(/<a href/g) == null){
-                        splitInput[i] = splitInput[i].replace(replacePattern1, '<a href="$1" target="_blank">$1</a>').replace(replacePattern2, '$1<a href="http://$2" target="_blank">$2</a>').replace(replacePattern3, '<a href="mailto:$1">$1</a>');
+                for (var i = 0 ; i < splitInput.length ; i++) {
+                    if (splitInput[i].match(/<a href/g) == null) {
+                        splitInput[i] = splitInput[i]
+                            .replace(replacePattern1, '<a href="$1" target="_blank">$1</a>')
+                            .replace(replacePattern2, '$1<a href="http://$2" target="_blank">$2</a>')
+                            .replace(replacePattern3, '<a href="mailto:$1">$1</a>');
                     }
                 }
                 var combinedReplacedText = splitInput.join('');
@@ -2245,7 +2362,6 @@
         },
 
         applyInternalMappings: function(commentJSON) {
-
             // Inverting field mappings
             var invertedMappings = {};
             var mappings = this.options.fieldMappings;
