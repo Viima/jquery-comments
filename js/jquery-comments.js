@@ -602,23 +602,23 @@
             if (this.options.maxRepliesVisible == null) return;
 
             var childCommentsEl = parentEl.find('.child-comments');
-            var childComments = childCommentsEl.find('.comment');
+            var childComments = childCommentsEl.find('.comment').not('.hidden');
             var toggleAllButton = childCommentsEl.find('li.toggle-all');
-            childComments.removeClass('hidden-reply');
+            childComments.removeClass('togglable-reply');
 
             // Select replies to be hidden
             if (this.options.maxRepliesVisible === 0) {
-                var hiddenReplies = childComments;
+                var togglableReplies = childComments;
             } else {
-                var hiddenReplies = childComments.slice(0, -this.options.maxRepliesVisible);
+                var togglableReplies = childComments.slice(0, -this.options.maxRepliesVisible);
             }
 
             // Add identifying class for hidden replies so they can be toggled
-            hiddenReplies.addClass('hidden-reply');
+            togglableReplies.addClass('togglable-reply');
 
             // Show all replies if replies are expanded
             if(toggleAllButton.find('span.text').text() == this.options.textFormatter(this.options.hideRepliesText)) {
-                hiddenReplies.addClass('visible');
+                togglableReplies.addClass('visible');
             }
 
             // Make sure that toggle all button is present
@@ -649,6 +649,17 @@
             } else {
                 toggleAllButton.remove();
             }
+        },
+
+        updateToggleAllButtons: function() {
+            var self = this;
+            var commentList = this.$el.find('#comment-list');
+
+            // Fold comments, find first level children and update toggle buttons
+            commentList.find('.comment').removeClass('visible');
+            commentList.children('.comment').each(function(index, el) {
+                self.updateToggleAllButton($(el));
+            });
         },
 
         sortComments: function (comments, sortKey) {
@@ -1047,7 +1058,7 @@
 
         toggleReplies: function(ev) {
             var el = $(ev.currentTarget);
-            el.siblings('.hidden-reply').toggleClass('visible');
+            el.siblings('.togglable-reply').toggleClass('visible');
             this.setToggleAllButtonText(el, true);
         },
 
@@ -2123,7 +2134,7 @@
 
             var showExpandingText = function() {
                 var text = self.options.textFormatter(self.options.viewAllRepliesText);
-                var replyCount = toggleAllButton.siblings('.comment').length;
+                var replyCount = toggleAllButton.siblings('.comment').not('.hidden').length;
                 text = text.replace('__replyCount__', replyCount);
                 textContainer.text(text);
             };

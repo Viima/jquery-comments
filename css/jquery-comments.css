@@ -682,12 +682,16 @@ http://viima.github.io/jquery-comments/*/
 	margin-top: -.2em;
 }
 
-.jquery-comments ul.main li.comment .child-comments .hidden-reply {
+.jquery-comments ul.main li.comment .child-comments .togglable-reply {
 	display: none;
 }
 
 .jquery-comments ul.main li.comment .child-comments .visible {
 	display: inherit;
+}
+
+.jquery-comments ul.main li.comment.hidden {
+	display: none;
 }
 
 /* Editing comment */
