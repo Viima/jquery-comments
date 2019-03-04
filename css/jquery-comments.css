@@ -167,7 +167,7 @@ http://viima.github.io/jquery-comments/*/
 	opacity: 1;
 }
 
-.jquery-comments:not(.mobile) .scrollable .textarea-wrapper .inline-button {
+.jquery-comments:not(.mobile) .commenting-field-scrollable .textarea-wrapper .inline-button {
 	margin-right: 15px;	/* Because of scrollbar */
 }
 
@@ -224,7 +224,7 @@ http://viima.github.io/jquery-comments/*/
 	padding-right: 2em;
 }
 
-.jquery-comments:not(.mobile) .scrollable .textarea-wrapper .textarea {
+.jquery-comments:not(.mobile) .commenting-field-scrollable .textarea-wrapper .textarea {
 	padding-right: calc(2em + 15px);	/* Because of scrollbar */
 }
 

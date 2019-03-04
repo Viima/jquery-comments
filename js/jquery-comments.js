@@ -843,9 +843,9 @@
             // Move close button if scrollbar is visible
             var commentingField = textarea.parents('.commenting-field').first();
             if(textarea[0].scrollHeight > textarea.outerHeight()) {
-                commentingField.addClass('scrollable');
+                commentingField.addClass('commenting-field-scrollable');
             } else {
-                commentingField.removeClass('scrollable');
+                commentingField.removeClass('commenting-field-scrollable');
             }
 
             // Check if content or parent has changed if editing
