@@ -834,9 +834,18 @@ A <code>boolean</code> value determing whether pinging users is enabled. Enablin
 <br>
 <ul>
 <li>The feature is depended on a javascript library called <a href="https://github.com/yuku-t/jquery-textcomplete">jquery-textcomplete</a></li>
-<li>You need to provide the list of users who can be pinged using the <code>getUsers</code> callback function</li>
+<li>You need to implement the <code>searchUsers</code> callback function which returns a list of all users matching the ping</li>
 <li>jquery-comments assumes that the pings are sent to the server in format <code>@&lt;user_id&gt;</code>, for example <code>@145</code></li>
-<li>jquery-comments assumes that the pings are returned from the server in format <code>@&lt;user_fullname&gt;</code>, for example <code>@Bryan Connery</code> together with array of pinged user ids in same order they appear in the comment</li>
+<li>jquery-comments assumes that the pings are returned from the server in format <code>@&lt;user_fullname&gt;</code>, for example <code>@Bryan Connery</code> together with a dictionary of pinged users and respective full names<br/>
+<label class="example">EXAMPLE</label>  
+<pre class="prettyprint linemus">
+{
+  content: "What do you think @Bryan Connery?",
+  pings: {254: "Bryan Connery"},
+  ...
+}
+</pre>
+</ul>
 </ul>
 
 <i>Switching the ping format is required in order to keep the link between the user model and the ping so that the ping won't get broken in case the user changes her name for example. On the other hand, we expect the server to return the ping in user friendly format so that the API will always return comments in a format that can be displayed without processing.</i>
@@ -1049,24 +1058,24 @@ $('#comments-container').comments({
 </tr>
 
 <tr>
-<td><code>getUsers</code></td>
+<td><code>searchUsers</code></td>
 <td>
 <p>
-A callback <code>function</code> that is used to fetch the user array from the server. The callback provides both <code>success</code> and <code>error</code> callbacks which should be called based on the result from the server. The success callback takes the user array as a parameter.
+A callback <code>function</code> that is used for searching users when pinging. The callback provides both <code>success</code> and <code>error</code> callbacks which should be called based on the result from the server. The success callback takes the user array as a parameter.
 </p>
 <label>DEFAULT</label>  
 <pre class="prettyprint linemus">
-function(success, error) {
+function(term, success, error) {
     success([]);
 }
 </pre>
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    getUsers: function(success, error) {
+    searchUsers: function(term, success, error) {
         $.ajax({
             type: 'get',
-            url: '/api/users/',
+            url: '/api/users/?search=' + term,
             success: function(userArray) {
                 success(userArray)
             },
