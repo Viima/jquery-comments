@@ -37,7 +37,9 @@ var commentsArray = [
    "created": "2015-01-03",
    "modified": "2015-01-03",
    "content": "@Hank Smith sed posuere interdum sem.\nQuisque ligula eros ullamcorper https://www.google.com/ quis, lacinia quis facilisis sed sapien. Mauris varius diam vitae arcu. Sed arcu lectus auctor vitae, consectetuer et venenatis eget #velit.",
-   "pings": [3],
+   "pings": {
+      3: 'Hank Smith',
+   },
    "creator": 1,
    "fullname": "You",
    "profile_picture_url": "https://viima-app.s3.amazonaws.com/media/public/defaults/user-icon.png",

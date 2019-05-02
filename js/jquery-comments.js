@@ -1,4 +1,4 @@
-/*!     jquery-comments.js 1.3.0
+/*!     jquery-comments.js 1.4.0
  *
  *     (c) 2017 Joona Tykkyläinen, Viima Solutions Oy
  *     jquery-comments may be freely distributed under the MIT license.
@@ -41,7 +41,6 @@
 
         $el: null,
         commentsById: {},
-        usersById: {},
         dataFetched: false,
         currentSortKey: '',
         options: {},
@@ -195,7 +194,7 @@
                     userHasUpvoted: 'user_has_upvoted'
                 },
 
-                getUsers: function(success, error) {success([])},
+                searchUsers: function(term, success, error) {success([])},
                 getComments: function(success, error) {success([])},
                 postComment: function(commentJSON, success, error) {success(commentJSON)},
                 putComment: function(commentJSON, success, error) {success(commentJSON)},
@@ -279,21 +278,15 @@
             var self = this;
 
             this.commentsById = {};
-            this.usersById = {};
 
             this.$el.empty();
             this.createHTML();
 
-            // Render after data has been fetched
-            var dataFetched = this.after(this.options.enablePinging ? 2 : 1, function() {
-                self.dataFetched = true;
-                self.render();
-            });
-
             // Comments
             // ========
 
-            var commentsFetched = function(commentsArray) {
+            this.options.getComments(function(commentsArray) {
+
                 // Convert comments to custom data model
                 var commentModels = commentsArray.map(function(commentsJSON){
                     return self.createCommentModel(commentsJSON)
@@ -307,23 +300,12 @@
                     self.addCommentToDataModel(commentModel);
                 });
 
-                dataFetched();
-            };
-            this.options.getComments(commentsFetched, dataFetched);
+                // Mark data as fetched
+                self.dataFetched = true;
 
-            // Users
-            // =====
-
-            if(this.options.enablePinging) {
-                var usersFetched = function(userArray) {
-                    $(userArray).each(function(index, user) {
-                        self.usersById[user.id] = user;
-                    });
-
-                    dataFetched();
-                }
-                this.options.getUsers(usersFetched, dataFetched);
-            }
+                // Render
+                self.render();
+            });
         },
 
         fetchNext: function() {
@@ -1439,79 +1421,12 @@
                     search: function (term, callback) {
                         term = self.normalizeSpaces(term);
 
-                        // Users excluding self and already pinged users
-                        var pings = self.getPings(textarea);
-                        var users = self.getUsers().filter(function(user) {
-                            var isSelf = user.id == self.options.currentUserId;
-                            var alreadyPinged = pings.indexOf(user.id) != -1;
-                            return !isSelf && !alreadyPinged;
-                        });
-
-                        // Case: return all users sorted alphabetically
-                        if(term.length == 0) {
-                            var filteredUsers = users;
-                            filteredUsers.sort(function(a,b) {
-                                var nameA = a.fullname.toLowerCase().trim();
-                                var nameB = b.fullname.toLowerCase().trim();
-                                if(nameA < nameB) return -1;
-                                if(nameA > nameB) return 1;
-                                return 0;
-                            });
-
-                        // Case: filter users by search term and sort by similarity
-                        } else {
-                            var filteredUsers = $.map(users, function (user) {
-                                user.points = 0;
-                                var wordsInSearchTerm = term.split(' ');
-                                var wordsInName = user.fullname.split(' ');
-
-                                // Order words in name by priority (first name, last name, middle names)
-                                wordsInName.splice(1, 0, wordsInName.splice(wordsInName.length -1, 1)[0]);
-
-                                // Loop all words in search term and ensure that they are found in the words of the fullname
-                                var allSearchWordsFound = true;
-                                $(wordsInSearchTerm).each(function(index, searchWord) {
-                                    var trimmedSearchWord = searchWord.toLowerCase().trim();
-                                    var trimmedSearchWordFound = false;
-
-                                    // Loop all words in the name and ensure that at least one of those starts with the search word
-                                    $(wordsInName).each(function(index, wordInName) {
-                                        var trimmedWordInName = wordInName.toLowerCase().trim();
-                                        if(trimmedWordInName.indexOf(trimmedSearchWord) == 0) {
-                                            trimmedSearchWordFound = true;
-
-                                            // Case: first name
-                                            if(index == 0) {
-                                                var multiplier = 0.5;
-
-                                            // Case: last name
-                                            } else if(index == 1) {
-                                                var multiplier = 0.4;
-
-                                            // Case: middle name
-                                            } else {
-                                                var multiplier = 0.1;
-                                            }
-
-                                            // Calculate the points for the match based on similarity
-                                            user.points += (trimmedSearchWord.length / trimmedWordInName.length) * multiplier;
-                                        }
-                                    });
-
-                                    // Mark search as failed if even one search word was not found in the name
-                                    if(!trimmedSearchWordFound) allSearchWordsFound = false;
-                                });
-
-                                return allSearchWordsFound ? user : null;
-                            });
-
-                            // Sort by similarity points
-                            filteredUsers.sort(function(a,b) {
-                                return b.points - a.points;
-                            });
+                        // Return empty array on error
+                        var error = function() {
+                            callback([]);
                         }
 
-                        callback(filteredUsers);
+                        self.options.searchUsers(term, callback, error);
                     },
                     template: function(user) {
                         var wrapper = $('<div/>');
@@ -1550,6 +1465,7 @@
                     dropdownClassName: 'dropdown autocomplete',
                     maxCount: 5,
                     rightEdgeOffset: 0,
+                    debounce: 250
                 });
 
 
@@ -1595,6 +1511,30 @@
                     this.$el.css('left', left);
 
                     // ===========
+                }
+
+
+                // OVERIDE TEXTCOMPLETE CONTENTEDITABLE SKIPSEARCH FUNCTION WHEN USING ALT + backspace
+
+                $.fn.textcomplete.ContentEditable.prototype._skipSearch = function(clickEvent) {
+                    switch (clickEvent.keyCode) {
+                        case 9:  // TAB
+                        case 13: // ENTER
+                        case 16: // SHIFT
+                        case 17: // CTRL
+                        //case 18: // ALT
+                        case 33: // PAGEUP
+                        case 34: // PAGEDOWN
+                        case 40: // DOWN
+                        case 38: // UP
+                        case 27: // ESC
+                            return true;
+                    }
+                    if (clickEvent.ctrlKey) switch (clickEvent.keyCode) {
+                        case 78: // Ctrl-N
+                        case 80: // Ctrl-P
+                            return true;
+                    }
                 }
             }
 
@@ -2074,11 +2014,6 @@
             return Object.keys(this.commentsById).map(function(id){return self.commentsById[id]});
         },
 
-        getUsers: function() {
-            var self = this;
-            return Object.keys(this.usersById).map(function(id){return self.usersById[id]});
-        },
-
         getChildComments: function(parentId) {
             return this.getComments().filter(function(comment){return comment.parent == parentId});
         },
@@ -2218,8 +2153,20 @@
             return html;
         },
 
+        // Return pings in format
+        //  {
+        //      id1: userFullname1,
+        //      id2: userFullname2,
+        //      ...
+        //  }
         getPings: function(textarea) {
-            return $.map(textarea.find('.ping'), function(el){return parseInt($(el).attr('data-value'))});
+            var pings = {};
+            textarea.find('.ping').each(function(index, el){
+                var id = parseInt($(el).attr('data-value'));
+                var value = $(el).val();
+                pings[id] = value.slice(1);
+            });
+            return pings;
         },
 
         moveCursorToEnd: function(el) {
@@ -2297,28 +2244,18 @@
 
             if(html.indexOf('@') != -1) {
 
-                var __createTag = function(user) {
-                    var tag = self.createTagElement('@' + user.fullname, 'ping', user.id, {
-                        'data-user-id': user.id
+                var __createTag = function(pingText, userId) {
+                    var tag = self.createTagElement(pingText, 'ping', userId, {
+                        'data-user-id': userId
                     });
                     return tag[0].outerHTML;
                 }
 
-                var highlightedHtml = '';
-                $(commentModel.pings).each(function(index, id) {
-                    if(id in self.usersById) {
-                        var user = self.usersById[id];
-                        var pingText = '@' + user.fullname;
-
-                        var endIndex = html.indexOf(pingText) + pingText.length;
-                        var current = html.slice(0, endIndex);
-                        highlightedHtml += current.replace(pingText, __createTag(user));
-
-                        html = html.slice(endIndex);
-                    }
+                $(Object.keys(commentModel.pings)).each(function(index, userId) {
+                    var fullname = commentModel.pings[userId];
+                    var pingText = '@' + fullname;
+                    html = html.replace(new RegExp(pingText, 'g'), __createTag(pingText, userId));
                 });
-                highlightedHtml += html;
-                return highlightedHtml;
             }
             return html;
         },
@@ -2327,15 +2264,15 @@
             var replacedText, replacePattern1, replacePattern2, replacePattern3;
 
             // URLs starting with http://, https://, ftp:// or file://
-            replacePattern1 = /(\b(https?|ftp|file):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
+            replacePattern1 = /(\b(https?|ftp|file):\/\/[-A-ZÄÖÅ0-9+&@#\/%?=~_|!:,.;]*[-A-ZÄÖÅ0-9+&@#\/%=~_|])/gim;
             replacedText = inputText.replace(replacePattern1, '<a href="$1" target="_blank">$1</a>');
 
             // URLs starting with "www." (without // before it, or it would re-link the ones done above).
-            replacePattern2 = /(^|[^\/f])(www\.[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/gim;
+            replacePattern2 = /(^|[^\/f])(www\.[-A-ZÄÖÅ0-9+&@#\/%?=~_|!:,.;]*[-A-ZÄÖÅ0-9+&@#\/%=~_|])/gim;
             replacedText = replacedText.replace(replacePattern2, '$1<a href="http://$2" target="_blank">$2</a>');
 
             // Change email addresses to mailto: links.
-            replacePattern3 = /(([a-zA-Z0-9\-\_\.])+@[a-zA-Z\_]+?(\.[a-zA-Z]{2,6})+)/gim;
+            replacePattern3 = /(([A-ZÄÖÅ0-9\-\_\.])+@[A-ZÄÖÅ\_]+?(\.[A-ZÄÖÅ]{2,6})+)/gim;
             replacedText = replacedText.replace(replacePattern3, '<a href="mailto:$1">$1</a>');
 
             // If there are hrefs in the original text, let's split

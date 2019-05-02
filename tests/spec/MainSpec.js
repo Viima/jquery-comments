@@ -8,9 +8,10 @@ describe('Basic features', function() {
         var saveComment = function(data) {
 
             // Convert pings to human readable format
-            $(data.pings).each(function(index, id) {
-                var user = usersArray.filter(function(user){return user.id == id})[0];
-                data.content = data.content.replace('@' + id, '@' + user.fullname);
+            $(Object.keys(data.pings)).each(function(index, userId) {
+                var fullname = data.pings[userId];
+                var pingText = '@' + fullname;
+                data.content = data.content.replace(new RegExp('@' + userId, 'g'), pingText);
             });
 
             return data;
@@ -25,8 +26,14 @@ describe('Basic features', function() {
             enableDeletingCommentWithReplies: true,
             textareaRows: 1,
             textareaMaxRows: 4,
-            getUsers: function(success, error) {
-                success(usersArray);
+            searchUsers: function(term, success, error) {
+                setTimeout(function() {
+                    success(usersArray.filter(function(user) {
+                        var containsSearchTerm = user.fullname.toLowerCase().indexOf(term.toLowerCase()) != -1;
+                        var isNotSelf = user.id != 1;
+                        return containsSearchTerm && isNotSelf;
+                    }));
+                }, 500);
             },
             getComments: function(success, error) {
                 success(commentsArray);
@@ -853,19 +860,17 @@ describe('Uploading attachments', function() {
 
     function checkCommentElementData(commentEl) {
         var nameContainer = commentEl.find('.name').first();
-        var nameContainerStripped = nameContainer.clone();
-        nameContainerStripped.children().remove();
 
         // Fields to be tested
-        var profilePicture = commentEl.find('img.profile-picture').first().attr('src');
+        var profilePictureURL = commentEl.find('.profile-picture').first().css('background-image').slice(5, -2);
         var replyTo = nameContainer.find('.reply-to').text();
-        var fullname = nameContainerStripped.text();
+        var fullname = nameContainer.children().first().text();
 
         // Model that we are testing against
         var commentModel = commentEl.data().model;
 
         // Check basic fields
-        expect(profilePicture).toBe(commentModel.profilePictureURL);
+        expect(profilePictureURL).toBe(commentModel.profilePictureURL);
         expect(fullname).toBe(commentModel.fullname);
 
         // Check content
