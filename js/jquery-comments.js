@@ -2269,7 +2269,7 @@
 
             // URLs starting with "www." (without // before it, or it would re-link the ones done above).
             replacePattern2 = /(^|[^\/f])(www\.[-A-ZÄÖÅ0-9+&@#\/%?=~_|!:,.;]*[-A-ZÄÖÅ0-9+&@#\/%=~_|])/gim;
-            replacedText = replacedText.replace(replacePattern2, '$1<a href="http://$2" target="_blank">$2</a>');
+            replacedText = replacedText.replace(replacePattern2, '$1<a href="https://$2" target="_blank">$2</a>');
 
             // Change email addresses to mailto: links.
             replacePattern3 = /(([A-ZÄÖÅ0-9\-\_\.])+@[A-ZÄÖÅ\_]+?(\.[A-ZÄÖÅ]{2,6})+)/gim;
@@ -2286,7 +2286,7 @@
                     if (splitInput[i].match(/<a href/g) == null) {
                         splitInput[i] = splitInput[i]
                             .replace(replacePattern1, '<a href="$1" target="_blank">$1</a>')
-                            .replace(replacePattern2, '$1<a href="http://$2" target="_blank">$2</a>')
+                            .replace(replacePattern2, '$1<a href="https://$2" target="_blank">$2</a>')
                             .replace(replacePattern3, '<a href="mailto:$1">$1</a>');
                     }
                 }
