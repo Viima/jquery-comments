@@ -1,0 +1,137 @@
+/*.jquery-comments .profile-picture {
+    float:right;
+}
+
+.jquery-comments .textarea-wrapper {
+    padding-right: 15px;
+}*/
+
+.jquery-comments .profile-picture {
+    float: right;
+}
+
+.jquery-comments .textarea-wrapper {
+    padding-right: 15px;
+}
+
+    .jquery-comments .textarea-wrapper:before {
+        right: 5px;
+        border-right-color: rgba(0, 0, 0, 0);
+    }
+
+    .jquery-comments .textarea-wrapper:after {
+        right: 7px;
+        border-right-color: rgba(0, 0, 0, 0);
+    }
+
+    .jquery-comments .textarea-wrapper .inline-button {
+        left: 12px;
+        right: unset;
+    }
+
+.jquery-comments:not(.mobile) .commenting-field-scrollable .textarea-wrapper .inline-button {
+    margin-left: 15px;
+}
+
+.jquery-comments .textarea-wrapper .upload input {
+    left: 0;
+}
+
+.jquery-comments .textarea-wrapper .close span {
+    right: 37.5%;
+}
+
+.jquery-comments .textarea-wrapper .textarea {
+    padding-left: 2em;
+    padding-right: 0.8em;
+}
+
+.jquery-comments:not(.mobile) .commenting-field-scrollable .textarea-wrapper .textarea {
+    padding-left: calc(2em + 15px);
+}
+
+.jquery-comments .textarea-wrapper .control-row > span {
+    float: left;
+}
+
+    .jquery-comments .textarea-wrapper .control-row > span:not(:first-child) {
+        margin-left: .5em;
+    }
+
+.jquery-comments ul.navigation li.active:after {
+    left: 0;
+    right: 0;
+}
+
+.jquery-comments ul.navigation li[data-sort-key="attachments"] {
+    float: left;
+}
+
+    .jquery-comments ul.navigation li[data-sort-key="attachments"] i {
+        margin-left: 0.25em;
+    }
+
+.jquery-comments ul.navigation .navigation-wrapper.responsive li.title header:after {
+    border-right: 0.3em solid rgba(0, 0, 0, 0) !important;
+    border-left: 0.3em solid rgba(0, 0, 0, 0) !important;
+    margin-right: 0.5em;
+}
+
+.jquery-comments ul.dropdown li .profile-picture {
+    float: right;
+    margin-left: 0.5em;
+}
+
+.jquery-comments ul.navigation .navigation-wrapper.responsive ul.dropdown {
+    right: 0;
+}
+
+.jquery-comments ul.main li.comment .comment-wrapper > .profile-picture {
+    margin-left: 1rem;
+}
+
+.jquery-comments ul.main li.comment time {
+    float: left;
+    margin-right: .5em;
+}
+
+.jquery-comments ul.main li.comment .name .reply-to i {
+    margin-right: .5em;
+    margin-left: .25em;
+}
+
+.jquery-comments ul.main li.comment .name .new {
+    margin-right: .5em;
+}
+
+.jquery-comments ul.main li.comment .wrapper .content a.attachment i {
+    margin-left: 0.5em;
+}
+
+.jquery-comments ul.main li.comment .actions .action {
+    margin-right: 1em;
+    margin-left: 1em;
+}
+
+    .jquery-comments ul.main li.comment .actions .action:first-child {
+        margin-right: 0;
+    }
+
+    .jquery-comments ul.main li.comment .actions .action.upvote .upvote-count {
+        margin-left: .5em;
+    }
+
+.jquery-comments ul.main li.comment .child-comments > *:before {
+    float: right;
+}
+
+.jquery-comments ul.main li.comment .child-comments li.toggle-all .caret {
+    margin-right: .5em;
+    border-right-color: rgba(0, 0, 0, 0);
+    border-left-color: rgba(0, 0, 0, 0);
+}
+
+.jquery-comments .droppable-overlay {
+    right: 0;
+}
+
