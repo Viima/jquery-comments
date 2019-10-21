@@ -70,6 +70,7 @@
             'click .commenting-field .textarea' : 'increaseTextareaHeight',
             'change .commenting-field .textarea' : 'increaseTextareaHeight textareaContentChanged',
             'click .commenting-field:not(.main) .close' : 'removeCommentingField',
+            'click .commenting-field .attachment-inline-wrapper .delete' : 'removeImage',
 
             // Edit mode actions
             'click .commenting-field .send.enabled' : 'postComment',
@@ -161,6 +162,7 @@
                 forceResponsive: false,
                 readOnly: false,
                 defaultNavigationSortKey: 'newest',
+                includeAttachmentInPost: false,
 
                 // Colors
                 highlightColor: '#2793e6',
@@ -512,6 +514,7 @@
             var self = this;
             if(!commentingField) commentingField = this.$el.find('.commenting-field.main');
             var uploadButton = commentingField.find('.upload');
+            var sendButton = commentingField.find('.send');
             var isReply = !commentingField.hasClass('main');
             var fileCount = files.length;
 
@@ -530,21 +533,35 @@
                 }
 
                 var success = function(commentArray) {
-                    $(commentArray).each(function(index, commentJSON) {
-                        var commentModel = self.createCommentModel(commentJSON);
-                        self.addCommentToDataModel(commentModel);
-                        self.addComment(commentModel);
-                        self.addAttachment(commentModel);
-                    });
 
-                    // Close the commenting field if all the uploads were successfull
-                    // and there's no content besides the attachment
-                    if(commentArray.length == fileCount && self.getTextareaContent(textarea).length == 0) {
-                        commentingField.find('.close').trigger('click');
+                    if (self.options.includeAttachmentInPost == true) {
+                        $(commentArray).each(function(index, commentJSON) {
+                            var commentModel = self.createCommentModel(commentJSON);
+                            var attachment = self.createAttachment(commentModel);
+
+                            commentingField.append(attachment);
+                        });
+
+                        sendButton.addClass('enabled');
+                    }
+                    else {
+                        $(commentArray).each(function(index, commentJSON) {
+                            var commentModel = self.createCommentModel(commentJSON);
+                            self.addCommentToDataModel(commentModel);
+                            self.addComment(commentModel);
+                            self.addAttachment(commentModel);
+                        });
+
+                        // Close the commenting field if all the uploads were successfull
+                        // and there's no content besides the attachment
+                        if(commentArray.length == fileCount && self.getTextareaContent(textarea).length == 0 && self.options.includeAttachmentInPost != true) {
+                            commentingField.find('.close').trigger('click');
+                        }
+
+                        uploadButton.addClass('enabled');
                     }
 
                     // Enable upload button and remove spinners
-                    uploadButton.addClass('enabled');
                     commentListSpinner.remove();
                     attachmentListSpinner.remove();
                 };
@@ -803,6 +820,10 @@
             closeButton.hide();
             mainTextarea.parent().find('.upload.inline-button').show();
             mainTextarea.blur();
+
+            if (this.options.includeAttachmentInPost) {
+                closeButton.closest('.commenting-field').find(".attachment-inline-wrapper").remove();
+            }
         },
 
         increaseTextareaHeight: function(ev) {
@@ -876,11 +897,27 @@
             commentingField.remove();
         },
 
+        removeImage: function(ev) {
+            var button = $(ev.currentTarget);
+            var commentField = button.closest(".commenting-field");
+            var saveButton = commentField.find('.control-row .save');
+            var uploadButton = commentField.find('.upload');
+
+            button.closest('.attachment-inline-wrapper').remove();
+
+            saveButton.addClass('enabled');
+            uploadButton.addClass('enabled');
+        },
+
         postComment: function(ev) {
             var self = this;
             var sendButton = $(ev.currentTarget);
             var commentingField = sendButton.parents('.commenting-field').first();
             var textarea = commentingField.find('.textarea');
+            var attachment = commentingField.find('.attachment');
+            var attachmentJSON = attachment.data("attachment-model");
+
+            commentingField.addClass("posting-active");
 
             // Disable send button while request is pending
             sendButton.removeClass('enabled');
@@ -888,12 +925,25 @@
             // Create comment JSON
             var commentJSON = this.createCommentJSON(textarea);
 
+            // Save attachment
+            if (this.options.includeAttachmentInPost) {
+                commentJSON.fileURL = "";
+                commentJSON.fileMimeType = "";
+
+                if (attachmentJSON != null) {
+                    commentJSON.fileURL = attachmentJSON.fileURL;
+                    commentJSON.fileMimeType = attachmentJSON.fileMimeType;
+                }
+            }
+
             // Reverse mapping
             commentJSON = this.applyExternalMappings(commentJSON);
 
             var success = function(commentJSON) {
                 self.createComment(commentJSON);
                 commentingField.find('.close').trigger('click');
+
+                commentingField.removeClass("posting-active");
             };
 
             var error = function() {
@@ -914,6 +964,10 @@
             var saveButton = $(ev.currentTarget);
             var commentingField = saveButton.parents('.commenting-field').first();
             var textarea = commentingField.find('.textarea');
+            var attachment = commentingField.find('.attachment');
+            var attachmentJSON = attachment.data("attachment-model");
+
+            commentingField.addClass("posting-active");
 
             // Disable send button while request is pending
             saveButton.removeClass('enabled');
@@ -926,6 +980,18 @@
                 pings: this.getPings(textarea),
                 modified: new Date().getTime()
             });
+
+
+            // Save attachment
+            if (this.options.includeAttachmentInPost) {
+                commentJSON.fileURL = "";
+                commentJSON.fileMimeType = "";
+
+                if (attachmentJSON != null) {
+                    commentJSON.fileURL = attachmentJSON.fileURL;
+                    commentJSON.fileMimeType = attachmentJSON.fileMimeType;
+                }
+            }
 
             // Reverse mapping
             commentJSON = this.applyExternalMappings(commentJSON);
@@ -942,6 +1008,8 @@
 
                 // Close the editing field
                 commentingField.find('.close').trigger('click');
+
+                commentingField.removeClass("posting-active");
 
                 // Re-render the comment
                 self.reRenderComment(commentModel.id);
@@ -1084,6 +1152,13 @@
             // Create the editing field
             var editField = this.createCommentingFieldElement(commentModel.parent, commentModel.id);
             commentEl.find('.comment-wrapper').first().append(editField);
+
+            // Show attachment on edit
+            if (this.options.includeAttachmentInPost && commentModel.fileURL != undefined) {
+                var attachment = this.createAttachment(commentModel);
+
+                editField.append(attachment);
+            }
 
             // Append original content
             var textarea = editField.find('.textarea');
@@ -1363,7 +1438,7 @@
                     });
                     // Multi file upload might not work with backend as the the file names
                     // may be the same causing duplicates
-                    if(!$.browser.mobile) fileInput.attr('multiple', 'multiple');
+                    if(!$.browser.mobile && !this.options.includeAttachmentInPost) fileInput.attr('multiple', 'multiple');
 
                     if(this.options.uploadIconURL.length) {
                         uploadIcon.css('background-image', 'url("'+this.options.uploadIconURL+'")');
@@ -1741,80 +1816,23 @@
                 'class': 'content'
             });
 
-            // Case: attachment
-            var isAttachment = commentModel.fileURL != undefined;
-            if(isAttachment) {
-                var format = null;
-                var type = null;
+            var isAttachment = commentModel.fileURL != undefined && commentModel.fileURL != "";
+            
 
-                // Type and format
-                if(commentModel.fileMimeType) {
-                    var mimeTypeParts = commentModel.fileMimeType.split('/');
-                    if(mimeTypeParts.length == 2) {
-                        format = mimeTypeParts[1];
-                        type = mimeTypeParts[0];
-                    }
-                }
-
-                // Attachment link
-                var link = $('<a/>', {
-                    'class': 'attachment',
-                    href: commentModel.fileURL,
-                    target: '_blank'
-                });
-
-                // Case: image preview
-                if(type == 'image') {
-                    var image = $('<img/>', {
-                        src: commentModel.fileURL
-                    });
-                    link.html(image);
-
-                // Case: video preview
-                } else if(type == 'video') {
-                    var video = $('<video/>', {
-                        src: commentModel.fileURL,
-                        type: commentModel.fileMimeType,
-                        controls: 'controls'
-                    });
-                    link.html(video);
-
-                // Case: icon and text
-                } else {
-
-                    // Icon
-                    var availableIcons = ['archive', 'audio', 'code', 'excel', 'image', 'movie', 'pdf', 'photo',
-                        'picture', 'powerpoint', 'sound', 'video', 'word', 'zip'];
-
-                    var iconClass = 'fa fa-file-o';
-                    if(availableIcons.indexOf(format) > 0) {
-                        iconClass = 'fa fa-file-' + format + '-o';
-                    } else if(availableIcons.indexOf(type) > 0) {
-                        iconClass = 'fa fa-file-' + type + '-o';
-                    }
-
-                    var fileIcon = $('<i/>', {
-                        'class': iconClass
-                    });
-                    if(this.options.fileIconURL.length) {
-                        fileIcon.css('background-image', 'url("'+this.options.fileIconURL+'")');
-                        fileIcon.addClass('image');
-                    }
-
-                    // File name
-                    var parts = commentModel.fileURL.split('/');
-                    var fileName = parts[parts.length - 1];
-                    fileName = fileName.split('?')[0];
-                    fileName = decodeURIComponent(fileName);
-
-                    link.text(fileName);
-                    link.prepend(fileIcon);
-                }
-                content.html(link);
-
-            // Case: regular comment
-            } else {
+            if (!isAttachment || this.options.includeAttachmentInPost == true && commentModel.content) {
                 content.html(this.getFormattedCommentContent(commentModel));
+            }
+
+            // Case: attachment
+            if (isAttachment) {
+                var attachment = this.createAttachment(commentModel);
+
+                if (this.options.includeAttachmentInPost == true) {
+                    content.append(attachment);
+                }
+                else {
+                    content.html(attachment);
+                }
             }
 
             // Edited timestamp
@@ -1865,17 +1883,20 @@
             if(commentModel.createdByCurrentUser || this.options.currentUserIsAdmin) {
 
                 // Case: delete button for attachment
-                if(isAttachment && this.isAllowedToDelete(commentModel.id)) {
+                if(isAttachment || this.options.includeAttachmentInPost && this.isAllowedToDelete(commentModel.id)) {
                     var deleteButton = $('<button/>', {
                         'class': 'action delete enabled',
+                        'type': 'button',
                         text: this.options.textFormatter(this.options.deleteText)
                     });
                     actions.append(deleteButton);
+                }
 
                 // Case: edit button for regular comment
-                } else if(!isAttachment && this.options.enableEditing) {
+                if((!isAttachment || this.options.includeAttachmentInPost) && this.options.enableEditing) {
                     var editButton = $('<button/>', {
                         'class': 'action edit',
+                        'type': 'button',
                         text: this.options.textFormatter(this.options.editText)
                     });
                     actions.append(editButton);
@@ -1893,6 +1914,90 @@
             wrapper.append(actions);
             commentWrapper.append(profilePicture).append(time).append(nameEl).append(wrapper);
             return commentWrapper;
+        },
+
+        createAttachment: function(commentModel, content) {
+            var format = null;
+            var type = null;
+
+            // Type and format
+            if(commentModel.fileMimeType) {
+                var mimeTypeParts = commentModel.fileMimeType.split('/');
+                if(mimeTypeParts.length == 2) {
+                    format = mimeTypeParts[1];
+                    type = mimeTypeParts[0];
+                }
+            }
+
+            // Attachment link
+            var link = $('<a/>', {
+                'class': 'attachment',
+                href: commentModel.fileURL,
+                target: '_blank',
+                data: {'attachment-model' : commentModel}
+            });
+
+            // Case: image preview
+            if(type == 'image') {
+                var image = $('<img/>', {
+                    src: commentModel.fileURL
+                });
+                link.html(image);
+
+            // Case: video preview
+            } else if(type == 'video') {
+                var video = $('<video/>', {
+                    src: commentModel.fileURL,
+                    type: commentModel.fileMimeType,
+                    controls: 'controls'
+                });
+                link.html(video);
+
+            // Case: icon and text
+            } else {
+
+                // Icon
+                var availableIcons = ['archive', 'audio', 'code', 'excel', 'image', 'movie', 'pdf', 'photo',
+                    'picture', 'powerpoint', 'sound', 'video', 'word', 'zip'];
+
+                var iconClass = 'fa fa-file-o';
+                if(availableIcons.indexOf(format) > 0) {
+                    iconClass = 'fa fa-file-' + format + '-o';
+                } else if(availableIcons.indexOf(type) > 0) {
+                    iconClass = 'fa fa-file-' + type + '-o';
+                }
+
+                var fileIcon = $('<i/>', {
+                    'class': iconClass
+                });
+                if(this.options.fileIconURL.length) {
+                    fileIcon.css('background-image', 'url("'+this.options.fileIconURL+'")');
+                    fileIcon.addClass('image');
+                }
+
+                // File name
+                var parts = commentModel.fileURL.split('/');
+                var fileName = parts[parts.length - 1];
+                fileName = fileName.split('?')[0];
+                fileName = decodeURIComponent(fileName);
+
+                link.text(fileName);
+                link.prepend(fileIcon);
+            }
+
+            var linkWrapper = $('<div/>', {
+                'class': 'attachment-inline-wrapper'
+            });
+
+            // Close button
+            var closeButton = $('<span/>', {
+                'class': 'delete inline-button'
+            }).append($('<span class="left"/>')).append($('<span class="right"/>'));
+
+            linkWrapper.append(link);
+            linkWrapper.append(closeButton);
+
+            return linkWrapper;
         },
 
         createUpvoteElement: function(commentModel) {
