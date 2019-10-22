@@ -629,6 +629,66 @@ http://viima.github.io/jquery-comments/*/
 }
 
 
+.commenting-field .attachment-inline-wrapper {
+    position: relative;
+    display: inline-block;
+    margin: 1em 0 0 5.2em;
+}
+.jquery-comments .textarea-wrapper .upload.inline-button {
+    display: none !important;
+}
+
+.attachment-inline-wrapper .delete {
+    background: #000;
+    width: .9em;
+    height: .9em;
+    cursor: pointer;
+    top: 0;
+    right: 0;
+    z-index: 10;
+    position: absolute;
+    border: .5em solid rgba(0,0,0,0);
+    box-sizing: content-box;
+    font-size: inherit;
+    overflow: hidden;
+    opacity: 0.6;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    display: none;
+}
+
+.attachment-inline-wrapper .delete span {
+    background: #999;
+    width: 25%;
+    left: 37.5%;
+    height: 100%;
+    position: absolute;
+    -ms-transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+.attachment-inline-wrapper .delete .right {
+    -ms-transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    transform: rotate(-45deg);
+}
+
+.attachment-inline-wrapper .delete:hover {
+    opacity: 1;
+}
+
+.commenting-field .attachment-inline-wrapper .delete {
+    display: block;
+}
+
+.jquery-comments .textarea-wrapper .control-row .delete {
+    display: none;
+}
+
+
 /* Child comments */
 .jquery-comments ul.main li.comment .child-comments > *:before { /* Margin for second level content */
 	content: "";

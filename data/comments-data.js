@@ -160,6 +160,23 @@ var commentsArray = [
    "upvote_count": 0,
    "user_has_upvoted": false,
    "is_new": false
+},
+{
+   "id": 11,
+   "parent": 2,
+   "created": "2015-01-06",
+   "modified": "2015-01-06",
+   "file_url": "https://www.w3schools.com/html/pic_trulli.jpg",
+   "file_mime_type": "image/jpg",
+   "pings": [],
+   "creator": 1,
+   "fullname": "You",
+   "profile_picture_url": "https://viima-app.s3.amazonaws.com/media/public/defaults/user-icon.png",
+   "created_by_admin": false,
+   "created_by_current_user": true,
+   "upvote_count": 0,
+   "user_has_upvoted": false,
+   "is_new": false
 }
 ]
 

@@ -899,9 +899,9 @@
 
         removeImage: function(ev) {
             var button = $(ev.currentTarget);
-            var commentField = button.closest(".commenting-field");
-            var saveButton = commentField.find('.control-row .save');
-            var uploadButton = commentField.find('.upload');
+            var commentingField = button.closest(".commenting-field");
+            var saveButton = commentingField.find('.control-row .save');
+            var uploadButton = commentingField.find('.upload');
 
             button.closest('.attachment-inline-wrapper').remove();
 
@@ -1154,7 +1154,7 @@
             commentEl.find('.comment-wrapper').first().append(editField);
 
             // Show attachment on edit
-            if (this.options.includeAttachmentInPost && commentModel.fileURL != undefined) {
+            if (this.options.includeAttachmentInPost && commentModel.fileURL) {
                 var attachment = this.createAttachment(commentModel);
 
                 editField.append(attachment);
@@ -1165,7 +1165,9 @@
             textarea.attr('data-comment', commentModel.id);
 
             // Escaping HTML
-            textarea.append(this.getFormattedCommentContent(commentModel, true));
+            if (commentModel.content){
+                textarea.append(this.getFormattedCommentContent(commentModel, true));
+            }
 
             // Move cursor to end
             this.moveCursorToEnd(textarea);
