@@ -468,7 +468,11 @@
 
             // Case: main level comment
             } else {
-                commentList.prepend(commentEl);
+                if(this.currentSortKey == 'newest') {
+                    commentList.prepend(commentEl);
+                } else {
+                    commentList.append(commentEl);
+                }
             }
         },
 
