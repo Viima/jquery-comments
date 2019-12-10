@@ -2189,7 +2189,7 @@
 
         getTextareaContent: function(textarea, humanReadable) {
             var wysiwyg_editor = textarea.data('wysiwyg_editor');
-            if (wysiwyg_editor && this.options.wysiwyg_editor) {
+            if (wysiwyg_editor && this.options.wysiwyg_editor.opts.enable) {
                 return this.options.wysiwyg_editor.get_contents(wysiwyg_editor);
             }
             var parentId = textarea.data('parent');
