@@ -188,8 +188,8 @@
                     // Object that returns the html content of the edit (html text).
                     get_contents: function(editor) {},
                     // Call of events.
-                    on_post_comment: function(editor, evt) {},
-                    on_put_comment: function(editor, evt) {},
+                    on_post_comment: function(editor, evt, status) {},
+                    on_put_comment: function(editor, evt, status) {},
                     on_close_button: function (editor, evt) {}
                 },
                 fieldMappings: {
@@ -925,20 +925,27 @@
             // Reverse mapping
             commentJSON = this.applyExternalMappings(commentJSON);
 
+            // Notify event to external editor
+            var editor_event_post_comment = function (status) {
+                if (wysiwyg_editor && self.options.wysiwyg_editor.opts.enable) {
+                    self.options.wysiwyg_editor.on_post_comment(wysiwyg_editor, ev, status);
+                }
+            };
+
             var success = function(commentJSON) {
+                editor_event_post_comment('success');
                 self.createComment(commentJSON);
                 commentingField.find('.close').trigger('click');
             };
 
             var error = function() {
+                editor_event_post_comment('error');
                 sendButton.addClass('enabled');
             };
 
+
             this.options.postComment(commentJSON, success, error);
-            // Notify event to external editor
-            if (wysiwyg_editor && this.options.wysiwyg_editor.opts.enable) {
-                this.options.wysiwyg_editor.on_post_comment(wysiwyg_editor, ev);
-            }
+            editor_event_post_comment();
         },
 
         createComment: function(commentJSON) {
@@ -969,7 +976,15 @@
             // Reverse mapping
             commentJSON = this.applyExternalMappings(commentJSON);
 
+            // Notify event to external editor
+            var editor_event_put_comment = function (status) {
+                if (wysiwyg_editor && self.options.wysiwyg_editor.opts.enable) {
+                    self.options.wysiwyg_editor.on_put_comment(wysiwyg_editor, ev, status);
+                }
+            };
             var success = function(commentJSON) {
+                editor_event_put_comment('success');
+
                 // The outermost parent can not be changed by editing the comment so the childs array
                 // of parent does not require an update
 
@@ -987,14 +1002,13 @@
             };
 
             var error = function() {
+                editor_event_put_comment('error');
                 saveButton.addClass('enabled');
             };
 
             this.options.putComment(commentJSON, success, error);
             // Notify event to external editor
-            if (wysiwyg_editor && this.options.wysiwyg_editor.opts.enable) {
-                this.options.wysiwyg_editor.on_put_comment(wysiwyg_editor, ev);
-            }
+            editor_event_put_comment();
         },
 
         deleteComment: function(ev) {
