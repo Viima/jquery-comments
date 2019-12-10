@@ -189,7 +189,8 @@
                     get_contents: function(editor) {},
                     // Call of events.
                     on_post_comment: function(editor, evt) {},
-                    on_put_comment: function(editor, evt) {}
+                    on_put_comment: function(editor, evt) {},
+                    on_close_button: function (editor, evt) {}
                 },
                 fieldMappings: {
                     id: 'id',
@@ -817,7 +818,11 @@
             var closeButton = $(ev.currentTarget);
             var mainTextarea = this.$el.find('.commenting-field.main .textarea');
             var mainControlRow = this.$el.find('.commenting-field.main .control-row');
+            var wysiwyg_editor = mainTextarea.data('wysiwyg_editor');
 
+            if (wysiwyg_editor && this.options.wysiwyg_editor.opts.enable) {
+                this.options.wysiwyg_editor.on_close_button(wysiwyg_editor, ev);
+            }
             this.clearTextarea(mainTextarea);
             this.adjustTextareaHeight(mainTextarea, false);
 
