@@ -173,6 +173,24 @@
                 textareaMaxRows: 5,
                 maxRepliesVisible: 2,
 
+                // wysiwyg-editor interface
+                wysiwyg_editor: {
+                    opts: {
+                        // Whether an external editor is being used.
+                        enable: false,
+                        // Indicates whether comments will be displayed with plain text or rendered as html.
+                        is_html: true
+                    },
+                    // Initializes a new instance of the html editor.
+                    init: function (textarea, html) {},
+                    // jquery object within which the editor will be rendered.
+                    get_container: function(textarea) {},
+                    // Object that returns the html content of the edit (html text).
+                    get_contents: function(editor) {},
+                    // Call of events.
+                    on_post_comment: function(editor, evt) {},
+                    on_put_comment: function(editor, evt) {}
+                },
                 fieldMappings: {
                     id: 'id',
                     parent: 'parent',
@@ -223,7 +241,7 @@
             if($.browser.mobile) this.$el.addClass('mobile');
 
             // Init options
-            this.options = $.extend(true, {}, this.getDefaultOptions(), options);;
+            this.options = $.extend(true, {}, this.getDefaultOptions(), options);
 
             // Read-only mode
             if(this.options.readOnly) this.$el.addClass('read-only');
@@ -816,6 +834,7 @@
 
         textareaContentChanged: function(ev) {
             var textarea = $(ev.currentTarget);
+            var wysiwyg_editor = textarea.data('wysiwyg_editor');
             var saveButton = textarea.siblings('.control-row').find('.save');
 
             // Update parent id if reply-to tag was removed
@@ -847,7 +866,12 @@
 
             // Check if content or parent has changed if editing
             var contentOrParentChangedIfEditing = true;
-            var content = this.getTextareaContent(textarea, true);
+            var content;
+            if (wysiwyg_editor && this.options.wysiwyg_editor.opts.enable) {
+                content = this.options.wysiwyg_editor.get_contents(wysiwyg_editor);
+            } else {
+                content = this.getTextareaContent(textarea, true);
+            }
             if(commentModel = this.commentsById[textarea.attr('data-comment')]) {
                 var contentChanged = content != commentModel.content;
                 var parentFromModel;
@@ -885,6 +909,7 @@
             var sendButton = $(ev.currentTarget);
             var commentingField = sendButton.parents('.commenting-field').first();
             var textarea = commentingField.find('.textarea');
+            var wysiwyg_editor = textarea.data('wysiwyg_editor');
 
             // Disable send button while request is pending
             sendButton.removeClass('enabled');
@@ -905,6 +930,10 @@
             };
 
             this.options.postComment(commentJSON, success, error);
+            // Notify event to external editor
+            if (wysiwyg_editor && this.options.wysiwyg_editor.opts.enable) {
+                this.options.wysiwyg_editor.on_post_comment(wysiwyg_editor, ev);
+            }
         },
 
         createComment: function(commentJSON) {
@@ -918,6 +947,7 @@
             var saveButton = $(ev.currentTarget);
             var commentingField = saveButton.parents('.commenting-field').first();
             var textarea = commentingField.find('.textarea');
+            var wysiwyg_editor = textarea.data('wysiwyg_editor');
 
             // Disable send button while request is pending
             saveButton.removeClass('enabled');
@@ -956,6 +986,10 @@
             };
 
             this.options.putComment(commentJSON, success, error);
+            // Notify event to external editor
+            if (wysiwyg_editor && this.options.wysiwyg_editor.opts.enable) {
+                this.options.wysiwyg_editor.on_put_comment(wysiwyg_editor, ev);
+            }
         },
 
         deleteComment: function(ev) {
@@ -1066,7 +1100,13 @@
 
                 // Move cursor to end
                 var textarea = replyField.find('.textarea');
-                this.moveCursorToEnd(textarea)
+
+                // starts new editor instance (before cursor change).
+                // textarea saves the reference to the editor that will be used later.
+                if (this.options.wysiwyg_editor.opts.enable) {
+                    textarea.data('wysiwyg_editor', this.options.wysiwyg_editor.init(textarea));
+                }
+                this.moveCursorToEnd(textarea);
 
                 // Make sure the reply field will be displayed
                 var scrollTop = this.options.scrollContainer.scrollTop();
@@ -1096,6 +1136,14 @@
             // Escaping HTML
             textarea.append(this.getFormattedCommentContent(commentModel, true));
 
+            // starts new editor instance.
+            // textarea saves the reference to the editor that will be used later.
+            // In this case the editor starts with the content of the model (raw text).
+            if (this.options.wysiwyg_editor.opts.enable) {
+                textarea.data('wysiwyg_editor', this.options.wysiwyg_editor.init(
+                    textarea, commentModel.content
+                ));
+            }
             // Move cursor to end
             this.moveCursorToEnd(textarea);
         },
@@ -1173,11 +1221,17 @@
             // Commenting field
             var mainCommentingField = this.createMainCommentingFieldElement();
             this.$el.append(mainCommentingField);
-
             // Hide control row and close button
             var mainControlRow = mainCommentingField.find('.control-row');
             mainControlRow.hide();
             mainCommentingField.find('.close').hide();
+
+            // Starts a new instance of the editor.
+            // Connects the textarea with the corresponding editor.
+            if (this.options.wysiwyg_editor.opts.enable) {
+                var textarea = mainCommentingField.find('.textarea');
+                textarea.data('wysiwyg_editor', this.options.wysiwyg_editor.init(textarea));
+            }
 
             // Navigation bar
             if (this.options.enableNavigation) {
@@ -1395,8 +1449,13 @@
             // Populate the element
             controlRow.prepend(saveButton);
             textareaWrapper.append(closeButton).append(textarea).append(controlRow);
+            // controle over external html editor
+            if (this.options.wysiwyg_editor.opts.enable) {
+                // Who assumes here is the external wysiwyg editor but the default api should keep working.
+                textarea.hide();
+                textareaWrapper.append(this.options.wysiwyg_editor.get_container(textarea)).append(controlRow);
+            }
             commentingField.append(profilePicture).append(textareaWrapper);
-
 
             if(parentId) {
 
@@ -1818,7 +1877,11 @@
 
             // Case: regular comment
             } else {
-                content.html(this.getFormattedCommentContent(commentModel));
+                if (this.options.wysiwyg_editor.opts.is_html) {
+                    content.html(commentModel.content);
+                } else {
+                    content.html(this.getFormattedCommentContent(commentModel));
+                }
             }
 
             // Edited timestamp
@@ -2125,6 +2188,11 @@
         },
 
         getTextareaContent: function(textarea, humanReadable) {
+            var wysiwyg_editor = textarea.data('wysiwyg_editor');
+            if (wysiwyg_editor && this.options.wysiwyg_editor) {
+                return this.options.wysiwyg_editor.get_contents(wysiwyg_editor);
+            }
+            var parentId = textarea.data('parent');
             var textareaClone = textarea.clone();
 
             // Remove reply-to tag
