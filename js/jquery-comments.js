@@ -125,6 +125,7 @@
                 attachmentIconURL: '',
                 fileIconURL: '',
                 noCommentsIconURL: '',
+                closeIconURL: '',
 
                 // Strings to be formatted (for example localization)
                 textareaPlaceholderText: 'Add a comment',
@@ -1334,7 +1335,14 @@
             // Close button
             var closeButton = $('<span/>', {
                 'class': 'close inline-button'
-            }).append($('<span class="left"/>')).append($('<span class="right"/>'));
+            })
+
+            var closeIcon = $('<i class="fa fa-close"/>');
+            if (this.options.closeIconURL.length) {
+                closeIcon.css('background-image', 'url("'+this.options.closeIconURL+'")');
+                closeIcon.addClass('image');
+            }
+            closeButton.append(closeIcon);
 
             // Save button text
             if(existingCommentId) {
