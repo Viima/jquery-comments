@@ -2277,7 +2277,7 @@
 
             // Change email addresses to mailto: links.
             replacePattern3 = /(([A-ZÄÖÅ0-9\-\_\.])+@[A-ZÄÖÅ\_]+?(\.[A-ZÄÖÅ]{2,6})+)/gim;
-            replacedText = replacedText.replace(replacePattern3, '<a href="mailto:$1">$1</a>');
+            replacedText = replacedText.replace(replacePattern3, '<a href="mailto:$1" target="_blank">$1</a>');
 
             // If there are hrefs in the original text, let's split
             // the text up and only work on the parts that don't have urls yet.
@@ -2291,7 +2291,7 @@
                         splitInput[i] = splitInput[i]
                             .replace(replacePattern1, '<a href="$1" target="_blank">$1</a>')
                             .replace(replacePattern2, '$1<a href="https://$2" target="_blank">$2</a>')
-                            .replace(replacePattern3, '<a href="mailto:$1">$1</a>');
+                            .replace(replacePattern3, '<a href="mailto:$1" target="_blank">$1</a>');
                     }
                 }
                 var combinedReplacedText = splitInput.join('');
