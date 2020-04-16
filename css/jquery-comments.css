@@ -244,20 +244,20 @@ http://viima.github.io/jquery-comments/*/
 	margin-right: .5em;
 }
 
-.jquery-comments .textarea-wrapper .control-row > span.enabled {
+.jquery-comments .textarea-wrapper .control-row > .button.enabled {
 	opacity: 1;
 	cursor: pointer;
 }
 
-.jquery-comments .textarea-wrapper .control-row > span:not(.enabled) {
+.jquery-comments .textarea-wrapper .control-row > .button:not(.enabled) {
 	pointer-events: none;
 }
 
-.jquery-comments .textarea-wrapper .control-row > span.enabled:hover {
+.jquery-comments .textarea-wrapper .control-row > .button.enabled:hover {
 	opacity: .9;
 }
 
-.jquery-comments .textarea-wrapper .control-row > span.upload {
+.jquery-comments .textarea-wrapper .control-row > .button.upload {
 	position: relative;
 	overflow: hidden;
 	background-color: #999;

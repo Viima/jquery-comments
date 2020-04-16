@@ -1342,7 +1342,7 @@
 
                 // Delete button
                 var deleteButton = $('<span/>', {
-                    'class': 'delete',
+                    'class': 'delete button',
                     text: this.options.textFormatter(this.options.deleteText)
                 }).css('background-color', this.options.deleteButtonColor);
                 controlRow.append(deleteButton);
@@ -1356,7 +1356,7 @@
                 // Add upload button if attachments are enabled
                 if(this.options.enableAttachments) {
                     var uploadButton = $('<span/>', {
-                        'class': 'enabled upload'
+                        'class': 'enabled upload button'
                     });
                     var uploadIcon = $('<i/>', {
                         'class': 'fa fa-paperclip'
@@ -1388,7 +1388,7 @@
             // Save button
             var saveButtonClass = existingCommentId ? 'update' : 'send';
             var saveButton = $('<span/>', {
-                'class': saveButtonClass + ' save highlight-background',
+                'class': saveButtonClass + ' save button highlight-background',
                 text: saveButtonText
             });
 
