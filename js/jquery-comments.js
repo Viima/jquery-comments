@@ -512,7 +512,7 @@
             this.updateToggleAllButton(parentEl);
         },
 
-        uploadAttachments: function(files, commentingField) {
+        preSaveAttachments: function(files, commentingField) {
             var self = this;
             if(!commentingField) commentingField = this.$el.find('.commenting-field.main');
             var uploadButton = commentingField.find('.upload');
@@ -999,7 +999,7 @@
         fileInputChanged: function(ev, files) {
             var files = ev.currentTarget.files;
             var commentingField = $(ev.currentTarget).parents('.commenting-field').first();
-            this.uploadAttachments(files, commentingField);
+            this.preSaveAttachments(files, commentingField);
         },
 
         upvoteComment: function(ev) {
@@ -1156,7 +1156,7 @@
 
             // Hide the overlay and upload the files
             this.hideDroppableOverlay();
-            this.uploadAttachments(ev.originalEvent.dataTransfer.files);
+            this.preSaveAttachments(ev.originalEvent.dataTransfer.files);
         },
 
         stopPropagation: function(ev) {
