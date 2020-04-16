@@ -591,22 +591,19 @@
             var fileCount = files.length;
 
             if(fileCount) {
-                var textarea = commentingField.find('.textarea');
-
-                var commentArray = [];
+                var attachmentsContainer = commentingField.find('.control-row .attachments');
                 $(files).each(function(index, file) {
 
-                    // Create comment JSON
-                    var commentJSON = self.createCommentJSON(textarea);
-                    commentJSON.id += '-' + index;
-                    commentJSON.content = '';
-                    commentJSON.file = file;
-                    commentJSON.fileURL = 'C:/fakepath/' + file.name;
-                    commentJSON.fileMimeType = file.type;
+                    // Create temporary attachment model
+                    var attachment = {
+                        url: 'C:/fakepath/' + file.name,
+                        mime_type: file.type,
+                        file: file
+                    }
 
-                    // Reverse mapping
-                    commentJSON = self.applyExternalMappings(commentJSON);
-                    commentArray.push(commentJSON);
+                    // Add attachment tag to the container
+                    var attachmentTag = self.createAttachmentTagElement(attachment, true);
+                    attachmentsContainer.append(attachmentTag);
                 });
             }
 
@@ -1434,7 +1431,7 @@
                 'class': 'attachments',
             });
             $(attachments).each(function(index, attachment) {
-                var attachmentTag = self.createAttachmentTagElement(attachment);
+                var attachmentTag = self.createAttachmentTagElement(attachment, true);
                 attachmentsContainer.append(attachmentTag);
             });
 
@@ -1867,7 +1864,7 @@
                     }
 
                     // Tag element
-                    var attachmentTag = self.createAttachmentTagElement(attachment);
+                    var attachmentTag = self.createAttachmentTagElement(attachment, false);
                     attachmentTags.append(attachmentTag);
                 });
             }
@@ -1965,7 +1962,7 @@
             return tagEl;
         },
 
-        createAttachmentTagElement: function(attachment) {
+        createAttachmentTagElement: function(attachment, editable) {
 
             // File name
             var parts = attachment.url.split('/');
@@ -1985,7 +1982,18 @@
             // Tag element
             var attachmentTag = $('<span/>', {
                 'class': 'tag attachment'
-            }).append(attachmentIcon).append('&nbsp;').append(fileName);
+            }).append(attachmentIcon, fileName);
+
+            // Add delete button if editable
+            if(editable) {
+                attachmentTag.addClass('editable');
+
+                // Append close button
+                var closeButton = $('<i/>', {
+                    'class': 'fa fa-times delete'
+                });
+                attachmentTag.append(closeButton);
+            }
 
             return attachmentTag;
         },

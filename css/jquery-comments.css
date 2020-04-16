@@ -53,12 +53,35 @@ http://viima.github.io/jquery-comments/*/
 	display: inline-block;
 }
 
+.jquery-comments .tag.attachment {
+	padding: 0.05em 0.5em;
+	line-height: 1.3em;
+}
+
 .jquery-comments .attachments .tag {
 	margin-right: 0.5em;
 }
 
+.jquery-comments .attachments .tag i:first-child {
+	margin-right: 0.4em;
+	color: #555;
+}
+
+.jquery-comments .attachments .tag i.delete {
+	margin-left: 0.6em;
+	font-size: 14px;
+	color: #888;
+}
+
+.jquery-comments .attachments .tag:hover i.delete {
+	color: black;
+}
+
 .jquery-comments .tag:hover {
 	text-decoration: none;
+}
+
+.jquery-comments .tag:not(.editable):hover {
 	background-color: #d8edf8;
 	border-color: #2793e6;
 }
