@@ -231,11 +231,15 @@ http://viima.github.io/jquery-comments/*/
 .jquery-comments .textarea-wrapper .control-row > span {
 	line-height: 1.6em;
 	margin-top: .4em;
-	border: 1px solid rgba(0, 0, 0, 0);
+}
+
+.jquery-comments .textarea-wrapper .control-row > .attachments {
+	float: left;
 }
 
 .jquery-comments .textarea-wrapper .control-row > .button {
 	float: right;
+	border: 1px solid rgba(0, 0, 0, 0);
 	color: #FFF;
 	padding: 0 1em;
 	font-size: 1em;
