@@ -182,6 +182,7 @@
                     file: 'file',
                     fileURL: 'file_url',
                     fileMimeType: 'file_mime_type',
+                    attachments: 'attachments',
                     pings: 'pings',
                     creator: 'creator',
                     fullname: 'fullname',
@@ -1668,6 +1669,8 @@
         },
 
         createCommentWrapperElement: function(commentModel) {
+            var self = this;
+
             var commentWrapper = $('<div/>', {
                 'class': 'comment-wrapper'
             });
@@ -1832,6 +1835,37 @@
                 content.append(edited);
             }
 
+            // Attachments
+            var attachments = $('<div/>', {
+                'class': 'attachments'
+            });
+
+            if(commentModel.attachments && commentModel.attachments.length) {
+                $(commentModel.attachments).each(function(index, attachment) {
+
+                    // File name
+                    var parts = attachment.url.split('/');
+                    var fileName = parts[parts.length - 1];
+                    fileName = fileName.split('?')[0];
+                    fileName = decodeURIComponent(fileName);
+
+                    // Attachment icon
+                    var attachmentIcon = $('<i/>', {
+                        'class': 'fa fa-paperclip'
+                    });
+                    if(self.options.attachmentIconURL.length) {
+                        attachmentIcon.css('background-image', 'url("'+self.options.attachmentIconURL+'")');
+                        attachmentIcon.addClass('image');
+                    }
+
+                    // Tag element
+                    var attachmentTag = $('<span/>', {
+                        'class': 'tag attachment'
+                    }).append(attachmentIcon).append('&nbsp;').append(fileName);
+                    attachments.append(attachmentTag);
+                });
+            }
+
             // Actions
             var actions = $('<span/>', {
                 'class': 'actions'
@@ -1894,6 +1928,7 @@
             });
 
             wrapper.append(content);
+            wrapper.append(attachments);
             wrapper.append(actions);
             commentWrapper.append(profilePicture).append(time).append(nameEl).append(wrapper);
             return commentWrapper;

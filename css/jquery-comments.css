@@ -561,6 +561,10 @@ http://viima.github.io/jquery-comments/*/
 	content: " - ";
 }
 
+/* Attachments */
+.jquery-comments ul.main li.comment .attachments .tag:not(:first-child) {
+	margin-left: 0.5em;
+}
 
 /* Actions */
 .jquery-comments.mobile ul.main li.comment .actions {
