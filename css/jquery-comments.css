@@ -49,6 +49,12 @@ http://viima.github.io/jquery-comments/*/
 	font-weight: normal;
 	border-radius: 1em;
 	transition: all 0.2s linear;
+	white-space: nowrap;
+	display: inline-block;
+}
+
+.jquery-comments .attachments .tag {
+	margin-right: 0.5em;
 }
 
 .jquery-comments .tag:hover {
@@ -228,17 +234,14 @@ http://viima.github.io/jquery-comments/*/
 	padding-right: calc(2em + 15px);	/* Because of scrollbar */
 }
 
-.jquery-comments .textarea-wrapper .control-row > span {
-	line-height: 1.6em;
-	margin-top: .4em;
-}
-
-.jquery-comments .textarea-wrapper .control-row > .attachments {
-	float: left;
+.jquery-comments .textarea-wrapper .control-row > .attachments .tag {
+	margin-top: .6em;	
 }
 
 .jquery-comments .textarea-wrapper .control-row > .button {
 	float: right;
+	line-height: 1.6em;
+	margin-top: .4em;
 	border: 1px solid rgba(0, 0, 0, 0);
 	color: #FFF;
 	padding: 0 1em;
@@ -566,10 +569,6 @@ http://viima.github.io/jquery-comments/*/
 	margin-top: .25em;
 	margin-right: .25em;
 	margin-bottom: .25em;
-}
-
-.jquery-comments ul.main li.comment .attachments .tags .tag:not(:first-child) {
-	margin-left: 0.5em;
 }
 
 /* Actions */
