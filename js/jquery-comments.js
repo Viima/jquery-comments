@@ -1962,7 +1962,7 @@
             return tagEl;
         },
 
-        createAttachmentTagElement: function(attachment, editable) {
+        createAttachmentTagElement: function(attachment, deletable) {
 
             // File name
             var parts = attachment.url.split('/');
@@ -1984,9 +1984,9 @@
                 'class': 'tag attachment'
             }).append(attachmentIcon, fileName);
 
-            // Add delete button if editable
-            if(editable) {
-                attachmentTag.addClass('editable');
+            // Add delete button if deletable
+            if(deletable) {
+                attachmentTag.addClass('deletable');
 
                 // Append close button
                 var closeButton = $('<i/>', {

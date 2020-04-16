@@ -81,7 +81,7 @@ http://viima.github.io/jquery-comments/*/
 	text-decoration: none;
 }
 
-.jquery-comments .tag:not(.editable):hover {
+.jquery-comments .tag:not(.deletable):hover {
 	background-color: #d8edf8;
 	border-color: #2793e6;
 }
