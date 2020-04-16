@@ -512,7 +512,7 @@
             this.updateToggleAllButton(parentEl);
         },
 
-        preSaveAttachments: function(files, commentingField) {
+        uploadAttachments: function(files, commentingField) {
             var self = this;
             if(!commentingField) commentingField = this.$el.find('.commenting-field.main');
             var uploadButton = commentingField.find('.upload');
@@ -577,6 +577,37 @@
                 });
 
                 self.options.uploadAttachments(commentArray, success, error);
+            }
+
+            // Clear the input field
+            uploadButton.find('input').val('');
+        },
+
+        preSaveAttachments: function(files, commentingField) {
+            var self = this;
+            if(!commentingField) commentingField = this.$el.find('.commenting-field.main');
+            var uploadButton = commentingField.find('.upload');
+            var isReply = !commentingField.hasClass('main');
+            var fileCount = files.length;
+
+            if(fileCount) {
+                var textarea = commentingField.find('.textarea');
+
+                var commentArray = [];
+                $(files).each(function(index, file) {
+
+                    // Create comment JSON
+                    var commentJSON = self.createCommentJSON(textarea);
+                    commentJSON.id += '-' + index;
+                    commentJSON.content = '';
+                    commentJSON.file = file;
+                    commentJSON.fileURL = 'C:/fakepath/' + file.name;
+                    commentJSON.fileMimeType = file.type;
+
+                    // Reverse mapping
+                    commentJSON = self.applyExternalMappings(commentJSON);
+                    commentArray.push(commentJSON);
+                });
             }
 
             // Clear the input field
@@ -1292,6 +1323,10 @@
         createCommentingFieldElement: function(parentId, existingCommentId, isMain) {
             var self = this;
 
+            var profilePictureURL;
+            var userId;
+            var attachments;
+
             // Commenting field
             var commentingField = $('<div/>', {
                 'class': 'commenting-field'
@@ -1300,13 +1335,15 @@
 
             // Comment was modified, use existing data
             if(existingCommentId) {
-                var profilePictureURL = this.commentsById[existingCommentId].profilePictureURL;
-                var userId = this.commentsById[existingCommentId].creator;
+                profilePictureURL = this.commentsById[existingCommentId].profilePictureURL;
+                userId = this.commentsById[existingCommentId].creator;
+                attachments = this.commentsById[existingCommentId].attachments;
 
             // New comment was created
             } else {
-                var profilePictureURL = this.options.profilePictureURL;
-                var userId = this.options.creator;
+                profilePictureURL = this.options.profilePictureURL;
+                userId = this.options.creator;
+                attachments = [];
             }
 
             var profilePicture = this.createProfilePictureElement(profilePictureURL, userId);
@@ -1392,8 +1429,18 @@
                 text: saveButtonText
             });
 
+            // Attachments
+            var attachmentsContainer = $('<span/>', {
+                'class': 'attachments',
+            });
+            $(attachments).each(function(index, attachment) {
+                var attachmentTag = self.createAttachmentTagElement(attachment);
+                attachmentsContainer.append(attachmentTag);
+            });
+
             // Populate the element
             controlRow.prepend(saveButton);
+            controlRow.append(attachmentsContainer);
             textareaWrapper.append(closeButton).append(textarea).append(controlRow);
             commentingField.append(profilePicture).append(textareaWrapper);
 
@@ -1819,25 +1866,8 @@
                         attachmentPreviews.append(preview);
                     }
 
-                    // File name
-                    var parts = attachment.url.split('/');
-                    var fileName = parts[parts.length - 1];
-                    fileName = fileName.split('?')[0];
-                    fileName = decodeURIComponent(fileName);
-
-                    // Attachment icon
-                    var attachmentIcon = $('<i/>', {
-                        'class': 'fa fa-paperclip'
-                    });
-                    if(self.options.attachmentIconURL.length) {
-                        attachmentIcon.css('background-image', 'url("'+self.options.attachmentIconURL+'")');
-                        attachmentIcon.addClass('image');
-                    }
-
                     // Tag element
-                    var attachmentTag = $('<span/>', {
-                        'class': 'tag attachment'
-                    }).append(attachmentIcon).append('&nbsp;').append(fileName);
+                    var attachmentTag = self.createAttachmentTagElement(attachment);
                     attachmentTags.append(attachmentTag);
                 });
             }
@@ -1933,6 +1963,31 @@
             tagEl.attr('data-value', value);
             if (extraAttributes) tagEl.attr(extraAttributes);
             return tagEl;
+        },
+
+        createAttachmentTagElement: function(attachment) {
+
+            // File name
+            var parts = attachment.url.split('/');
+            var fileName = parts[parts.length - 1];
+            fileName = fileName.split('?')[0];
+            fileName = decodeURIComponent(fileName);
+
+            // Attachment icon
+            var attachmentIcon = $('<i/>', {
+                'class': 'fa fa-paperclip'
+            });
+            if(this.options.attachmentIconURL.length) {
+                attachmentIcon.css('background-image', 'url("'+this.options.attachmentIconURL+'")');
+                attachmentIcon.addClass('image');
+            }
+
+            // Tag element
+            var attachmentTag = $('<span/>', {
+                'class': 'tag attachment'
+            }).append(attachmentIcon).append('&nbsp;').append(fileName);
+
+            return attachmentTag;
         },
 
         reRenderComment: function(id) {
