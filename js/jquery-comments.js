@@ -123,7 +123,6 @@
                 replyIconURL: '',
                 uploadIconURL: '',
                 attachmentIconURL: '',
-                fileIconURL: '',
                 noCommentsIconURL: '',
 
                 // Strings to be formatted (for example localization)
@@ -1744,85 +1743,12 @@
             });
 
             // Content
+            // =======
+
             var content = $('<div/>', {
                 'class': 'content'
             });
-
-            // Case: attachment
-            var isAttachment = commentModel.fileURL != undefined;
-            if(isAttachment) {
-                var format = null;
-                var type = null;
-
-                // Type and format
-                if(commentModel.fileMimeType) {
-                    var mimeTypeParts = commentModel.fileMimeType.split('/');
-                    if(mimeTypeParts.length == 2) {
-                        format = mimeTypeParts[1];
-                        type = mimeTypeParts[0];
-                    }
-                }
-
-                // Attachment link
-                var link = $('<a/>', {
-                    'class': 'attachment',
-                    href: commentModel.fileURL,
-                    target: '_blank'
-                });
-
-                // Case: image preview
-                if(type == 'image') {
-                    var image = $('<img/>', {
-                        src: commentModel.fileURL
-                    });
-                    link.html(image);
-
-                // Case: video preview
-                } else if(type == 'video') {
-                    var video = $('<video/>', {
-                        src: commentModel.fileURL,
-                        type: commentModel.fileMimeType,
-                        controls: 'controls'
-                    });
-                    link.html(video);
-
-                // Case: icon and text
-                } else {
-
-                    // Icon
-                    var availableIcons = ['archive', 'audio', 'code', 'excel', 'image', 'movie', 'pdf', 'photo',
-                        'picture', 'powerpoint', 'sound', 'video', 'word', 'zip'];
-
-                    var iconClass = 'fa fa-file-o';
-                    if(availableIcons.indexOf(format) > 0) {
-                        iconClass = 'fa fa-file-' + format + '-o';
-                    } else if(availableIcons.indexOf(type) > 0) {
-                        iconClass = 'fa fa-file-' + type + '-o';
-                    }
-
-                    var fileIcon = $('<i/>', {
-                        'class': iconClass
-                    });
-                    if(this.options.fileIconURL.length) {
-                        fileIcon.css('background-image', 'url("'+this.options.fileIconURL+'")');
-                        fileIcon.addClass('image');
-                    }
-
-                    // File name
-                    var parts = commentModel.fileURL.split('/');
-                    var fileName = parts[parts.length - 1];
-                    fileName = fileName.split('?')[0];
-                    fileName = decodeURIComponent(fileName);
-
-                    link.text(fileName);
-                    link.prepend(fileIcon);
-                }
-                content.html(link);
-
-            // Case: regular comment
-            } else {
-                content.html(this.getFormattedCommentContent(commentModel));
-            }
+            content.html(this.getFormattedCommentContent(commentModel));
 
             // Edited timestamp
             if(commentModel.modified && commentModel.modified != commentModel.created) {
@@ -1835,13 +1761,63 @@
                 content.append(edited);
             }
 
+
             // Attachments
+            // ===========
+
             var attachments = $('<div/>', {
                 'class': 'attachments'
             });
+            var attachmentPreviews = $('<div/>', {
+                'class': 'previews'
+            });
+            var attachmentTags = $('<div/>', {
+                'class': 'tags'
+            });
+            attachments.append(attachmentPreviews).append(attachmentTags);
 
             if(commentModel.attachments && commentModel.attachments.length) {
                 $(commentModel.attachments).each(function(index, attachment) {
+                    var format = undefined;
+                    var type = undefined;
+
+                    // Type and format
+                    if(attachment.mime_type) {
+                        var mimeTypeParts = attachment.mime_type.split('/');
+                        if(mimeTypeParts.length == 2) {
+                            format = mimeTypeParts[1];
+                            type = mimeTypeParts[0];
+                        }
+                    }
+
+                    // Preview
+                    if(type == 'image' || type == 'video') {
+
+                        // Preview element
+                        var preview = $('<a/>', {
+                            'class': 'preview',
+                            href: attachment.url,
+                            target: '_blank'
+                        });
+
+                        // Case: image preview
+                        if(type == 'image') {
+                            var image = $('<img/>', {
+                                src: attachment.url
+                            });
+                            preview.html(image);
+
+                        // Case: video preview
+                        } else {
+                            var video = $('<video/>', {
+                                src: attachment.url,
+                                type: attachment.mime_type,
+                                controls: 'controls'
+                            });
+                            preview.html(video);
+                        }
+                        attachmentPreviews.append(preview);
+                    }
 
                     // File name
                     var parts = attachment.url.split('/');
@@ -1862,11 +1838,14 @@
                     var attachmentTag = $('<span/>', {
                         'class': 'tag attachment'
                     }).append(attachmentIcon).append('&nbsp;').append(fileName);
-                    attachments.append(attachmentTag);
+                    attachmentTags.append(attachmentTag);
                 });
             }
 
+
             // Actions
+            // =======
+
             var actions = $('<span/>', {
                 'class': 'actions'
             });
@@ -1901,23 +1880,11 @@
             if(this.options.enableUpvoting) actions.append(upvotes);
 
             if(commentModel.createdByCurrentUser || this.options.currentUserIsAdmin) {
-
-                // Case: delete button for attachment
-                if(isAttachment && this.isAllowedToDelete(commentModel.id)) {
-                    var deleteButton = $('<button/>', {
-                        'class': 'action delete enabled',
-                        text: this.options.textFormatter(this.options.deleteText)
-                    });
-                    actions.append(deleteButton);
-
-                // Case: edit button for regular comment
-                } else if(!isAttachment && this.options.enableEditing) {
-                    var editButton = $('<button/>', {
-                        'class': 'action edit',
-                        text: this.options.textFormatter(this.options.editText)
-                    });
-                    actions.append(editButton);
-                }
+                var editButton = $('<button/>', {
+                    'class': 'action edit',
+                    text: this.options.textFormatter(this.options.editText)
+                });
+                actions.append(editButton);
             }
 
             // Append separators between the actions

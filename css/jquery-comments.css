@@ -529,24 +529,10 @@ http://viima.github.io/jquery-comments/*/
 	overflow: visible;
 }
 
-
 /* Content */
 .jquery-comments ul.main li.comment .wrapper .content {
 	white-space: pre-line;
 	word-break: break-word;
-}
-
-.jquery-comments ul.main li.comment .wrapper .content a.attachment i {
-	margin-right: 0.5em;
-}
-
-.jquery-comments ul.main li.comment .wrapper .content a.attachment > * {
-	max-width: 100%;
-	max-height: 200px;
-	width: auto;
-	height: auto;
-	margin-top: .25em;
-	margin-bottom: .25em;
 }
 
 .jquery-comments ul.main li.comment .wrapper .content time.edited {
@@ -562,7 +548,21 @@ http://viima.github.io/jquery-comments/*/
 }
 
 /* Attachments */
-.jquery-comments ul.main li.comment .attachments .tag:not(:first-child) {
+.jquery-comments ul.main li.comment .wrapper .attachments .previews .preview {
+	display: inline-block;
+}
+
+.jquery-comments ul.main li.comment .wrapper .attachments .previews .preview > * {
+	max-width: 100%;
+	max-height: 200px;
+	width: auto;
+	height: auto;
+	margin-top: .25em;
+	margin-right: .25em;
+	margin-bottom: .25em;
+}
+
+.jquery-comments ul.main li.comment .attachments .tags .tag:not(:first-child) {
 	margin-left: 0.5em;
 }
 
