@@ -1427,7 +1427,7 @@
             });
 
             // Attachments
-            var attachmentsContainer = $('<span/>', {
+            var attachmentsContainer = $('<div/>', {
                 'class': 'attachments',
             });
             $(attachments).each(function(index, attachment) {

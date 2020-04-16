@@ -53,12 +53,11 @@ http://viima.github.io/jquery-comments/*/
 	display: inline-block;
 }
 
-.jquery-comments .tag.attachment {
+.jquery-comments .attachments .tag {
 	padding: 0.05em 0.5em;
 	line-height: 1.3em;
-}
 
-.jquery-comments .attachments .tag {
+	margin-top: 0.3em;
 	margin-right: 0.5em;
 }
 
@@ -257,8 +256,8 @@ http://viima.github.io/jquery-comments/*/
 	padding-right: calc(2em + 15px);	/* Because of scrollbar */
 }
 
-.jquery-comments .textarea-wrapper .control-row > .attachments .tag {
-	margin-top: .6em;
+.jquery-comments .textarea-wrapper .control-row > .attachments {
+	padding-top: .3em;
 }
 
 .jquery-comments .textarea-wrapper .control-row > .button {
