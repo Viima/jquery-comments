@@ -853,7 +853,6 @@
 
         textareaContentChanged: function(ev) {
             var textarea = $(ev.currentTarget);
-            var saveButton = textarea.siblings('.control-row').find('.save');
 
             // Update parent id if reply-to tag was removed
             if(!textarea.find('.reply-to.tag').length) {
@@ -881,6 +880,13 @@
             } else {
                 commentingField.removeClass('commenting-field-scrollable');
             }
+
+            this.toggleSaveButton(commentingField);
+        },
+
+        toggleSaveButton: function(commentingField) {
+            var textarea = commentingField.find('.textarea');
+            var saveButton = textarea.siblings('.control-row').find('.save');
 
             // Check if content or parent has changed if editing
             var contentOrParentChangedIfEditing = true;
