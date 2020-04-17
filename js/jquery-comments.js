@@ -1040,7 +1040,7 @@
             if(commentingField.hasClass('main')) {
 
                 // Ensure main comenting field is shown
-                commentingField.find('.textarea').click();
+                commentingField.find('.textarea').trigger('click');
             }
         },
 
