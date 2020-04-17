@@ -964,7 +964,8 @@
                 parent: textarea.attr('data-parent') || null,
                 content: this.getTextareaContent(textarea),
                 pings: this.getPings(textarea),
-                modified: new Date().getTime()
+                modified: new Date().getTime(),
+                attachments: this.getAttachmentsFromCommentingField(commentingField)
             });
 
             // Reverse mapping
@@ -2130,10 +2131,6 @@
             var textarea = commentingField.find('.textarea');
             var time = new Date().toISOString();
 
-            var attachments = commentingField.find('.attachments .attachment').map(function(){
-                return $(this).data();
-            });
-
             var commentJSON = {
                 id: 'c' +  (this.getComments().length + 1),   // Temporary id
                 parent: textarea.attr('data-parent') || null,
@@ -2146,7 +2143,7 @@
                 createdByCurrentUser: true,
                 upvoteCount: 0,
                 userHasUpvoted: false,
-                attachments: attachments
+                attachments: this.getAttachmentsFromCommentingField(commentingField)
             };
             return commentJSON;
         },
@@ -2269,6 +2266,14 @@
                 pings[id] = value.slice(1);
             });
             return pings;
+        },
+
+        getAttachmentsFromCommentingField: function(commentingField) {
+            var attachments = commentingField.find('.attachments .attachment').map(function(){
+                return $(this).data();
+            });
+
+            return attachments;
         },
 
         moveCursorToEnd: function(el) {
