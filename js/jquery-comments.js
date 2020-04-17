@@ -75,6 +75,7 @@
             'click .commenting-field .send.enabled' : 'postComment',
             'click .commenting-field .update.enabled' : 'putComment',
             'click .commenting-field .delete.enabled' : 'deleteComment',
+            'click .commenting-field .attachments .attachment .delete' : 'preDeleteAttachment',
             'change .commenting-field .upload.enabled input[type="file"]' : 'fileInputChanged',
 
             // Other actions
@@ -581,6 +582,11 @@
 
             // Clear the input field
             uploadButton.find('input').val('');
+        },
+
+        preDeleteAttachment: function(ev) {
+            var attachmentEl = $(ev.currentTarget).parents('.attachment').first();
+            attachmentEl.remove();
         },
 
         preSaveAttachments: function(files, commentingField) {
