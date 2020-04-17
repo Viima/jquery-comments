@@ -565,7 +565,7 @@
                 $(files).each(function(index, file) {
 
                     // Create comment JSON
-                    var commentJSON = self.createCommentJSON(textarea);
+                    var commentJSON = self.createCommentJSON(commentingField);
                     commentJSON.id += '-' + index;
                     commentJSON.content = '';
                     commentJSON.file = file;
@@ -837,6 +837,9 @@
             this.clearTextarea(mainTextarea);
             this.adjustTextareaHeight(mainTextarea, false);
 
+            // Clear attachments
+            this.$el.find('.commenting-field.main .attachments').empty();
+
             mainControlRow.hide();
             closeButton.hide();
             mainTextarea.parent().find('.upload.inline-button').show();
@@ -918,13 +921,12 @@
             var self = this;
             var sendButton = $(ev.currentTarget);
             var commentingField = sendButton.parents('.commenting-field').first();
-            var textarea = commentingField.find('.textarea');
 
             // Disable send button while request is pending
             sendButton.removeClass('enabled');
 
             // Create comment JSON
-            var commentJSON = this.createCommentJSON(textarea);
+            var commentJSON = this.createCommentJSON(commentingField);
 
             // Reverse mapping
             commentJSON = this.applyExternalMappings(commentJSON);
@@ -1977,6 +1979,18 @@
         },
 
         createAttachmentTagElement: function(attachment, deletable) {
+            
+            // Tag element
+            var attachmentTag = $('<span/>', {
+                'class': 'tag attachment'
+            });
+
+            // Bind data
+            attachmentTag.data({
+                url: attachment.url,
+                mime_type: attachment.mime_type,
+                file: attachment.file,
+            });
 
             // File name
             var parts = attachment.url.split('/');
@@ -1993,10 +2007,8 @@
                 attachmentIcon.addClass('image');
             }
 
-            // Tag element
-            var attachmentTag = $('<span/>', {
-                'class': 'tag attachment'
-            }).append(attachmentIcon, fileName);
+            // Append content
+            attachmentTag.append(attachmentIcon, fileName);
 
             // Add delete button if deletable
             if(deletable) {
@@ -2114,8 +2126,14 @@
             return parentComment;
         },
 
-        createCommentJSON: function(textarea) {
+        createCommentJSON: function(commentingField) {
+            var textarea = commentingField.find('.textarea');
             var time = new Date().toISOString();
+
+            var attachments = commentingField.find('.attachments .attachment').map(function(){
+                return $(this).data();
+            });
+
             var commentJSON = {
                 id: 'c' +  (this.getComments().length + 1),   // Temporary id
                 parent: textarea.attr('data-parent') || null,
@@ -2127,7 +2145,8 @@
                 profilePictureURL: this.options.profilePictureURL,
                 createdByCurrentUser: true,
                 upvoteCount: 0,
-                userHasUpvoted: false
+                userHasUpvoted: false,
+                attachments: attachments
             };
             return commentJSON;
         },
