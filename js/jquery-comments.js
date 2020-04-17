@@ -1034,6 +1034,14 @@
             var files = ev.currentTarget.files;
             var commentingField = $(ev.currentTarget).parents('.commenting-field').first();
             this.preSaveAttachments(files, commentingField);
+
+            // Check if input changed in main commenting field
+            var commentingField = $(ev.currentTarget).parents('.commenting-field').first();
+            if(commentingField.hasClass('main')) {
+
+                // Ensure main comenting field is shown
+                commentingField.find('.textarea').click();
+            }
         },
 
         upvoteComment: function(ev) {
