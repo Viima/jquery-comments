@@ -616,6 +616,11 @@
                     attachmentsContainer.append(attachmentTag);
                 });
 
+                // Ensure that the main commenting field is shown if attachments were added to that
+                if(commentingField.hasClass('main')) {
+                    commentingField.find('.textarea').trigger('click');
+                }
+
                 // Check if save button needs to be enabled
                 this.toggleSaveButton(commentingField);
             }
@@ -1065,14 +1070,6 @@
             var files = ev.currentTarget.files;
             var commentingField = $(ev.currentTarget).parents('.commenting-field').first();
             this.preSaveAttachments(files, commentingField);
-
-            // Check if input changed in main commenting field
-            var commentingField = $(ev.currentTarget).parents('.commenting-field').first();
-            if(commentingField.hasClass('main')) {
-
-                // Ensure main comenting field is shown
-                commentingField.find('.textarea').trigger('click');
-            }
         },
 
         upvoteComment: function(ev) {
