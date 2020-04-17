@@ -914,9 +914,12 @@
                 var parentChanged = textarea.attr('data-parent') != parentFromModel;
 
                 // Case: attachments changed
-                var savedAttachmentIds = commentModel.attachments.map(function(attachment){return attachment.id});
-                var currentAttachmentIds = attachments.map(function(attachment){return attachment.id});
-                var attachmentsChanged = !this.areArraysEqual(savedAttachmentIds, currentAttachmentIds);
+                var attachmentsChanged = false;
+                if(this.options.enableAttachments) {
+                    var savedAttachmentIds = commentModel.attachments.map(function(attachment){return attachment.id});
+                    var currentAttachmentIds = attachments.map(function(attachment){return attachment.id});
+                    attachmentsChanged = !this.areArraysEqual(savedAttachmentIds, currentAttachmentIds);
+                }
 
                 enabled = contentChanged || parentChanged || attachmentsChanged;
 
@@ -1862,7 +1865,7 @@
             });
             attachments.append(attachmentPreviews).append(attachmentTags);
 
-            if(commentModel.attachments && commentModel.attachments.length) {
+            if(this.options.enableAttachments && commentModel.attachments.length) {
                 $(commentModel.attachments).each(function(index, attachment) {
                     var format = undefined;
                     var type = undefined;
