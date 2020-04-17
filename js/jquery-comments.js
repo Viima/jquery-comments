@@ -1415,74 +1415,74 @@
                 'class': 'close inline-button'
             }).append($('<span class="left"/>')).append($('<span class="right"/>'));
 
-            // Save button text
-            if(existingCommentId) {
-                var saveButtonText = this.options.textFormatter(this.options.saveText);
+            // Save button
+            var saveButtonClass = existingCommentId ? 'update' : 'send';
+            var saveButtonText = existingCommentId ? this.options.textFormatter(this.options.saveText) : this.options.textFormatter(this.options.sendText);
+            var saveButton = $('<span/>', {
+                'class': saveButtonClass + ' save button highlight-background',
+                'text': saveButtonText
+            });
+            controlRow.append(saveButton);
+
+            // Delete button
+            if(existingCommentId && this.isAllowedToDelete(existingCommentId)) {
 
                 // Delete button
                 var deleteButton = $('<span/>', {
-                    'class': 'delete button',
+                    'class': 'delete button enabled',
                     text: this.options.textFormatter(this.options.deleteText)
                 }).css('background-color', this.options.deleteButtonColor);
                 controlRow.append(deleteButton);
-
-                // Enable the delete button only if the user is allowed to delete
-                if(this.isAllowedToDelete(existingCommentId)) deleteButton.addClass('enabled')
-
-            } else {
-                var saveButtonText = this.options.textFormatter(this.options.sendText);
-
-                // Add upload button if attachments are enabled
-                if(this.options.enableAttachments) {
-                    var uploadButton = $('<span/>', {
-                        'class': 'enabled upload button'
-                    });
-                    var uploadIcon = $('<i/>', {
-                        'class': 'fa fa-paperclip'
-                    });
-                    var fileInput = $('<input/>', {
-                        type: 'file',
-                        'data-role': 'none' // Prevent jquery-mobile for adding classes
-                    });
-                    // Multi file upload might not work with backend as the the file names
-                    // may be the same causing duplicates
-                    if(!$.browser.mobile) fileInput.attr('multiple', 'multiple');
-
-                    if(this.options.uploadIconURL.length) {
-                        uploadIcon.css('background-image', 'url("'+this.options.uploadIconURL+'")');
-                        uploadIcon.addClass('image');
-                    }
-                    uploadButton.append(uploadIcon).append(fileInput);
-
-                    // Main upload button
-                    controlRow.append(uploadButton.clone());
-
-                    // Inline upload button for main commenting field
-                    if(isMain) {
-                        textareaWrapper.append(uploadButton.clone().addClass('inline-button'));
-                    }
-                }
             }
 
-            // Save button
-            var saveButtonClass = existingCommentId ? 'update' : 'send';
-            var saveButton = $('<span/>', {
-                'class': saveButtonClass + ' save button highlight-background',
-                text: saveButtonText
-            });
+            if(this.options.enableAttachments) {
 
-            // Attachments
-            var attachmentsContainer = $('<div/>', {
-                'class': 'attachments',
-            });
-            $(attachments).each(function(index, attachment) {
-                var attachmentTag = self.createAttachmentTagElement(attachment, true);
-                attachmentsContainer.append(attachmentTag);
-            });
+                // Upload buttons
+                // ==============
+
+                var uploadButton = $('<span/>', {
+                    'class': 'enabled upload button'
+                });
+                var uploadIcon = $('<i/>', {
+                    'class': 'fa fa-paperclip'
+                });
+                var fileInput = $('<input/>', {
+                    type: 'file',
+                    'data-role': 'none' // Prevent jquery-mobile for adding classes
+                });
+                // Multi file upload might not work with backend as the the file names
+                // may be the same causing duplicates
+                if(!$.browser.mobile) fileInput.attr('multiple', 'multiple');
+
+                if(this.options.uploadIconURL.length) {
+                    uploadIcon.css('background-image', 'url("'+this.options.uploadIconURL+'")');
+                    uploadIcon.addClass('image');
+                }
+                uploadButton.append(uploadIcon).append(fileInput);
+
+                // Main upload button
+                controlRow.append(uploadButton.clone());
+
+                // Inline upload button for main commenting field
+                if(isMain) {
+                    textareaWrapper.append(uploadButton.clone().addClass('inline-button'));
+                }
+
+                // Attachments container
+                // =====================
+
+                var attachmentsContainer = $('<div/>', {
+                    'class': 'attachments',
+                });
+                $(attachments).each(function(index, attachment) {
+                    var attachmentTag = self.createAttachmentTagElement(attachment, true);
+                    attachmentsContainer.append(attachmentTag);
+                });
+                controlRow.append(attachmentsContainer);
+            }
+
 
             // Populate the element
-            controlRow.prepend(saveButton);
-            controlRow.append(attachmentsContainer);
             textareaWrapper.append(closeButton).append(textarea).append(controlRow);
             commentingField.append(profilePicture).append(textareaWrapper);
 
