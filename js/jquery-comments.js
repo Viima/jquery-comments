@@ -585,8 +585,12 @@
         },
 
         preDeleteAttachment: function(ev) {
+            var commentingField = $(ev.currentTarget).parents('.commenting-field').first()
             var attachmentEl = $(ev.currentTarget).parents('.attachment').first();
             attachmentEl.remove();
+
+            // Check if save button needs to be enabled
+            this.toggleSaveButton(commentingField);
         },
 
         preSaveAttachments: function(files, commentingField) {
@@ -611,6 +615,9 @@
                     var attachmentTag = self.createAttachmentTagElement(attachment, true);
                     attachmentsContainer.append(attachmentTag);
                 });
+
+                // Check if save button needs to be enabled
+                this.toggleSaveButton(commentingField);
             }
 
             // Clear the input field
@@ -881,6 +888,7 @@
                 commentingField.removeClass('commenting-field-scrollable');
             }
 
+            // Check if save button needs to be enabled
             this.toggleSaveButton(commentingField);
         },
 
@@ -888,25 +896,36 @@
             var textarea = commentingField.find('.textarea');
             var saveButton = textarea.siblings('.control-row').find('.save');
 
-            // Check if content or parent has changed if editing
-            var contentOrParentChangedIfEditing = true;
             var content = this.getTextareaContent(textarea, true);
+            var attachments = this.getAttachmentsFromCommentingField(commentingField);
+            var enabled;
+
+            // Case: existing comment
             if(commentModel = this.commentsById[textarea.attr('data-comment')]) {
+
+                // Case: parent changed
                 var contentChanged = content != commentModel.content;
                 var parentFromModel;
                 if(commentModel.parent) {
                     parentFromModel = commentModel.parent.toString();
                 }
+
+                // Case: parent changed
                 var parentChanged = textarea.attr('data-parent') != parentFromModel;
-                contentOrParentChangedIfEditing = contentChanged || parentChanged;
+
+                // Case: attachments changed
+                var savedAttachmentIds = commentModel.attachments.map(function(attachment){return attachment.id});
+                var currentAttachmentIds = attachments.map(function(attachment){return attachment.id});
+                var attachmentsChanged = !this.areArraysEqual(savedAttachmentIds, currentAttachmentIds);
+
+                enabled = contentChanged || parentChanged || attachmentsChanged;
+
+            // Case: new comment
+            } else {
+                enabled = Boolean(content.length) || Boolean(attachments.length);
             }
 
-            // Check whether save button needs to be enabled
-            if(content.length && contentOrParentChangedIfEditing) {
-                saveButton.addClass('enabled');
-            } else {
-                saveButton.removeClass('enabled');
-            }
+            saveButton.toggleClass('enabled', enabled);
         },
 
         removeCommentingField: function(ev) {
@@ -1994,6 +2013,7 @@
 
             // Bind data
             attachmentTag.data({
+                id: attachment.id,
                 url: attachment.url,
                 mime_type: attachment.mime_type,
                 file: attachment.file,
@@ -2277,7 +2297,7 @@
         getAttachmentsFromCommentingField: function(commentingField) {
             var attachments = commentingField.find('.attachments .attachment').map(function(){
                 return $(this).data();
-            });
+            }).toArray();
 
             return attachments;
         },
@@ -2419,6 +2439,25 @@
                 setTimeout(function() {
                     self.waitUntil(condition, callback);
                 }, 100);
+            }
+        },
+
+        areArraysEqual: function(array1, array2) {
+
+            // Case: arrays are different sized
+            if(array1.length != array2.length) {
+                return false;
+
+            // Case: arrays are equal sized
+            } else {
+                array1.sort();
+                array2.sort();
+
+                for(var i=0; i < array1.length; i++) {
+                    if(array1[i] != array2[i]) return false;
+                }
+
+                return true;
             }
         },
 
