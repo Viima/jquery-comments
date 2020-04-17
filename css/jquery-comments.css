@@ -61,13 +61,18 @@ http://viima.github.io/jquery-comments/*/
 	margin-right: 0.5em;
 }
 
+.jquery-comments .attachments .tag.deletable {
+	padding-right: 0;
+}
+
 .jquery-comments .attachments .tag i:first-child {
 	margin-right: 0.4em;
 	color: #555;
 }
 
 .jquery-comments .attachments .tag i.delete {
-	margin-left: 0.6em;
+	display: inline;
+	padding: 2px 5px 2px 8px;
 	font-size: 14px;
 	color: #888;
 }
