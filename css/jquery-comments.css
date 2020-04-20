@@ -589,7 +589,7 @@ http://viima.github.io/jquery-comments/*/
 }
 
 .jquery-comments ul.main li.comment .wrapper .attachments .previews .preview {
-	display: inline-block;
+	display: block;
 }
 
 .jquery-comments ul.main li.comment .wrapper .attachments .previews .preview > * {
