@@ -1415,7 +1415,7 @@
             var saveButtonClass = existingCommentId ? 'update' : 'send';
             var saveButtonText = existingCommentId ? this.options.textFormatter(this.options.saveText) : this.options.textFormatter(this.options.sendText);
             var saveButton = $('<span/>', {
-                'class': saveButtonClass + ' save button highlight-background',
+                'class': saveButtonClass + ' save highlight-background',
                 'text': saveButtonText
             });
             controlRow.append(saveButton);
@@ -1425,7 +1425,7 @@
 
                 // Delete button
                 var deleteButton = $('<span/>', {
-                    'class': 'delete button enabled',
+                    'class': 'delete enabled',
                     text: this.options.textFormatter(this.options.deleteText)
                 }).css('background-color', this.options.deleteButtonColor);
                 controlRow.append(deleteButton);
@@ -1437,7 +1437,7 @@
                 // ==============
 
                 var uploadButton = $('<span/>', {
-                    'class': 'enabled upload button'
+                    'class': 'enabled upload'
                 });
                 var uploadIcon = $('<i/>', {
                     'class': 'fa fa-paperclip'

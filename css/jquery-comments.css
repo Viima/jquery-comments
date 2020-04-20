@@ -266,7 +266,7 @@ http://viima.github.io/jquery-comments/*/
 	padding-top: .3em;
 }
 
-.jquery-comments .textarea-wrapper .control-row > .button {
+.jquery-comments .textarea-wrapper .control-row > span {
 	float: right;
 	line-height: 1.6em;
 	margin-top: .4em;
@@ -277,24 +277,24 @@ http://viima.github.io/jquery-comments/*/
 	opacity: .5;
 }
 
-.jquery-comments .textarea-wrapper .control-row > .button:not(:first-child) {
+.jquery-comments .textarea-wrapper .control-row > span:not(:first-child) {
 	margin-right: .5em;
 }
 
-.jquery-comments .textarea-wrapper .control-row > .button.enabled {
+.jquery-comments .textarea-wrapper .control-row > span.enabled {
 	opacity: 1;
 	cursor: pointer;
 }
 
-.jquery-comments .textarea-wrapper .control-row > .button:not(.enabled) {
+.jquery-comments .textarea-wrapper .control-row > span:not(.enabled) {
 	pointer-events: none;
 }
 
-.jquery-comments .textarea-wrapper .control-row > .button.enabled:hover {
+.jquery-comments .textarea-wrapper .control-row > span.enabled:hover {
 	opacity: .9;
 }
 
-.jquery-comments .textarea-wrapper .control-row > .button.upload {
+.jquery-comments .textarea-wrapper .control-row > span.upload {
 	position: relative;
 	overflow: hidden;
 	background-color: #999;
