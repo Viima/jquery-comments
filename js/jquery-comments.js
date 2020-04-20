@@ -606,7 +606,6 @@
 
                     // Create temporary attachment model
                     var attachment = {
-                        url: 'C:/fakepath/' + file.name,
                         mime_type: file.type,
                         file: file
                     }
@@ -1882,21 +1881,21 @@
                         // Preview element
                         var preview = $('<a/>', {
                             'class': 'preview',
-                            href: attachment.url,
+                            href: attachment.file,
                             target: '_blank'
                         });
 
                         // Case: image preview
                         if(type == 'image') {
                             var image = $('<img/>', {
-                                src: attachment.url
+                                src: attachment.file
                             });
                             preview.html(image);
 
                         // Case: video preview
                         } else {
                             var video = $('<video/>', {
-                                src: attachment.url,
+                                src: attachment.file,
                                 type: attachment.mime_type,
                                 controls: 'controls'
                             });
@@ -2014,22 +2013,30 @@
 
             // Set href attribute if not deletable
             if(!deletable) {
-                attachmentTag.attr('href', attachment.url);
+                attachmentTag.attr('href', attachment.file);
             }
 
             // Bind data
             attachmentTag.data({
                 id: attachment.id,
-                url: attachment.url,
                 mime_type: attachment.mime_type,
                 file: attachment.file,
             });
 
             // File name
-            var parts = attachment.url.split('/');
-            var fileName = parts[parts.length - 1];
-            fileName = fileName.split('?')[0];
-            fileName = decodeURIComponent(fileName);
+            var fileName = '';
+
+            // Case: file is file object
+            if(attachment.file instanceof File) {
+                fileName = attachment.file.name;
+
+            // Case: file is URL
+            } else {
+                var parts = attachment.file.split('/');
+                var fileName = parts[parts.length - 1];
+                fileName = fileName.split('?')[0];
+                fileName = decodeURIComponent(fileName);
+            }
 
             // Attachment icon
             var attachmentIcon = $('<i/>', {
