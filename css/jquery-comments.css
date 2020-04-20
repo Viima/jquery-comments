@@ -10,12 +10,12 @@ http://viima.github.io/jquery-comments/*/
 	text-shadow: none;
 }
 
-.jquery-comments a[href] {
+.jquery-comments a[href]:not(.tag) {
 	color: #2793e6;
 	text-decoration: none;
 }
 
-.jquery-comments a[href]:hover {
+.jquery-comments a[href]:not(.tag):hover {
 	text-decoration: underline;
 }
 
@@ -51,6 +51,7 @@ http://viima.github.io/jquery-comments/*/
 	transition: all 0.2s linear;
 	white-space: nowrap;
 	display: inline-block;
+	text-decoration: none;
 }
 
 .jquery-comments .attachments .tag {

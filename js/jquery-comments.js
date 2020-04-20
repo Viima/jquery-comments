@@ -2007,9 +2007,15 @@
         createAttachmentTagElement: function(attachment, deletable) {
             
             // Tag element
-            var attachmentTag = $('<span/>', {
-                'class': 'tag attachment'
+            var attachmentTag = $('<a/>', {
+                'class': 'tag attachment',
+                'target': '_blank'
             });
+
+            // Set href attribute if not deletable
+            if(!deletable) {
+                attachmentTag.attr('href', attachment.url);
+            }
 
             // Bind data
             attachmentTag.data({
