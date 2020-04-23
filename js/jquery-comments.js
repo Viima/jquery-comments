@@ -2154,7 +2154,7 @@
         },
 
         getAttachments: function() {
-            return this.getComments().filter(function(comment){return comment.fileURL != undefined});
+            return this.getComments().filter(function(comment){return comment.attachments.length > 0});
         },
 
         getOutermostParent: function(directParentId) {
