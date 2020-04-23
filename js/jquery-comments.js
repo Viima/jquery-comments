@@ -179,9 +179,6 @@
                     created: 'created',
                     modified: 'modified',
                     content: 'content',
-                    file: 'file',
-                    fileURL: 'file_url',
-                    fileMimeType: 'file_mime_type',
                     attachments: 'attachments',
                     pings: 'pings',
                     creator: 'creator',
@@ -203,7 +200,6 @@
                 upvoteComment: function(commentJSON, success, error) {success(commentJSON)},
                 hashtagClicked: function(hashtag) {},
                 pingClicked: function(userId) {},
-                uploadAttachments: function(commentArray, success, error) {success(commentArray)},
                 refresh: function() {},
                 timeFormatter: function(time) {return new Date(time).toLocaleDateString()}
             }
@@ -511,77 +507,6 @@
 
             // Update the toggle all button
             this.updateToggleAllButton(parentEl);
-        },
-
-        uploadAttachments: function(files, commentingField) {
-            var self = this;
-            if(!commentingField) commentingField = this.$el.find('.commenting-field.main');
-            var uploadButton = commentingField.find('.upload');
-            var isReply = !commentingField.hasClass('main');
-            var fileCount = files.length;
-
-            if(fileCount) {
-                var textarea = commentingField.find('.textarea');
-
-                // Disable upload button and append spinners while request is pending
-                uploadButton.removeClass('enabled');
-                var attachmentListSpinner = this.createSpinner();
-                var commentListSpinner = this.createSpinner();
-                this.$el.find('ul#attachment-list').prepend(attachmentListSpinner);
-                if(isReply) {
-                    commentingField.before(commentListSpinner);
-                } else {
-                    this.$el.find('ul#comment-list').prepend(commentListSpinner);
-                }
-
-                var success = function(commentArray) {
-                    $(commentArray).each(function(index, commentJSON) {
-                        var commentModel = self.createCommentModel(commentJSON);
-                        self.addCommentToDataModel(commentModel);
-                        self.addComment(commentModel);
-                        self.addAttachment(commentModel);
-                    });
-
-                    // Close the commenting field if all the uploads were successfull
-                    // and there's no content besides the attachment
-                    if(commentArray.length == fileCount && self.getTextareaContent(textarea).length == 0) {
-                        commentingField.find('.close').trigger('click');
-                    }
-
-                    // Enable upload button and remove spinners
-                    uploadButton.addClass('enabled');
-                    commentListSpinner.remove();
-                    attachmentListSpinner.remove();
-                };
-
-                var error = function() {
-                    // Enable upload button and remove spinners
-                    uploadButton.addClass('enabled');
-                    commentListSpinner.remove();
-                    attachmentListSpinner.remove();
-                };
-
-                var commentArray = [];
-                $(files).each(function(index, file) {
-
-                    // Create comment JSON
-                    var commentJSON = self.createCommentJSON(commentingField);
-                    commentJSON.id += '-' + index;
-                    commentJSON.content = '';
-                    commentJSON.file = file;
-                    commentJSON.fileURL = 'C:/fakepath/' + file.name;
-                    commentJSON.fileMimeType = file.type;
-
-                    // Reverse mapping
-                    commentJSON = self.applyExternalMappings(commentJSON);
-                    commentArray.push(commentJSON);
-                });
-
-                self.options.uploadAttachments(commentArray, success, error);
-            }
-
-            // Clear the input field
-            uploadButton.find('input').val('');
         },
 
         preDeleteAttachment: function(ev) {
