@@ -879,8 +879,8 @@
             var sendButton = $(ev.currentTarget);
             var commentingField = sendButton.parents('.commenting-field').first();
 
-            // Disable send button while request is pending
-            sendButton.removeClass('enabled');
+            // Set button state to loading
+            this.setButtonState(sendButton, false, true);
 
             // Create comment JSON
             var commentJSON = this.createCommentJSON(commentingField);
@@ -891,10 +891,15 @@
             var success = function(commentJSON) {
                 self.createComment(commentJSON);
                 commentingField.find('.close').trigger('click');
+
+                // Reset button state
+                self.setButtonState(sendButton, false, false);
             };
 
             var error = function() {
-                sendButton.addClass('enabled');
+
+                // Reset button state
+                self.setButtonState(sendButton, true, false);
             };
 
             this.options.postComment(commentJSON, success, error);
@@ -912,8 +917,8 @@
             var commentingField = saveButton.parents('.commenting-field').first();
             var textarea = commentingField.find('.textarea');
 
-            // Disable send button while request is pending
-            saveButton.removeClass('enabled');
+            // Set button state to loading
+            this.setButtonState(saveButton, false, true);
 
             // Use a clone of the existing model and update the model after succesfull update
             var commentJSON =  $.extend({}, this.commentsById[textarea.attr('data-comment')]);
@@ -943,10 +948,15 @@
 
                 // Re-render the comment
                 self.reRenderComment(commentModel.id);
+
+                // Reset button state
+                self.setButtonState(saveButton, false, false);
             };
 
             var error = function() {
-                saveButton.addClass('enabled');
+
+                // Reset button state
+                self.setButtonState(saveButton, true, false);
             };
 
             this.options.putComment(commentJSON, success, error);
@@ -960,8 +970,8 @@
             var commentId = commentJSON.id;
             var parentId = commentJSON.parent;
 
-            // Disable send button while request is pending
-            deleteButton.removeClass('enabled');
+            // Set button state to loading
+            this.setButtonState(deleteButton, false, true);
 
             // Reverse mapping
             commentJSON = this.applyExternalMappings(commentJSON);
@@ -969,10 +979,15 @@
             var success = function() {
                 self.removeComment(commentId);
                 if(parentId) self.reRenderCommentActionBar(parentId);
+
+                // Reset button state
+                self.setButtonState(deleteButton, false, false);
             };
 
             var error = function() {
-                deleteButton.addClass('enabled');
+
+                // Reset button state
+                self.setButtonState(deleteButton, true, false);
             };
 
             this.options.deleteComment(commentJSON, success, error);
@@ -1343,16 +1358,19 @@
                 'class': saveButtonClass + ' save highlight-background',
                 'text': saveButtonText
             });
+            saveButton.data('original-text', saveButtonText);
             controlRow.append(saveButton);
 
             // Delete button
             if(existingCommentId && this.isAllowedToDelete(existingCommentId)) {
 
                 // Delete button
+                var deleteButtonText = this.options.textFormatter(this.options.deleteText);
                 var deleteButton = $('<span/>', {
                     'class': 'delete enabled',
-                    text: this.options.textFormatter(this.options.deleteText)
+                    text: deleteButtonText
                 }).css('background-color', this.options.deleteButtonColor);
+                deleteButton.data('original-text', deleteButtonText);
                 controlRow.append(deleteButton);
             }
 
@@ -1638,10 +1656,12 @@
             return navigationEl;
         },
 
-        createSpinner: function() {
+        createSpinner: function(inline) {
             var spinner = $('<div/>', {
                 'class': 'spinner'
             });
+            if(inline) spinner.addClass('inline');
+
             var spinnerIcon = $('<i/>', {
                 'class': 'fa fa-spinner fa-spin'
             });
@@ -2156,6 +2176,15 @@
                 if(textContainer.text() != hideRepliesText) {
                     showExpandingText();
                 }
+            }
+        },
+
+        setButtonState: function(button, enabled, loading) {
+            button.toggleClass('enabled', enabled);
+            if(loading) {
+                button.html(this.createSpinner(true));
+            } else {
+                button.text(button.data('original-text'));
             }
         },
 
