@@ -114,6 +114,12 @@ http://viima.github.io/jquery-comments/*/
 	color: #666;
 }
 
+.jquery-comments .spinner.inline {
+	font-size: inherit;
+	padding: 0;
+	color: #fff;
+}
+
 .jquery-comments ul {
 	list-style: none;
 	padding: 0;
