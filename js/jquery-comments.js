@@ -198,6 +198,7 @@
                 putComment: function(commentJSON, success, error) {success(commentJSON)},
                 deleteComment: function(commentJSON, success, error) {success()},
                 upvoteComment: function(commentJSON, success, error) {success(commentJSON)},
+                validateAttachments: function(files) {return files},
                 hashtagClicked: function(hashtag) {},
                 pingClicked: function(userId) {},
                 refresh: function() {},
@@ -520,6 +521,10 @@
 
         preSaveAttachments: function(files, commentingField) {
             var self = this;
+
+            // Validate files
+            files = this.options.validateAttachments(files);
+
             if(!commentingField) commentingField = this.$el.find('.commenting-field.main');
             var uploadButton = commentingField.find('.upload');
             var isReply = !commentingField.hasClass('main');
