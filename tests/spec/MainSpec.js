@@ -292,7 +292,7 @@ describe('Basic features', function() {
             var newCommentText = 'New main level comment with attachment';
             mainTextarea.html(newCommentText).trigger('input');
 
-            // Add attachment
+            // Add attachments
             var files = [new File([], 'test.txt'), new File([], 'test2.png')];
             comments.preSaveAttachments(files, mainCommentingField);
 
@@ -364,6 +364,36 @@ describe('Basic features', function() {
                 var toggleAllText = mostPopularComment.find('li.toggle-all').text();
                 expect(toggleAllText).toBe('View all 6 replies');
                 expect(mostPopularComment.find('li.comment:visible').length).toBe(2);
+            });
+        });
+
+        it('Should be able to reply with attachments', function() {
+            mostPopularComment.find('.reply').first().click();
+            var replyField = mostPopularComment.find('.commenting-field');
+
+            var replyText = 'This is a reply with attachments';
+            replyField.find('.textarea').append(replyText).trigger('input');
+
+            // Add attachments
+            var files = [new File([], 'test.txt'), new File([], 'test2.png')];
+            comments.preSaveAttachments(files, replyField);
+
+            // Verify pre saved attachments
+            var attachmentTags = replyField.find('.attachments').first().find('.attachment');
+            expect(attachmentTags.length).toBe(2);
+            expect(attachmentTags.first().text()).toBe('test.txt');
+            expect(attachmentTags.last().text()).toBe('test2.png');
+
+            var commentCount = comments.getComments().length;
+            wait(function() {
+                return comments.getComments().length == commentCount + 1;
+            });
+
+            replyField.find('.send').trigger('click');
+
+            run(function() {
+                var commentEl = mostPopularComment.find('li.comment').last();
+                checkCommentElementData(commentEl);
             });
         });
 
@@ -889,6 +919,16 @@ describe('Basic features', function() {
         var modifiedContent = '<br>appended content with new line';
         textarea.append(modifiedContent).trigger('input');
 
+        // Add attachments
+        var files = [new File([], 'test.txt'), new File([], 'test2.png')];
+        comments.preSaveAttachments(files, editField);
+
+        // Verify pre saved attachments
+        var attachmentTags = editField.find('.attachments').first().find('.attachment');
+        expect(attachmentTags.length).toBe(2);
+        expect(attachmentTags.first().text()).toBe('test.txt');
+        expect(attachmentTags.last().text()).toBe('test2.png');
+
         // Save the comment
         var originalContent = comments.commentsById[id].content;
         wait(function() {
@@ -908,19 +948,28 @@ describe('Basic features', function() {
             // Check that only fields content and modified have changed in comment model
             var ownCommentModel = comments.commentsById[id];
             $(Object.keys(ownCommentModel)).each(function(index, key) {
-                if(key == 'content' || key == 'modified') {
-                    expect(ownCommentModel[key]).not.toBe(ownCommentModelBefore[key]);
-                } else if(key == 'pings' || key == 'attachments') {
-                    expect(JSON.stringify(ownCommentModel[key])).toBe(JSON.stringify(ownCommentModelBefore[key]));
+                var arrayComparison = key == 'pings' || key == 'attachments';
+
+                // Comparison values
+                var currentComparisonValue = arrayComparison ? JSON.stringify(ownCommentModel[key]) : ownCommentModel[key];
+                var oldComparisonValue = arrayComparison ? JSON.stringify(ownCommentModelBefore[key]) : ownCommentModelBefore[key];
+
+                if(key == 'content' || key == 'modified' || key == 'attachments') {
+                    expect(currentComparisonValue).not.toBe(oldComparisonValue);
                 } else {
-                    expect(ownCommentModel[key]).toBe(ownCommentModelBefore[key]);
+                    expect(currentComparisonValue).toBe(oldComparisonValue);
                 }
             });
 
             // Check that only content has changed in comment element
             ownComment = ownComment.clone();
+
             ownComment.find('.content').remove();
             ownCommentBefore.find('.content').remove();
+
+            ownComment.find('.attachments').remove();
+            ownCommentBefore.find('.attachments').remove();
+
             expect(ownComment[0].outerHTML).toBe(ownCommentBefore[0].outerHTML);
         });
     }
