@@ -515,7 +515,7 @@ describe('Basic features', function() {
 
         it('Should show the edit button only for own comments', function() {
             expect(editButton.length).toBe(1);
-            expect($('.edit').length).toBe(3);
+            expect($('[data-container="comments"] .edit').length).toBe(3);
         });
 
         it('Should be able to open and close the edit field', function() {
@@ -753,6 +753,37 @@ describe('Basic features', function() {
                 expect(outermostParent.find('.toggle-all').length).toBe(0);
                 expect(comments.commentsById[outermostParent.attr('data-id')].childs.length).toBe(2);
             });
+        });
+
+        it('Should be able to delete attachments', function() {
+            var ownCommentModel = comments.commentsById[10];
+            var ownComment = $('#comment-list li.comment[data-id=10]');
+
+            var attachmentCountBefore = 1;
+            expect(ownCommentModel.attachments.length).toBe(attachmentCountBefore);
+            expect(ownComment.find('.attachments').first().find('.attachment').length).toBe(1);
+
+            // Open edit mode
+            var editButton = ownComment.find('.edit');
+            editButton.click();
+
+            // Delete attachment
+            var attachmentTag = ownComment.find('.commenting-field').find('.attachment').first();
+            attachmentTag.find('.delete').trigger('click');
+
+            // Save comment
+            var saveButton = ownComment.find('.save');
+            expect(saveButton.hasClass('enabled')).toBe(true);
+            saveButton.trigger('click');
+
+            wait(function() {
+                return ownCommentModel.attachments.length < attachmentCountBefore;
+            });
+
+            run(function() {
+                expect(ownCommentModel.attachments.length).toBe(0);
+                expect(ownComment.find('.attachments').first().find('.attachment').length).toBe(0);
+            })
         });
     });
 
