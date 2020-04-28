@@ -83,6 +83,11 @@
 							success(data);
 						}, 500);
 					},
+					validateAttachments: function(attachments, callback) {
+						setTimeout(function() {
+							callback(attachments);
+						}, 500);
+					},
 				});
 			});
 		</script>

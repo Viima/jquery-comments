@@ -198,7 +198,7 @@
                 putComment: function(commentJSON, success, error) {success(commentJSON)},
                 deleteComment: function(commentJSON, success, error) {success()},
                 upvoteComment: function(commentJSON, success, error) {success(commentJSON)},
-                validateAttachments: function(files) {return files},
+                validateAttachments: function(attachments, callback) {return callback(attachments)},
                 hashtagClicked: function(hashtag) {},
                 pingClicked: function(userId) {},
                 refresh: function() {},
@@ -522,27 +522,19 @@
         preSaveAttachments: function(files, commentingField) {
             var self = this;
 
-            // Validate files
-            files = this.options.validateAttachments(files);
-
             if(!commentingField) commentingField = this.$el.find('.commenting-field.main');
-            var uploadButton = commentingField.find('.upload');
+            var uploadButton = commentingField.find('.control-row .upload');
             var isReply = !commentingField.hasClass('main');
-            var fileCount = files.length;
+            var attachmentsContainer = commentingField.find('.control-row .attachments');
 
-            if(fileCount) {
-                var attachmentsContainer = commentingField.find('.control-row .attachments');
-                $(files).each(function(index, file) {
+            if(files.length) {
 
-                    // Create temporary attachment model
-                    var attachment = {
+                // Create attachment models
+                var attachments = $(files).map(function(index, file){
+                    return {
                         mime_type: file.type,
                         file: file
                     }
-
-                    // Add attachment tag to the container
-                    var attachmentTag = self.createAttachmentTagElement(attachment, true);
-                    attachmentsContainer.append(attachmentTag);
                 });
 
                 // Ensure that the main commenting field is shown if attachments were added to that
@@ -550,8 +542,27 @@
                     commentingField.find('.textarea').trigger('click');
                 }
 
-                // Check if save button needs to be enabled
-                this.toggleSaveButton(commentingField);
+                // Set button state to loading
+                this.setButtonState(uploadButton, false, true);
+
+                // Validate attachments
+                this.options.validateAttachments(attachments, function(validatedAttachments) {
+
+                    if(validatedAttachments.length) {
+
+                        // Create attachment tags
+                        $(attachments).each(function(index, attachment) {
+                            var attachmentTag = self.createAttachmentTagElement(attachment, true);
+                            attachmentsContainer.append(attachmentTag);
+                        });
+
+                        // Check if save button needs to be enabled
+                        self.toggleSaveButton(commentingField);
+                    }
+
+                    // Reset button state
+                    self.setButtonState(uploadButton, true, false);
+                });
             }
 
             // Clear the input field
@@ -1363,7 +1374,7 @@
                 'class': saveButtonClass + ' save highlight-background',
                 'text': saveButtonText
             });
-            saveButton.data('original-text', saveButtonText);
+            saveButton.data('original-content', saveButtonText);
             controlRow.append(saveButton);
 
             // Delete button
@@ -1375,7 +1386,7 @@
                     'class': 'delete enabled',
                     text: deleteButtonText
                 }).css('background-color', this.options.deleteButtonColor);
-                deleteButton.data('original-text', deleteButtonText);
+                deleteButton.data('original-content', deleteButtonText);
                 controlRow.append(deleteButton);
             }
 
@@ -1405,7 +1416,9 @@
                 uploadButton.append(uploadIcon).append(fileInput);
 
                 // Main upload button
-                controlRow.append(uploadButton.clone());
+                var mainUploadButton = uploadButton.clone();
+                mainUploadButton.data('original-content', mainUploadButton.children());
+                controlRow.append(mainUploadButton);
 
                 // Inline upload button for main commenting field
                 if(isMain) {
@@ -2189,7 +2202,7 @@
             if(loading) {
                 button.html(this.createSpinner(true));
             } else {
-                button.text(button.data('original-text'));
+                button.html(button.data('original-content'));
             }
         },
 
