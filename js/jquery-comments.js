@@ -783,14 +783,21 @@
 
         hideMainCommentingField: function(ev) {
             var closeButton = $(ev.currentTarget);
-            var mainTextarea = this.$el.find('.commenting-field.main .textarea');
-            var mainControlRow = this.$el.find('.commenting-field.main .control-row');
+            var commentingField = this.$el.find('.commenting-field.main');
+            var mainTextarea = commentingField.find('.textarea');
+            var mainControlRow = commentingField.find('.control-row');
 
+            // Clear text area
             this.clearTextarea(mainTextarea);
-            this.adjustTextareaHeight(mainTextarea, false);
 
             // Clear attachments
-            this.$el.find('.commenting-field.main .attachments').empty();
+            commentingField.find('.attachments').empty();
+
+            // Toggle save button
+            this.toggleSaveButton(commentingField);
+
+            // Adjust height
+            this.adjustTextareaHeight(mainTextarea, false);
 
             mainControlRow.hide();
             closeButton.hide();
