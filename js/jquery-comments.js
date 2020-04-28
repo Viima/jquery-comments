@@ -551,7 +551,7 @@
                     if(validatedAttachments.length) {
 
                         // Create attachment tags
-                        $(attachments).each(function(index, attachment) {
+                        $(validatedAttachments).each(function(index, attachment) {
                             var attachmentTag = self.createAttachmentTagElement(attachment, true);
                             attachmentsContainer.append(attachmentTag);
                         });
