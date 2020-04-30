@@ -330,6 +330,9 @@
         createCommentModel: function(commentJSON) {
             var commentModel = this.applyInternalMappings(commentJSON);
             commentModel.childs = [];
+            commentModel.hasAttachments = function() {
+                return commentModel.attachments.length > 0;
+            }
             return commentModel;
         },
 
@@ -360,9 +363,6 @@
 
             // Create comments
             this.createComments();
-
-            // Create attachments if enabled
-            if(this.options.enableAttachments) this.createAttachments();
 
             // Remove spinner
             this.$el.find('> .spinner').remove();
@@ -756,7 +756,9 @@
             var sortKey = navigationEl.data().sortKey;
 
             // Sort the comments if necessary
-            if(sortKey != 'attachments') {
+            if(sortKey == 'attachments') {
+                this.createAttachments();
+            } else {
                 this.sortAndReArrangeComments(sortKey);
             }
 
@@ -932,6 +934,10 @@
             var commentModel = this.createCommentModel(commentJSON);
             this.addCommentToDataModel(commentModel);
             this.addComment(commentModel);
+
+            if(this.currentSortKey == 'attachments' && commentModel.hasAttachments()) {
+                this.addAttachment(commentModel);
+            }
         },
 
         putComment: function(ev) {
@@ -1831,7 +1837,7 @@
             });
             attachments.append(attachmentPreviews).append(attachmentTags);
 
-            if(this.options.enableAttachments && commentModel.attachments.length) {
+            if(this.options.enableAttachments && commentModel.hasAttachments()) {
                 $(commentModel.attachments).each(function(index, attachment) {
                     var format = undefined;
                     var type = undefined;
@@ -2124,7 +2130,7 @@
         },
 
         getAttachments: function() {
-            return this.getComments().filter(function(comment){return comment.attachments.length > 0});
+            return this.getComments().filter(function(comment){return comment.hasAttachments()});
         },
 
         getOutermostParent: function(directParentId) {
