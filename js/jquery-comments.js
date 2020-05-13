@@ -125,6 +125,7 @@
                 uploadIconURL: '',
                 attachmentIconURL: '',
                 noCommentsIconURL: '',
+                closeIconURL: '',
 
                 // Strings to be formatted (for example localization)
                 textareaPlaceholderText: 'Add a comment',
