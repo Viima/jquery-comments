@@ -63,7 +63,7 @@ http://viima.github.io/jquery-comments/*/
 }
 
 .jquery-comments .attachments .tag.deletable {
-	padding-right: 0;
+	padding-right: 0 !important;
 }
 
 .jquery-comments .attachments .tag i:first-child {
