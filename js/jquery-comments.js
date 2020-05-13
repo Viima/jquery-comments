@@ -361,8 +361,9 @@
             // Show active container
             this.showActiveContainer();
 
-            // Create comments
+            // Create comments and attachments
             this.createComments();
+            this.createAttachments();
 
             // Remove spinner
             this.$el.find('> .spinner').remove();
@@ -403,7 +404,7 @@
             this.sortComments(mainLevelComments, this.currentSortKey);
             mainLevelComments.reverse();    // Reverse the order as they are prepended to DOM
             $(mainLevelComments).each(function(index, commentModel) {
-                self.addComment(commentModel, commentList);
+                self.addComment(commentModel, commentList, true);
             });
 
             // Append replies in chronological order
@@ -437,7 +438,7 @@
             this.$el.find('[data-container="attachments"]').prepend(attachmentList);
         },
 
-        addComment: function(commentModel, commentList) {
+        addComment: function(commentModel, commentList, forcePrepend) {
             commentList = commentList || this.$el.find('#comment-list');
             var commentEl = this.createCommentElement(commentModel);
 
@@ -466,7 +467,7 @@
 
             // Case: main level comment
             } else {
-                if(this.currentSortKey == 'newest') {
+                if(this.currentSortKey == 'newest' || forcePrepend) {
                     commentList.prepend(commentEl);
                 } else {
                     commentList.append(commentEl);
