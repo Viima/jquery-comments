@@ -1377,9 +1377,8 @@
             this.adjustTextareaHeight(textarea, false);
 
             // Close button
-            var closeButton = $('<span/>', {
-                'class': 'close inline-button'
-            }).append($('<span class="left"/>')).append($('<span class="right"/>'));
+            var closeButton = this.createCloseButton();
+            closeButton.addClass('inline-button');
 
             // Save button
             var saveButtonClass = existingCommentId ? 'update' : 'send';
@@ -1703,6 +1702,18 @@
             }
             spinner.html(spinnerIcon);
             return spinner;
+        },
+
+        createCloseButton: function(className) {
+            var closeButton = $('<span/>', {
+                'class': className || 'close'
+            });
+
+            closeButton.html($('<i/>', {
+                'class': 'fa fa-times'
+            }));
+
+            return closeButton;
         },
 
         createCommentElement: function(commentModel) {
@@ -2032,9 +2043,7 @@
                 attachmentTag.addClass('deletable');
 
                 // Append close button
-                var closeButton = $('<i/>', {
-                    'class': 'fa fa-times delete'
-                });
+                var closeButton = this.createCloseButton('delete');
                 attachmentTag.append(closeButton);
             }
 

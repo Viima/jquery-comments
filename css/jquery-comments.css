@@ -66,18 +66,18 @@ http://viima.github.io/jquery-comments/*/
 	padding-right: 0 !important;
 }
 
-.jquery-comments .attachments .tag i:first-child {
+.jquery-comments .attachments .tag > i:first-child {
 	margin-right: 0.4em;
 }
 
-.jquery-comments .attachments .tag i.delete {
+.jquery-comments .attachments .tag .delete {
 	display: inline;
 	padding: 2px 5px 2px 8px;
 	font-size: 14px;
 	color: #888;
 }
 
-.jquery-comments .attachments .tag:hover i.delete {
+.jquery-comments .attachments .tag:hover .delete {
 	color: black;
 }
 
@@ -211,8 +211,8 @@ http://viima.github.io/jquery-comments/*/
 	margin-right: 15px;	/* Because of scrollbar */
 }
 
-.jquery-comments .textarea-wrapper .upload.inline-button i {
-	font-size: 1.3em;
+.jquery-comments .textarea-wrapper .inline-button i {
+	font-size: 1.2em;
 }
 
 .jquery-comments .textarea-wrapper .upload input {
@@ -230,23 +230,6 @@ http://viima.github.io/jquery-comments/*/
 .jquery-comments .textarea-wrapper .close {
 	width: 1em;
 	height: 1em;
-}
-
-.jquery-comments .textarea-wrapper .close span {
-	background: #999;
-	width: 25%;
-	left: 37.5%;
-	height: 100%;
-	position: absolute;
-	-ms-transform: rotate(45deg);
-	-webkit-transform: rotate(45deg);
-	transform: rotate(45deg);
-}
-
-.jquery-comments .textarea-wrapper .close .right {
-	-ms-transform: rotate(-45deg);
-	-webkit-transform: rotate(-45deg);
-	transform: rotate(-45deg);
 }
 
 .jquery-comments .textarea-wrapper .textarea {
