@@ -1709,9 +1709,15 @@
                 'class': className || 'close'
             });
 
-            closeButton.html($('<i/>', {
+            var icon = $('<i/>', {
                 'class': 'fa fa-times'
-            }));
+            });
+            if(this.options.closeIconURL.length) {
+                icon.css('background-image', 'url("'+this.options.closeIconURL+'")');
+                icon.addClass('image');
+            }
+
+            closeButton.html(icon);
 
             return closeButton;
         },
