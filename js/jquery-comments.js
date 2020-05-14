@@ -1129,7 +1129,6 @@
                 // Move cursor to end
                 var textarea = replyField.find('.textarea');
                 this.moveCursorToEnd(textarea);
-                textarea.focus();
 
                 // Ensure element stays visible
                 this.ensureElementStaysVisible(replyField);
