@@ -48,6 +48,9 @@
             // Close dropdowns
             'click': 'closeDropdowns',
 
+            // Paste attachments
+            'paste' : 'preSavePastedAttachments',
+
             // Save comment on keydown
             'keydown [contenteditable]' : 'saveOnKeydown',
 
@@ -719,6 +722,25 @@
 
         closeDropdowns: function() {
             this.$el.find('.dropdown').hide();
+        },
+
+        preSavePastedAttachments: function(ev) {
+            var clipboardData = ev.originalEvent.clipboardData;
+            var files = clipboardData.files;
+
+            // Browsers only support pasting one file
+            if(files && files.length == 1) {
+
+                // Select correct commenting field
+                var commentingField;
+                var parentCommentingField = $(ev.target).parents('.commenting-field').first(); 
+                if(parentCommentingField.length) {
+                    commentingField = parentCommentingField;
+                }
+
+                this.preSaveAttachments(files, commentingField);
+                ev.preventDefault();
+            }
         },
 
         saveOnKeydown: function(ev) {
