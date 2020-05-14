@@ -1128,15 +1128,13 @@
 
                 // Move cursor to end
                 var textarea = replyField.find('.textarea');
-                this.moveCursorToEnd(textarea)
+                this.moveCursorToEnd(textarea);
+                textarea.focus();
 
                 // Make sure the reply field will be displayed
-                var scrollTop = this.options.scrollContainer.scrollTop();
-                var endOfReply = scrollTop + replyField.position().top + replyField.outerHeight();
-                var endOfScrollable = scrollTop + this.options.scrollContainer.outerHeight();
-                if(endOfReply > endOfScrollable) {
-                    var newScrollTop = scrollTop + (endOfReply - endOfScrollable);
-                    this.options.scrollContainer.scrollTop(newScrollTop);
+                var minScrollTop = replyField.position().top + replyField.outerHeight() - this.options.scrollContainer.outerHeight();
+                if(this.options.scrollContainer.scrollTop() < minScrollTop) {
+                    this.options.scrollContainer.scrollTop(minScrollTop);
                 }
             }
         },
