@@ -592,6 +592,10 @@ http://viima.github.io/jquery-comments/*/
 	height: auto;
 }
 
+.jquery-comments ul.main li.comment .wrapper .attachments .previews .preview > *:focus {
+	outline: none;
+}
+
 /* Actions */
 .jquery-comments.mobile ul.main li.comment .actions {
 	font-size: 1em;
