@@ -1872,6 +1872,7 @@
 
                     // Preview
                     if(type == 'image' || type == 'video') {
+                        var previewRow = $('<div/>');
 
                         // Preview element
                         var preview = $('<a/>', {
@@ -1879,6 +1880,7 @@
                             href: attachment.file,
                             target: '_blank'
                         });
+                        previewRow.html(preview);
 
                         // Case: image preview
                         if(type == 'image') {
@@ -1896,7 +1898,7 @@
                             });
                             preview.html(video);
                         }
-                        attachmentPreviews.append(preview);
+                        attachmentPreviews.append(previewRow);
                     }
 
                     // Tag element

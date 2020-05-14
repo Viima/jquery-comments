@@ -580,7 +580,9 @@ http://viima.github.io/jquery-comments/*/
 }
 
 .jquery-comments ul.main li.comment .wrapper .attachments .previews .preview {
-	display: block;
+	display: inline-block;
+	margin-top: .25em;
+	margin-right: .25em;
 }
 
 .jquery-comments ul.main li.comment .wrapper .attachments .previews .preview > * {
@@ -588,8 +590,6 @@ http://viima.github.io/jquery-comments/*/
 	max-height: 200px;
 	width: auto;
 	height: auto;
-	margin-top: .25em;
-	margin-right: .25em;
 }
 
 /* Actions */
