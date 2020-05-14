@@ -734,7 +734,8 @@ http://viima.github.io/jquery-comments/*/
 }
 
 .jquery-comments ul.main li.comment.edit > .comment-wrapper .commenting-field {
-	padding: 0 !important;	/* Parent element has the padding */
+	padding-left: 0 !important;
+	padding-right: 0 !important;
 }
 
 /* Drag & drop attachments */
