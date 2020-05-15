@@ -92,10 +92,10 @@ describe('Basic features', function() {
         checkOrder($('ul#comment-list > li.comment'), [3,2,1]);
 
         // Check reply to -fields
-        expect($('#comment-list li.comment[data-id=8] .name .reply-to').text()).toBe('Jack Hemsworth');
-        expect($('#comment-list li.comment[data-id=9] .name .reply-to').text()).toBe('You');
-        expect($('#comment-list li.comment[data-id=5] .name .reply-to').text()).toBe('Todd Brown');
-        expect($('#comment-list li.comment[data-id=10] .name .reply-to').text()).toBe('Bryan Connery');
+        expect($('#comment-list li.comment[data-id=8] .comment-header .reply-to').text()).toBe('Jack Hemsworth');
+        expect($('#comment-list li.comment[data-id=9] .comment-header .reply-to').text()).toBe('You');
+        expect($('#comment-list li.comment[data-id=5] .comment-header .reply-to').text()).toBe('Todd Brown');
+        expect($('#comment-list li.comment[data-id=10] .comment-header .reply-to').text()).toBe('Bryan Connery');
 
         // Check that other comments do not have the field
         $('#comment-list li.comment').each(function(index, el) {
@@ -432,7 +432,7 @@ describe('Basic features', function() {
                 var commentEl = mostPopularComment.find('li.comment').last();
                 var idOfNewComment = commentEl.data().id;
 
-                expect(commentEl.find('.name .reply-to').text().indexOf('Bryan Connery')).not.toBe(-1);
+                expect(commentEl.find('.comment-header .reply-to').text().indexOf('Bryan Connery')).not.toBe(-1);
                 expect(commentEl.find('.content').text()).toBe(replyText);
                 expect(commentEl.hasClass('by-current-user')).toBe(true);
                 checkCommentElementData(commentEl);
@@ -466,7 +466,7 @@ describe('Basic features', function() {
                 var commentEl = mostPopularComment.find('li.comment').last();
                 var idOfNewComment = commentEl.data().id;
 
-                expect(commentEl.find('.name .reply-to').text().indexOf('Jack Hemsworth')).not.toBe(-1);
+                expect(commentEl.find('.comment-header .reply-to').text().indexOf('Jack Hemsworth')).not.toBe(-1);
                 expect(commentEl.find('.content').text()).toBe(replyText);
                 expect(commentEl.hasClass('by-current-user')).toBe(true);
                 checkCommentElementData(commentEl);
@@ -499,7 +499,7 @@ describe('Basic features', function() {
 
             run(function() {
                 var commentEl = mostPopularComment.find('li.comment').last();
-                expect(commentEl.find('.name .reply-to').length).toBe(0);
+                expect(commentEl.find('.comment-header .reply-to').length).toBe(0);
             });
         });
     });
@@ -859,12 +859,12 @@ describe('Basic features', function() {
     }
 
     function checkCommentElementData(commentEl) {
-        var nameContainer = commentEl.find('.name').first();
+        var header = commentEl.find('.comment-header').first();
 
         // Fields to be tested
         var profilePictureURL = commentEl.find('.profile-picture').first().css('background-image').slice(5, -2);
-        var replyTo = nameContainer.find('.reply-to').text();
-        var fullname = nameContainer.children().first().text();
+        var replyTo = header.find('.reply-to').text();
+        var fullname = header.find('.name').text();
 
         // Model that we are testing against
         var commentModel = commentEl.data().model;
@@ -979,11 +979,24 @@ describe('Basic features', function() {
             // Check that only fields content and modified have changed in comment model
             var ownCommentModel = comments.commentsById[id];
             $(Object.keys(ownCommentModel)).each(function(index, key) {
-                var arrayComparison = key == 'pings' || key == 'attachments';
+                var currentComparisonValue;
+                var oldComparisonValue;
 
-                // Comparison values
-                var currentComparisonValue = arrayComparison ? JSON.stringify(ownCommentModel[key]) : ownCommentModel[key];
-                var oldComparisonValue = arrayComparison ? JSON.stringify(ownCommentModelBefore[key]) : ownCommentModelBefore[key];
+                // Comparison value type
+                var arrayComparison = key == 'pings' || key == 'attachments';
+                var functionComparison = key == 'hasAttachments';
+
+                // Get comparison values based on comparison type
+                if(arrayComparison) {
+                    currentComparisonValue = JSON.stringify(ownCommentModel[key]);
+                    oldComparisonValue = JSON.stringify(ownCommentModelBefore[key]);
+                } else if(functionComparison) {  
+                    currentComparisonValue = ownCommentModel[key]()
+                    oldComparisonValue = ownCommentModelBefore[key]();
+                } else {
+                    currentComparisonValue = ownCommentModel[key];
+                    oldComparisonValue = ownCommentModelBefore[key];
+                }
 
                 if(key == 'content' || key == 'modified' || key == 'attachments') {
                     expect(currentComparisonValue).not.toBe(oldComparisonValue);

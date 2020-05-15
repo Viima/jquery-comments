@@ -187,7 +187,6 @@
                     pings: 'pings',
                     creator: 'creator',
                     fullname: 'fullname',
-                    profileURL: 'profile_url',
                     profilePictureURL: 'profile_picture_url',
                     isNew: 'is_new',
                     createdByAdmin: 'created_by_admin',
@@ -1782,23 +1781,19 @@
                 'data-original': commentModel.created
             });
 
+            // Comment header element
+            var commentHeaderEl = $('<div/>', {
+                'class': 'comment-header',
+            });
+
             // Name element
-            var name = $('<span/>', {
+            var nameEl = $('<span/>', {
+                'class': 'name',
                 'data-user-id': commentModel.creator,
                 'text': commentModel.createdByCurrentUser ? this.options.textFormatter(this.options.youText) : commentModel.fullname
             });
+            commentHeaderEl.append(nameEl);
 
-            if(commentModel.profileURL) {
-                name = $('<a/>', {
-                    'href': commentModel.profileURL,
-                    'html': name
-                });
-            }
-
-            var nameEl = $('<div/>', {
-                'class': 'name',
-                'html': name
-            });
 
             // Highlight admin names
             if(commentModel.createdByAdmin) nameEl.addClass('highlight-font-bold');
@@ -1823,7 +1818,7 @@
                     }
 
                     replyTo.prepend(replyIcon);
-                    nameEl.append(replyTo);
+                    commentHeaderEl.append(replyTo);
                 }
             }
 
@@ -1833,7 +1828,7 @@
                     'class': 'new highlight-background',
                     text: this.options.textFormatter(this.options.newText)
                 });
-                nameEl.append(newTag);
+                commentHeaderEl.append(newTag);
             }
 
             // Wrapper
@@ -1981,7 +1976,7 @@
             wrapper.append(content);
             wrapper.append(attachments);
             wrapper.append(actions);
-            commentWrapper.append(profilePicture).append(time).append(nameEl).append(wrapper);
+            commentWrapper.append(profilePicture).append(time).append(commentHeaderEl).append(wrapper);
             return commentWrapper;
         },
 
