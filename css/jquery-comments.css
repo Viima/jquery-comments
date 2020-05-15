@@ -516,7 +516,6 @@ http://viima.github.io/jquery-comments/*/
 
 .jquery-comments ul.main li.comment .comment-header {
 	line-height: 1.4em;
-	overflow: hidden;
 	word-break: break-word;
 }
 
