@@ -293,7 +293,7 @@ http://viima.github.io/jquery-comments/*/
 .jquery-comments ul.navigation {
 	clear: both;
 
-	color: #CCC;
+	color: #999;
 	border-bottom: 2px solid #CCC;
 	line-height: 2em;
 	font-size: 1em;
@@ -309,7 +309,6 @@ http://viima.github.io/jquery-comments/*/
 	position: relative;
 	padding: 0 1em;
 	cursor: pointer;
-	font-weight: bold;
 	text-align: center;
 
 	-webkit-user-select: none;
