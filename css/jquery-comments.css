@@ -55,15 +55,14 @@ http://viima.github.io/jquery-comments/*/
 }
 
 .jquery-comments .attachments .tag {
+	white-space: normal;
+	word-break: break-all;
+
 	padding: 0.05em 0.5em;
 	line-height: 1.3em;
 
 	margin-top: 0.3em;
 	margin-right: 0.5em;
-}
-
-.jquery-comments .attachments .tag.deletable {
-	padding-right: 0 !important;
 }
 
 .jquery-comments .attachments .tag > i:first-child {
@@ -72,10 +71,13 @@ http://viima.github.io/jquery-comments/*/
 
 .jquery-comments .attachments .tag .delete {
 	display: inline;
-	padding: 2px 5px 2px 8px;
 	font-size: 14px;
 	color: #888;
-	vertical-align: middle;
+	
+	position: relative;
+	padding: 2px;
+	padding-right: 4px;
+	right: -4px;
 }
 
 .jquery-comments .attachments .tag:hover .delete {
@@ -101,6 +103,7 @@ http://viima.github.io/jquery-comments/*/
 	width: 1em;
 	height: 1em;
 	background-size: cover;
+	text-align: center;
 }
 
 .jquery-comments i.fa.image:before {
