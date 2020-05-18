@@ -405,9 +405,8 @@
 
             // Append main level comments
             this.sortComments(mainLevelComments, this.currentSortKey);
-            mainLevelComments.reverse();    // Reverse the order as they are prepended to DOM
             $(mainLevelComments).each(function(index, commentModel) {
-                self.addComment(commentModel, commentList, true);
+                self.addComment(commentModel, commentList);
             });
 
             // Append replies in chronological order
@@ -432,7 +431,6 @@
 
             var attachments = this.getAttachments();
             this.sortComments(attachments, 'newest');
-            attachments.reverse();    // Reverse the order as they are prepended to DOM
             $(attachments).each(function(index, commentModel) {
                 self.addAttachment(commentModel, attachmentList);
             });
@@ -441,7 +439,7 @@
             this.$el.find('[data-container="attachments"]').prepend(attachmentList);
         },
 
-        addComment: function(commentModel, commentList, forcePrepend) {
+        addComment: function(commentModel, commentList, prependComment) {
             commentList = commentList || this.$el.find('#comment-list');
             var commentEl = this.createCommentElement(commentModel);
 
@@ -470,7 +468,7 @@
 
             // Case: main level comment
             } else {
-                if(this.currentSortKey == 'newest' || forcePrepend) {
+                if(prependComment) {
                     commentList.prepend(commentEl);
                 } else {
                     commentList.append(commentEl);
@@ -956,7 +954,11 @@
         createComment: function(commentJSON) {
             var commentModel = this.createCommentModel(commentJSON);
             this.addCommentToDataModel(commentModel);
-            this.addComment(commentModel);
+
+            // Add comment element
+            var commentList = this.$el.find('#comment-list');
+            var prependComment = this.currentSortKey == 'newest';
+            this.addComment(commentModel, commentList, prependComment);
 
             if(this.currentSortKey == 'attachments' && commentModel.hasAttachments()) {
                 this.addAttachment(commentModel);
