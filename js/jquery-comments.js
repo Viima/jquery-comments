@@ -524,12 +524,12 @@
         preSaveAttachments: function(files, commentingField) {
             var self = this;
 
-            if(!commentingField) commentingField = this.$el.find('.commenting-field.main');
-            var uploadButton = commentingField.find('.control-row .upload');
-            var isReply = !commentingField.hasClass('main');
-            var attachmentsContainer = commentingField.find('.control-row .attachments');
-
             if(files.length) {
+
+                if(!commentingField) commentingField = this.$el.find('.commenting-field.main');
+                var uploadButton = commentingField.find('.control-row .upload');
+                var isReply = !commentingField.hasClass('main');
+                var attachmentsContainer = commentingField.find('.control-row .attachments');
 
                 // Create attachment models
                 var attachments = $(files).map(function(index, file){
