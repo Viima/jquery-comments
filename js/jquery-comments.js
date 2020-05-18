@@ -366,7 +366,7 @@
 
             // Create comments and attachments
             this.createComments();
-            this.createAttachments();
+            if(this.options.enableAttachments) this.createAttachments();
 
             // Remove spinner
             this.$el.find('> .spinner').remove();
