@@ -197,6 +197,34 @@ attachmentIconURL: '',  // Only if attachments are enabled
 </code></pre>
 
 
+<h3><a id="example-data" class="anchor" href="#example-data" aria-hidden="true"><span class="octicon octicon-link"></span></a>Example data</h3>
+<p>The library expects the comment (and attachment) data to be provided in the format demonstrated below. Please note that you can use <code>fieldMappings</code> to map the field names to match with your API.</p>
+
+<pre><code>
+var commentModel = {
+   "id": 4,
+   "parent": 3,
+   "created": "2015-01-04",
+   "modified": "2015-01-04",
+   "content": "Check out this video",
+   "attachments": [
+      {
+         "id": 1,
+         "file": "http://www.w3schools.com/html/mov_bbb.mp4",
+         "mime_type": "video/mp4",
+      }, 
+   ],
+   "creator": 4,
+   "fullname": "Todd Brown",
+   "profile_picture_url": "https://viima-app.s3.amazonaws.com/media/public/defaults/user-icon.png",
+   "created_by_admin": false,
+   "created_by_current_user": false,
+   "upvote_count": 0,
+   "user_has_upvoted": false,
+   "is_new": true
+}
+</code></pre>
+
 
 <h3>Configuration options</h3>
 
