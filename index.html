@@ -949,23 +949,21 @@ A <code>dictionary</code> that is used to map the fields between jquery-comments
 </p>
 <label>FIELDS</label>  
 <pre class="prettyprint linemus">
-id            // Required
-parent          // Required if replying is enabled
-created         // Required
-modified        // Required if editing is enabled
-content         // Either content or fileURL must be present
-fileURL         // Either content or fileURL must be present
-file          // Required when uploading an attachment
-fileMimeType      // Optional
-pings           // Required if pinging is enabled
-creator         // Required if pinging is enabled
-fullname        // Required
+id                    // Required
+parent                // Required if replying is enabled
+created               // Required
+modified              // Required if editing is enabled
+content               // Optional
+attachments           // Required if attachments are enabled
+pings                 // Required if pinging is enabled
+creator               // Required if pinging is enabled
+fullname              // Required
 profilePictureURL     // Optional
-isNew           // Optional
-createdByAdmin      // Optional
+isNew                 // Optional
+createdByAdmin        // Optional
 createdByCurrentUser  // Required if editing is enabled
-upvoteCount       // Required if upvoting is enabled
-userHasUpvoted      // Required if upvoting is enabled
+upvoteCount           // Required if upvoting is enabled
+userHasUpvoted        // Required if upvoting is enabled
 </pre>
 <label>DEFAULT</label>  
 <pre class="prettyprint linemus">
@@ -975,9 +973,7 @@ fieldMappings: {
   created: 'created',
   modified: 'modified',
   content: 'content',
-  file: 'file',
-  fileURL: 'file_url',
-  fileMimeType: 'file_mime_type',
+  attachments: 'attachments',
   pings: 'pings',
   creator: 'creator',
   fullname: 'fullname',
