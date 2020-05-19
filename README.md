@@ -56,11 +56,11 @@ If you are not using Font Awesome for icons, you should replace the icons with c
 ```javascript
 spinnerIconURL: '',
 noCommentsIconURL: '',
-upvoteIconURL: '',		// Only if upvoting is enabled
-replyIconURL: '',		// Only if replying is enabled
-uploadIconURL: '',		// Only if attachments are enabled
-attachmentIconURL: '',	// Only if attachments are enabled
-fileIconURL: '',		// Only if attachments are enabled
+closeIconURL: '',
+upvoteIconURL: '',      // Only if upvoting is enabled
+replyIconURL: '',       // Only if replying is enabled
+uploadIconURL: '',      // Only if attachments are enabled
+attachmentIconURL: '',  // Only if attachments are enabled
 ```
 
 Dependencies
