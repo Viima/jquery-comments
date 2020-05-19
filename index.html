@@ -189,11 +189,11 @@
 
 <pre><code>spinnerIconURL: '',
 noCommentsIconURL: '',
-upvoteIconURL: '',    // Only if upvoting is enabled
-replyIconURL: '',     // Only if replying is enabled
-uploadIconURL: '',    // Only if attachments are enabled
+closeIconURL: '',
+upvoteIconURL: '',      // Only if upvoting is enabled
+replyIconURL: '',       // Only if replying is enabled
+uploadIconURL: '',      // Only if attachments are enabled
 attachmentIconURL: '',  // Only if attachments are enabled
-fileIconURL: '',    // Only if attachments are enabled
 </code></pre>
 
 
@@ -313,7 +313,7 @@ $('#comments-container').comments({
 <td><code>attachmentIconURL</code></td>
 <td>
 <p>
-An <code>url</code> for attachment icon that is used as a symbor for attachments. Not required if Font Awesome is used.
+An <code>url</code> for attachment icon that is used as a symbol for attachments. Not required if Font Awesome is used.
 </p>
 <label>DEFAULT</label>  
 <code class="string">""</code>
@@ -327,17 +327,17 @@ $('#comments-container').comments({
 </tr>
 
 <tr>
-<td><code>fileIconURL</code></td>
+<td><code>closeIconURL</code></td>
 <td>
 <p>
-An <code>url</code> for file icon that is used to indicate that a link is an attachment. Not required if Font Awesome is used.
+An <code>url</code> for close icon that is used as a button for closing commenting field. Not required if Font Awesome is used.
 </p>
 <label>DEFAULT</label>  
 <code class="string">""</code>
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-  fileIconURL: '/img/file-icon.png'
+  closeIconURL: '/img/close-icon.png'
 });
 </pre>
 </td>
@@ -960,7 +960,6 @@ fileMimeType      // Optional
 pings           // Required if pinging is enabled
 creator         // Required if pinging is enabled
 fullname        // Required
-profileURL        // Optional
 profilePictureURL     // Optional
 isNew           // Optional
 createdByAdmin      // Optional
@@ -982,7 +981,6 @@ fieldMappings: {
   pings: 'pings',
   creator: 'creator',
   fullname: 'fullname',
-  profileURL: 'profile_url',
   profilePictureURL: 'profile_picture_url',
   isNew: 'is_new',
   createdByAdmin: 'created_by_admin',
