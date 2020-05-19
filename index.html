@@ -1499,13 +1499,13 @@ $('#comments-container').comments({
 
 <h3>
 <a id="attachments" class="anchor" href="#attachments" aria-hidden="true"><span class="octicon octicon-link"></span></a>Working with attachments</h3>
-<p>Saving attachments is a bit different than saving other fields of the comment as attachments cannot be presented in plain text unlike other fields; the attachments are sent to the API in binary format and the API returns the URL of the saved file instead of the orignal binary due to performance reasons.
+<p>Saving attachments is a bit different than saving other fields of the comment as attachments cannot be presented in plain text unlike other fields; the attachments are sent to the API in binary format and the API returns the URL of the saved file instead of the original binary data due to performance reasons.
 <br>
 <br>
-The data should be provided to the API using <a href="https://developer.mozilla.org/en-US/docs/Web/API/FormData" target="_blank">FormData</a> interface. Also please make sure that your API supports content type <code>multipart/form-data</code> to accept the binary files provided with the FormData. Unfortunately it's not possbile to provide hierarchical data structure with the FormData interface and thus the attachments must be send to the API using a temporary field. The API must then get the files from that temporary field, save them to a file system and provide the URLs of those files in the <code>attachments</code> field.
+The data should be provided to the API using <a href="https://developer.mozilla.org/en-US/docs/Web/API/FormData" target="_blank">FormData</a> interface. Also please make sure that your API supports content type <code>multipart/form-data</code> to accept the binary files provided with the FormData. Unfortunately it's not possbile to provide hierarchical data structure with the FormData interface and thus the attachments must be sent to the API using a temporary field. The API must then get the files from that temporary field, save them to a file system and provide the URLs of those files in the <code>attachments</code> field.
 <br>
 <br>
-In the example below, the attachments are sent to the API in field named <code>attachments_to_be_created</code>. The API is expected to process the files from that field and provide the URL of the saved attacments in the <code>attachments</code> field of the response. Please see <a href="#example-data">Example data</a> for expected output.
+In the example below, the attachments are sent to the API in a field named <code>attachments_to_be_created</code>. The API is expected to process the files from that field and provide the URL of the saved attacments in the <code>attachments</code> field of the response. Please see <a href="#example-data">Example data</a> for expected output.
 </p>
 
 
