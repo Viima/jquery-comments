@@ -25,7 +25,7 @@
       el = $(el);
       var id = 'link-' + index;
       el.attr('id', id);
-      var listEl = $('<a/>').html(el.html());  
+      var listEl = $('<a/>').text(el.text());  
       listEl.attr('href', '#' + id);
       $('.sidebar').append(listEl);
 
