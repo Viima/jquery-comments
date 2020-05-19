@@ -5,7 +5,7 @@
 		<meta name=description content="">
 		<meta name=viewport content="width=device-width, initial-scale=1">
 		<title>Jquery Comments Plugin</title>
-		
+
 		<!-- Styles -->
 		<link rel="stylesheet" type="text/css" href="css/jquery-comments.css">
 		<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
@@ -33,9 +33,10 @@
 				var saveComment = function(data) {
 
 					// Convert pings to human readable format
-					$(data.pings).each(function(index, id) {
-						var user = usersArray.filter(function(user){return user.id == id})[0];
-						data.content = data.content.replace('@' + id, '@' + user.fullname);
+					$(Object.keys(data.pings)).each(function(index, userId) {
+					    var fullname = data.pings[userId];
+					    var pingText = '@' + fullname;
+					    data.content = data.content.replace(new RegExp('@' + userId, 'g'), pingText);
 					});
 
 					return data;
@@ -48,10 +49,15 @@
 					enableAttachments: true,
 					enableHashtags: true,
 					enablePinging: true,
-					getUsers: function(success, error) {
-						setTimeout(function() {
-							success(usersArray);
-						}, 500);
+					scrollContainer: $(window),
+					searchUsers: function(term, success, error) {
+					    setTimeout(function() {
+					        success(usersArray.filter(function(user) {
+					            var containsSearchTerm = user.fullname.toLowerCase().indexOf(term.toLowerCase()) != -1;
+					            var isNotSelf = user.id != 1;
+					            return containsSearchTerm && isNotSelf;
+					        }));
+					    }, 500);
 					},
 					getComments: function(success, error) {
 						setTimeout(function() {
@@ -78,9 +84,9 @@
 							success(data);
 						}, 500);
 					},
-					uploadAttachments: function(dataArray, success, error) {
+					validateAttachments: function(attachments, callback) {
 						setTimeout(function() {
-							success(dataArray);
+							callback(attachments);
 						}, 500);
 					},
 				});
