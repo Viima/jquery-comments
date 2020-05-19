@@ -1,142 +1,142 @@
 <!DOCTYPE html>
 <html lang="en-us">
   <head>
-    <meta charset="UTF-8">
-    <title>jquery-comments by Viima</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-    
-      ga('create', 'UA-41980270-4', 'auto');
-      ga('set', 'anonymizeIp', true);
-      ga('send', 'pageview');
+  <meta charset="UTF-8">
+  <title>jquery-comments by Viima</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+  <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+  <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+  <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+  <script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+    (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+    m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+    })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  
+    ga('create', 'UA-41980270-4', 'auto');
+    ga('set', 'anonymizeIp', true);
+    ga('send', 'pageview');
 
-      // Create sidebar dynamically
-      $(function() {
-        $('h3').each(function(index, el) {
-            el = $(el);
-            var id = 'link-' + index;
-            el.attr('id', id);
-            var listEl = $('<a/>').html(el.html());  
-            listEl.attr('href', '#' + id);
-            $('.sidebar').append(listEl);
+    // Create sidebar dynamically
+    $(function() {
+    $('h3').each(function(index, el) {
+      el = $(el);
+      var id = 'link-' + index;
+      el.attr('id', id);
+      var listEl = $('<a/>').html(el.html());  
+      listEl.attr('href', '#' + id);
+      $('.sidebar').append(listEl);
 
-            if(el.next().is('table')) {
-                var table = el.next();
-                table.find('th').each(function(index, th) {
-                    th = $(th);
-                    var id2 = id + '-' + index;
-                    th.attr('id', id2);
+      if(el.next().is('table')) {
+        var table = el.next();
+        table.find('th').each(function(index, th) {
+          th = $(th);
+          var id2 = id + '-' + index;
+          th.attr('id', id2);
 
-                    var listEl2 = $('<a/>').html(th.text()).addClass('level-2'); 
-                    listEl2.attr('href', '#' + id2);
-                    $('.sidebar').append(listEl2);
-                });
-            }
+          var listEl2 = $('<a/>').html(th.text()).addClass('level-2'); 
+          listEl2.attr('href', '#' + id2);
+          $('.sidebar').append(listEl2);
         });
-      });
+      }
+    });
+    });
 
-    </script>
+  </script>
 
-    <style type="text/css">
+  <style type="text/css">
 
-        .sidebar {
-            float: left;
-            margin-right: 2rem;
-        }
+    .sidebar {
+      float: left;
+      margin-right: 2rem;
+    }
 
-        .sidebar a{
-            display: block;
-            color: #23A6F0;
-            color: inherit;
-            font-size: .9em;
-            margin-bottom: .5em;
-        }
+    .sidebar a{
+      display: block;
+      color: #23A6F0;
+      color: inherit;
+      font-size: .9em;
+      margin-bottom: .5em;
+    }
 
-        .sidebar a.level-2{
-            font-size: .8em;
-            padding-left: 2rem;
-        }
+    .sidebar a.level-2{
+      font-size: .8em;
+      padding-left: 2rem;
+    }
 
-        .content {
-            overflow: hidden;
-        }
+    .content {
+      overflow: hidden;
+    }
 
-        .content table {
-            font-size: .9em;
-            text-align: left;
-        }
+    .content table {
+      font-size: .9em;
+      text-align: left;
+    }
 
-        .content td {
-            vertical-align: top;
-        }
+    .content td {
+      vertical-align: top;
+    }
 
-        .content code {
-            color: #23A6F0;
-            background: none;
-        }
+    .content code {
+      color: #23A6F0;
+      background: none;
+    }
 
-        .content code.string {
-            font-style: italic;
-            color: inherit;
-        }
+    .content code.string {
+      font-style: italic;
+      color: inherit;
+    }
 
-        label {
-            font-size: .9em;
-            color: #999;
-        }
+    label {
+      font-size: .9em;
+      color: #999;
+    }
 
-        label.example {
-            display: block;
-            margin-top: 1rem;
-        }
+    label.example {
+      display: block;
+      margin-top: 1rem;
+    }
 
-    </style>
+  </style>
 
   </head>
   <body>
-    <section class="page-header">
-      <h1 class="project-name">jquery-comments</h1>
-      <h2 class="project-tagline">The Javascript library of choice for implementing commenting in your web app</h2>
-      <a href="https://github.com/Viima/jquery-comments" class="btn">View on GitHub</a>
-      <a href="https://github.com/Viima/jquery-comments/zipball/master" class="btn">Download .zip</a>
-      <a href="https://github.com/Viima/jquery-comments/tarball/master" class="btn">Download .tar.gz</a>
-    </section>
+  <section class="page-header">
+    <h1 class="project-name">jquery-comments</h1>
+    <h2 class="project-tagline">The Javascript library of choice for implementing commenting in your web app</h2>
+    <a href="https://github.com/Viima/jquery-comments" class="btn">View on GitHub</a>
+    <a href="https://github.com/Viima/jquery-comments/zipball/master" class="btn">Download .zip</a>
+    <a href="https://github.com/Viima/jquery-comments/tarball/master" class="btn">Download .tar.gz</a>
+  </section>
 
-    <section class="main-content">
+  <section class="main-content">
 
-        <div class="sidebar"></div>
+    <div class="sidebar"></div>
 
-        <div class="content">
+    <div class="content">
 
 
-                  <h1>
-            <a id="jquery-comments" class="anchor" href="#jquery-comments" aria-hidden="true"><span class="octicon octicon-link"></span></a>jquery-comments</h1>
+          <h1>
+      <a id="jquery-comments" class="anchor" href="#jquery-comments" aria-hidden="true"><span class="octicon octicon-link"></span></a>jquery-comments</h1>
 
-            <p>jquery-comments is a jQuery plugin for implementing an out-of-the-box commenting solution to any web application with an existing backend. It provides all the UI functionalities and ties them to callbacks that let you easily define what you want to do with the data. The library is highly customizable and very easy to integrate thanks to a wide variety of settings.</p>
+      <p>jquery-comments is a jQuery plugin for implementing an out-of-the-box commenting solution to any web application with an existing backend. It provides all the UI functionalities and ties them to callbacks that let you easily define what you want to do with the data. The library is highly customizable and very easy to integrate thanks to a wide variety of settings.</p>
 
-            <p><img src="https://github.com/Viima/jquery-comments/blob/master/screenshot.png?raw=true" alt="Screenshot of jquery-comments" title="Screenshot of jquery-comments"></p>
+      <p><img src="https://github.com/Viima/jquery-comments/blob/master/screenshot.png?raw=true" alt="Screenshot of jquery-comments" title="Screenshot of jquery-comments"></p>
 
-            <h3>
-            <a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h3>
+      <h3>
+      <a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h3>
 
-            <ul>
+      <ul>
 				<li>Commenting</li>
 				<li>Replying (nested comments)</li>
 				<li>Editing comments</li>
 				<li>Deleting comments</li>
 				<li>Upvoting comments</li>
 				<li>Uploading attachments</li>
-                <li>Hashtags</li>
-                <li>Pinging users</li>
+        <li>Hashtags</li>
+        <li>Pinging users</li>
 				<li>Enabling/disabling functionalities</li>
 				<li>Localization</li>
 				<li>Time formatting</li>
@@ -144,17 +144,17 @@
 				<li>Callbacks</li>
 				<li>Fully responsive and mobile compatible</li>
 				<li>Miscellaneous settings</li>
-            </ul>
+      </ul>
 
-            <h3>
-            <a id="demo" class="anchor" href="#demo" aria-hidden="true"><span class="octicon octicon-link"></span></a>Demo</h3>
+      <h3>
+      <a id="demo" class="anchor" href="#demo" aria-hidden="true"><span class="octicon octicon-link"></span></a>Demo</h3>
 
-            <p><a href="http://viima.github.io/jquery-comments/demo/">http://viima.github.io/jquery-comments/demo/</a></p>
+      <p><a href="http://viima.github.io/jquery-comments/demo/">http://viima.github.io/jquery-comments/demo/</a></p>
 
-            <h3>
-            <a id="quick-start" class="anchor" href="#quick-start" aria-hidden="true"><span class="octicon octicon-link"></span></a>Quick start</h3>
+      <h3>
+      <a id="quick-start" class="anchor" href="#quick-start" aria-hidden="true"><span class="octicon octicon-link"></span></a>Quick start</h3>
 
-            <p><strong>1) Add the following to your HTML file</strong></p>
+      <p><strong>1) Add the following to your HTML file</strong></p>
 
 <pre><code>&lt;link rel="stylesheet" type="text/css" href="css/jquery-comments.css"&gt;
 &lt;link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css"&gt;
@@ -163,33 +163,33 @@
 &lt;script type="text/javascript" src="js/jquery-comments.js"&gt;&lt;/script&gt;
 </code></pre>
 
-            <p><strong>2) Initialize the library</strong></p>
+      <p><strong>2) Initialize the library</strong></p>
 
 <pre><code>$('#comments-container').comments({
-    profilePictureURL: 'https://viima-app.s3.amazonaws.com/media/public/defaults/user-icon.png',
-    getComments: function(success, error) {
-        var commentsArray = [{
-            id: 1,
-            created: '2015-10-01',
-            content: 'Lorem ipsum dolort sit amet',
-            fullname: 'Simon Powell',
-            upvote_count: 2,
-            user_has_upvoted: false
-        }];
-        success(commentsArray);
-    }
+  profilePictureURL: 'https://viima-app.s3.amazonaws.com/media/public/defaults/user-icon.png',
+  getComments: function(success, error) {
+    var commentsArray = [{
+      id: 1,
+      created: '2015-10-01',
+      content: 'Lorem ipsum dolort sit amet',
+      fullname: 'Simon Powell',
+      upvote_count: 2,
+      user_has_upvoted: false
+    }];
+    success(commentsArray);
+  }
 });
 </code></pre>
 
-            <p>If you are not using Font Awesome for icons, you should replace the icons with custom images by overriding following options when initializing the library:</p>
+      <p>If you are not using Font Awesome for icons, you should replace the icons with custom images by overriding following options when initializing the library:</p>
 
 <pre><code>spinnerIconURL: '',
 noCommentsIconURL: '',
-upvoteIconURL: '',      // Only if upvoting is enabled
-replyIconURL: '',       // Only if replying is enabled
-uploadIconURL: '',      // Only if attachments are enabled
+upvoteIconURL: '',    // Only if upvoting is enabled
+replyIconURL: '',     // Only if replying is enabled
+uploadIconURL: '',    // Only if attachments are enabled
 attachmentIconURL: '',  // Only if attachments are enabled
-fileIconURL: '',        // Only if attachments are enabled
+fileIconURL: '',    // Only if attachments are enabled
 </code></pre>
 
 
@@ -211,7 +211,7 @@ An <code>url</code> for profile picture of the current user. Not required if Fon
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    profilePictureURL: '/user_profiles/user-icon.png'
+  profilePictureURL: '/user_profiles/user-icon.png'
 });
 </pre>
 </td>
@@ -227,7 +227,7 @@ A <code>boolean</code> value determing whether the current user is administarato
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    currentUserIsAdmin: true
+  currentUserIsAdmin: true
 });
 </pre>
 </td>
@@ -246,7 +246,7 @@ An <code>url</code> for spinner icon that is shown before comments have been fet
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    spinnerIconURL: '/img/spinner.gif'
+  spinnerIconURL: '/img/spinner.gif'
 });
 </pre>
 </td>
@@ -264,7 +264,7 @@ An <code>url</code> for upvote icon that is used as a button for upvoting. Not r
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    upvoteIconURL: '/img/upvote-icon.png'
+  upvoteIconURL: '/img/upvote-icon.png'
 });
 </pre>
 </td>
@@ -282,7 +282,7 @@ An <code>url</code> for reply icon that is shown after the author of the comment
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    replyIconURL: '/img/reply-icon.png'
+  replyIconURL: '/img/reply-icon.png'
 });
 </pre>
 </td>
@@ -299,7 +299,7 @@ An <code>url</code> for upload icon that is used as a button for uploading attac
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    uploadIconURL: '/img/upload-icon.png'
+  uploadIconURL: '/img/upload-icon.png'
 });
 </pre>
 </td>
@@ -316,7 +316,7 @@ An <code>url</code> for attachment icon that is used as a symbor for attachments
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    attachmentIconURL: '/img/attachment-icon.png'
+  attachmentIconURL: '/img/attachment-icon.png'
 });
 </pre>
 </td>
@@ -333,7 +333,7 @@ An <code>url</code> for file icon that is used to indicate that a link is an att
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    fileIconURL: '/img/file-icon.png'
+  fileIconURL: '/img/file-icon.png'
 });
 </pre>
 </td>
@@ -350,7 +350,7 @@ An <code>url</code> for no-comments icon that is shown if there are no comments 
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    noCommentsIconURL: '/img/no-comments-icon.png'
+  noCommentsIconURL: '/img/no-comments-icon.png'
 });
 </pre>
 </td>
@@ -370,7 +370,7 @@ A <code>string</code> that is displayed as a placeholder in commenting fields
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    textareaPlaceholderText: 'Leave a comment'
+  textareaPlaceholderText: 'Leave a comment'
 });
 </pre>
 </td>
@@ -388,7 +388,7 @@ A <code>string</code> that is displayed on sorting button for newest comments
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    newestText: 'New'
+  newestText: 'New'
 });
 </pre>
 </td>
@@ -406,7 +406,7 @@ A <code>string</code> that is displayed on sorting button for oldest comments
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    oldestText: 'Old'
+  oldestText: 'Old'
 });
 </pre>
 </td>
@@ -423,7 +423,7 @@ A <code>string</code> that is displayed on sorting button for most popular comme
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    popularText: 'Most popular'
+  popularText: 'Most popular'
 });
 </pre>
 </td>
@@ -440,7 +440,7 @@ A <code>string</code> that is displayed on sorting button for attachments
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    attachmentsText: 'Show attachments'
+  attachmentsText: 'Show attachments'
 });
 </pre>
 </td>
@@ -457,7 +457,7 @@ A <code>string</code> that is displayed on send button
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    sendText: 'Comment'
+  sendText: 'Comment'
 });
 </pre>
 </td>
@@ -475,7 +475,7 @@ A <code>string</code> that is displayed on reply button
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    replyText: 'Answer'
+  replyText: 'Answer'
 });
 </pre>
 </td>
@@ -493,7 +493,7 @@ A <code>string</code> that is displayed on edit button
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    editText: 'Modify'
+  editText: 'Modify'
 });
 </pre>
 </td>
@@ -510,7 +510,7 @@ A <code>string</code> that is displayed on edited timestamp
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    editedText: 'Modified'
+  editedText: 'Modified'
 });
 </pre>
 </td>
@@ -528,7 +528,7 @@ A <code>string</code> that is displayed as a name of the user for new comments b
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    youText: 'Me'
+  youText: 'Me'
 });
 </pre>
 </td>
@@ -545,7 +545,7 @@ A <code>string</code> that is displayed on save button
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    saveText: 'Update'
+  saveText: 'Update'
 });
 </pre>
 </td>
@@ -563,7 +563,7 @@ A <code>string</code> that is displayed on delete button
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    deleteText: 'Remove'
+  deleteText: 'Remove'
 });
 </pre>
 </td>
@@ -580,7 +580,7 @@ A <code>string</code> that is displayed to show all replies when there are more 
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    viewAllRepliesText: 'Show all replies (__replyCount__)'
+  viewAllRepliesText: 'Show all replies (__replyCount__)'
 });
 </pre>
 </td>
@@ -598,7 +598,7 @@ A <code>string</code> that is displayed to hide replies that weren't visible ini
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    hideRepliesText: 'Hide'
+  hideRepliesText: 'Hide'
 });
 </pre>
 </td>
@@ -616,7 +616,7 @@ A <code>string</code> that is displayed if there are no comments to show
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    noCommentsText: 'There are no comments'
+  noCommentsText: 'There are no comments'
 });
 </pre>
 </td>
@@ -634,7 +634,7 @@ A <code>string</code> that is displayed if there are no attachments to show
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    noAttachmentsText: 'There are no attachments'
+  noAttachmentsText: 'There are no attachments'
 });
 </pre>
 </td>
@@ -652,7 +652,7 @@ A <code>string</code> that is used to inform the user where the attachments can 
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    attachmentDropText: 'Drop here'
+  attachmentDropText: 'Drop here'
 });
 </pre>
 </td>
@@ -671,7 +671,7 @@ A <code>css</code> value for the highlight color that is used for example to hig
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    highlightColor: '#23A6F0'
+  highlightColor: '#23A6F0'
 });
 </pre>
 </td>
@@ -688,7 +688,7 @@ A <code>css</code> value for the color of the delete button
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    deleteButtonColor: 'red'
+  deleteButtonColor: 'red'
 });
 </pre>
 </td>
@@ -708,7 +708,7 @@ A <code>boolean</code> value determing whether replying is enabled
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    enableReplying: false
+  enableReplying: false
 });
 </pre>
 </td>
@@ -726,7 +726,7 @@ A <code>boolean</code> value determing whether editing is enabled
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    enableEditing: false
+  enableEditing: false
 });
 </pre>
 </td>
@@ -744,7 +744,7 @@ A <code>boolean</code> value determing whether upvoting is enabled
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    enableUpvoting: false
+  enableUpvoting: false
 });
 </pre>
 </td>
@@ -762,7 +762,7 @@ A <code>boolean</code> value determing whether deleting is enabled
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    enableDeleting: false
+  enableDeleting: false
 });
 </pre>
 </td>
@@ -780,7 +780,7 @@ A <code>boolean</code> value determing whether user is allowed to delete own com
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    enableDeletingCommentWithReplies: false
+  enableDeletingCommentWithReplies: false
 });
 </pre>
 </td>
@@ -798,7 +798,7 @@ A <code>boolean</code> value determing whether attachments are enabled
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    enableAttachments: true
+  enableAttachments: true
 });
 </pre>
 </td>
@@ -816,7 +816,7 @@ A <code>boolean</code> value determing whether hashtags are enabled. Enabling th
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    enableHashtags: true
+  enableHashtags: true
 });
 </pre>
 </td>
@@ -856,7 +856,7 @@ A <code>boolean</code> value determing whether pinging users is enabled. Enablin
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    enablePinging: true
+  enablePinging: true
 });
 </pre>
 </td>
@@ -874,7 +874,7 @@ A <code>boolean</code> value determing whether navigation is enabled
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    enableNavigation: false
+  enableNavigation: false
 });
 </pre>
 </td>
@@ -892,7 +892,7 @@ A <code>boolean</code> value determing whether comments will be posted by pressi
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    postCommentOnEnter: true
+  postCommentOnEnter: true
 });
 </pre>
 </td>
@@ -910,7 +910,7 @@ A <code>boolean</code> value determing whether the main navigation elements are 
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    forceResponsive: true
+  forceResponsive: true
 });
 </pre>
 </td>
@@ -928,7 +928,7 @@ A <code>boolean</code> value determing whether any actions are enabled
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    readOnly: true
+  readOnly: true
 });
 </pre>
 </td>
@@ -945,58 +945,58 @@ A <code>dictionary</code> that is used to map the fields between jquery-comments
 </p>
 <label>FIELDS</label>  
 <pre class="prettyprint linemus">
-id                      // Required
-parent                  // Required if replying is enabled
-created                 // Required
-modified                // Required if editing is enabled
-content                 // Either content or fileURL must be present
-fileURL                 // Either content or fileURL must be present
-file                    // Required when uploading an attachment
-fileMimeType            // Optional
-pings                   // Required if pinging is enabled
-creator                 // Required if pinging is enabled
-fullname                // Required
-profileURL              // Optional
-profilePictureURL       // Optional
-isNew                   // Optional
-createdByAdmin          // Optional
-createdByCurrentUser    // Required if editing is enabled
-upvoteCount             // Required if upvoting is enabled
-userHasUpvoted          // Required if upvoting is enabled
+id            // Required
+parent          // Required if replying is enabled
+created         // Required
+modified        // Required if editing is enabled
+content         // Either content or fileURL must be present
+fileURL         // Either content or fileURL must be present
+file          // Required when uploading an attachment
+fileMimeType      // Optional
+pings           // Required if pinging is enabled
+creator         // Required if pinging is enabled
+fullname        // Required
+profileURL        // Optional
+profilePictureURL     // Optional
+isNew           // Optional
+createdByAdmin      // Optional
+createdByCurrentUser  // Required if editing is enabled
+upvoteCount       // Required if upvoting is enabled
+userHasUpvoted      // Required if upvoting is enabled
 </pre>
 <label>DEFAULT</label>  
 <pre class="prettyprint linemus">
 fieldMappings: {
-    id: 'id',
-    parent: 'parent',
-    created: 'created',
-    modified: 'modified',
-    content: 'content',
-    file: 'file',
-    fileURL: 'file_url',
-    fileMimeType: 'file_mime_type',
-    pings: 'pings',
-    creator: 'creator',
-    fullname: 'fullname',
-    profileURL: 'profile_url',
-    profilePictureURL: 'profile_picture_url',
-    isNew: 'is_new',
-    createdByAdmin: 'created_by_admin',
-    createdByCurrentUser: 'created_by_current_user',
-    upvoteCount: 'upvote_count',
-    userHasUpvoted: 'user_has_upvoted'
+  id: 'id',
+  parent: 'parent',
+  created: 'created',
+  modified: 'modified',
+  content: 'content',
+  file: 'file',
+  fileURL: 'file_url',
+  fileMimeType: 'file_mime_type',
+  pings: 'pings',
+  creator: 'creator',
+  fullname: 'fullname',
+  profileURL: 'profile_url',
+  profilePictureURL: 'profile_picture_url',
+  isNew: 'is_new',
+  createdByAdmin: 'created_by_admin',
+  createdByCurrentUser: 'created_by_current_user',
+  upvoteCount: 'upvote_count',
+  userHasUpvoted: 'user_has_upvoted'
 }
 </pre>
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    fieldMappings: {
-       parent: 'comment_id',
-       modified: 'edited',
-       fullname: 'name',
-       profilePictureURL: 'user_image',
-       upvoteCount: 'upvotes',
-    }
+  fieldMappings: {
+     parent: 'comment_id',
+     modified: 'edited',
+     fullname: 'name',
+     profilePictureURL: 'user_image',
+     upvoteCount: 'upvotes',
+  }
 });
 </pre>
 </td>
@@ -1019,9 +1019,9 @@ function() {}
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    refresh: function() {
-        $('#comments-container').addClass('rendered');
-    }
+  refresh: function() {
+    $('#comments-container').addClass('rendered');
+  }
 });
 </pre>
 </td>
@@ -1036,22 +1036,22 @@ A callback <code>function</code> that is used to fetch the comments array from t
 <label>DEFAULT</label>  
 <pre class="prettyprint linemus">
 function(success, error) {
-    success([]);
+  success([]);
 }
 </pre>
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    getComments: function(success, error) {
-        $.ajax({
-            type: 'get',
-            url: '/api/comments/',
-            success: function(commentsArray) {
-                success(commentsArray)
-            },
-            error: error
-        });
-    }
+  getComments: function(success, error) {
+    $.ajax({
+      type: 'get',
+      url: '/api/comments/',
+      success: function(commentsArray) {
+        success(commentsArray)
+      },
+      error: error
+    });
+  }
 });
 </pre>
 </td>
@@ -1066,22 +1066,22 @@ A callback <code>function</code> that is used for searching users when pinging. 
 <label>DEFAULT</label>  
 <pre class="prettyprint linemus">
 function(term, success, error) {
-    success([]);
+  success([]);
 }
 </pre>
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    searchUsers: function(term, success, error) {
-        $.ajax({
-            type: 'get',
-            url: '/api/users/?search=' + term,
-            success: function(userArray) {
-                success(userArray)
-            },
-            error: error
-        });
-    }
+  searchUsers: function(term, success, error) {
+    $.ajax({
+      type: 'get',
+      url: '/api/users/?search=' + term,
+      success: function(userArray) {
+        success(userArray)
+      },
+      error: error
+    });
+  }
 });
 </pre>
 </td>
@@ -1097,23 +1097,23 @@ A callback <code>function</code> that is used to create a new comment to the ser
 <label>DEFAULT</label>  
 <pre class="prettyprint linemus">
 function(commentJSON, success, error) {
-    success(commentJSON);
+  success(commentJSON);
 }
 </pre>
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    postComment: function(commentJSON, success, error) {
-        $.ajax({
-            type: 'post',
-            url: '/api/comments/',
-            data: commentJSON,
-            success: function(comment) {
-                success(comment)
-            },
-            error: error
-        });
-    }
+  postComment: function(commentJSON, success, error) {
+    $.ajax({
+      type: 'post',
+      url: '/api/comments/',
+      data: commentJSON,
+      success: function(comment) {
+        success(comment)
+      },
+      error: error
+    });
+  }
 });
 </pre>
 </td>
@@ -1129,23 +1129,23 @@ A callback <code>function</code> that is used to update an existing comment to t
 <label>DEFAULT</label>  
 <pre class="prettyprint linemus">
 function(commentJSON, success, error) {
-    success(commentJSON);
+  success(commentJSON);
 }
 </pre>
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    putComment: function(commentJSON, success, error) {
-        $.ajax({
-            type: 'put',
-            url: '/api/comments/' + commentJSON.id,
-            data: commentJSON,
-            success: function(comment) {
-                success(comment)
-            },
-            error: error
-        });
-    }
+  putComment: function(commentJSON, success, error) {
+    $.ajax({
+      type: 'put',
+      url: '/api/comments/' + commentJSON.id,
+      data: commentJSON,
+      success: function(comment) {
+        success(comment)
+      },
+      error: error
+    });
+  }
 });
 </pre>
 </td>
@@ -1161,20 +1161,20 @@ A callback <code>function</code> that is used to delete a comment from the serve
 <label>DEFAULT</label>  
 <pre class="prettyprint linemus">
 function(commentJSON, success, error) {
-    success();
+  success();
 }
 </pre>
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    deleteComment: function(commentJSON, success, error) {
-        $.ajax({
-            type: 'delete',
-            url: '/api/comments/' + commentJSON.id,
-            success: success,
-            error: error
-        });
-    }
+  deleteComment: function(commentJSON, success, error) {
+    $.ajax({
+      type: 'delete',
+      url: '/api/comments/' + commentJSON.id,
+      success: success,
+      error: error
+    });
+  }
 });
 </pre>
 </td>
@@ -1190,39 +1190,39 @@ A callback <code>function</code> that is used to create or delete an upvote. The
 <label>DEFAULT</label>  
 <pre class="prettyprint linemus">
 function(commentJSON, success, error) {
-    success(commentJSON);
+  success(commentJSON);
 }
 </pre>
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    upvoteComment: function(commentJSON, success, error) {
-        var commentURL = '/api/comments/' + commentJSON.id;
-        var upvotesURL = commentURL + '/upvotes/';
+  upvoteComment: function(commentJSON, success, error) {
+    var commentURL = '/api/comments/' + commentJSON.id;
+    var upvotesURL = commentURL + '/upvotes/';
 
-        if(commentJSON.userHasUpvoted) {
-            $.ajax({
-                type: 'post',
-                url: upvotesURL,
-                data: {
-                    comment: commentJSON.id
-                },
-                success: function() {
-                    success(commentJSON)
-                },
-                error: error
-            });
-        } else {
-            $.ajax({
-                type: 'delete',
-                url: upvotesURL + upvoteId,
-                success: function() {
-                    success(commentJSON)
-                },
-                error: error
-            });
-        }
+    if(commentJSON.userHasUpvoted) {
+      $.ajax({
+        type: 'post',
+        url: upvotesURL,
+        data: {
+          comment: commentJSON.id
+        },
+        success: function() {
+          success(commentJSON)
+        },
+        error: error
+      });
+    } else {
+      $.ajax({
+        type: 'delete',
+        url: upvotesURL + upvoteId,
+        success: function() {
+          success(commentJSON)
+        },
+        error: error
+      });
     }
+  }
 });
 </pre>
 </td>
@@ -1238,59 +1238,59 @@ A callback <code>function</code> that is used to upload attachments to the serve
 <label>DEFAULT</label>  
 <pre class="prettyprint linemus">
 function(commentArray, success, error) {
-    success(commentArray);
+  success(commentArray);
 }
 </pre>
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    uploadAttachments: function(commentArray, success, error) {
-        var responses = 0;
-        var successfulUploads = [];
+  uploadAttachments: function(commentArray, success, error) {
+    var responses = 0;
+    var successfulUploads = [];
 
-        var serverResponded = function() {
-            responses++;
+    var serverResponded = function() {
+      responses++;
 
-            // Check if all requests have finished
-            if(responses == commentArray.length) {
-                
-                // Case: all failed
-                if(successfulUploads.length == 0) {
-                    error();
+      // Check if all requests have finished
+      if(responses == commentArray.length) {
+        
+        // Case: all failed
+        if(successfulUploads.length == 0) {
+          error();
 
-                // Case: some succeeded
-                } else {
-                    success(successfulUploads)
-                }
-            }
+        // Case: some succeeded
+        } else {
+          success(successfulUploads)
         }
-
-        $(commentArray).each(function(index, commentJSON) {
-
-            // Create form data
-            var formData = new FormData();
-            $(Object.keys(commentJSON)).each(function(index, key) {
-                var value = commentJSON[key];
-                if(value) formData.append(key, value);
-            });
-
-            $.ajax({
-                url: '/api/comments/',
-                type: 'POST',
-                data: formData,
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: function(commentJSON) {
-                    successfulUploads.push(commentJSON);
-                    serverResponded();
-                },
-                error: function(data) {
-                    serverResponded();
-                },
-            });
-        });
+      }
     }
+
+    $(commentArray).each(function(index, commentJSON) {
+
+      // Create form data
+      var formData = new FormData();
+      $(Object.keys(commentJSON)).each(function(index, key) {
+        var value = commentJSON[key];
+        if(value) formData.append(key, value);
+      });
+
+      $.ajax({
+        url: '/api/comments/',
+        type: 'POST',
+        data: formData,
+        cache: false,
+        contentType: false,
+        processData: false,
+        success: function(commentJSON) {
+          successfulUploads.push(commentJSON);
+          serverResponded();
+        },
+        error: function(data) {
+          serverResponded();
+        },
+      });
+    });
+  }
 });
 </pre>
 </td>
@@ -1310,9 +1310,9 @@ function(hashtag) {}
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    hashtagClicked: function(hashtag) {
-        location.hash = 'tags/' + hashtag
-    }
+  hashtagClicked: function(hashtag) {
+    location.hash = 'tags/' + hashtag
+  }
 });
 </pre>
 </td>
@@ -1332,9 +1332,9 @@ function(ping) {}
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    pingClicked: function(ping) {
-        location.hash = 'users/' + ping
-    }
+  pingClicked: function(ping) {
+    location.hash = 'users/' + ping
+  }
 });
 </pre>
 </td>
@@ -1352,15 +1352,15 @@ A callback <code>function</code> that is called for strings before inserting to 
 <label>DEFAULT</label>  
 <pre class="prettyprint linemus">
 function(text) {
-    return text;
+  return text;
 }
 </pre>
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    textFormatter: function(text) {
-        return i18n.translate(text);
-    }
+  textFormatter: function(text) {
+    return i18n.translate(text);
+  }
 });
 </pre>
 </td>
@@ -1375,15 +1375,15 @@ A callback <code>function</code> that is called for timestamps before inserting 
 <label>DEFAULT</label>  
 <pre class="prettyprint linemus">
 function(time) {
-    return new Date(time).toLocaleDateString();
+  return new Date(time).toLocaleDateString();
 }
 </pre>
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    timeFormatter: function(time) {
-        return moment(time).fromNow();
-    }
+  timeFormatter: function(time) {
+    return moment(time).fromNow();
+  }
 });
 </pre>
 </td>
@@ -1403,7 +1403,7 @@ A <code>string</code> value determing the default sorting. Possible values are <
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    defaultNavigationSortKey: 'popularity'
+  defaultNavigationSortKey: 'popularity'
 });
 </pre>
 </td>
@@ -1421,7 +1421,7 @@ A <code>boolean</code> value determing whether profile pictures are rounded
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    roundProfilePictures: true
+  roundProfilePictures: true
 });
 </pre>
 </td>
@@ -1439,7 +1439,7 @@ An <code>integer</code> value determing how many rows there are in the commentin
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    textareaRows: 1
+  textareaRows: 1
 });
 </pre>
 </td>
@@ -1456,7 +1456,7 @@ An <code>integer</code> value determing how many rows there are in the commentin
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    textareaRowsOnFocus: 4
+  textareaRowsOnFocus: 4
 });
 </pre>
 </td>
@@ -1474,7 +1474,7 @@ An <code>integer</code> or a <code>boolean</code> value determing the maximum am
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    textareaMaxRows: false
+  textareaMaxRows: false
 });
 </pre>
 </td>
@@ -1492,53 +1492,53 @@ An <code>integer</code> value determing the maximum amount of replies that are v
 <label class="example">EXAMPLE</label>  
 <pre class="prettyprint linemus">
 $('#comments-container').comments({
-    maxRepliesVisible: 3
+  maxRepliesVisible: 3
 });
 </pre>
 </td>
 </tr>
 
 </table>
-	    <h3>
-            <a id="backend" class="anchor" href="#backend" aria-hidden="true"><span class="octicon octicon-link"></span></a>Backend/API implementation</h3>
-	    <p>This project doesn't take any stance on how you implement your backend and APIs for providing the library with the information it needs. However, as there have been many requests for it, you can find the documentation of the comment related endpoints for our REST API below as a reference.</p>
-	    <p><img src="https://github.com/Viima/jquery-comments/blob/master/comment-api-example.png?raw=true" alt="Comments REST API documentation" title="Comments REST API documentation"></p>
+	  <h3>
+      <a id="backend" class="anchor" href="#backend" aria-hidden="true"><span class="octicon octicon-link"></span></a>Backend/API implementation</h3>
+	  <p>This project doesn't take any stance on how you implement your backend and APIs for providing the library with the information it needs. However, as there have been many requests for it, you can find the documentation of the comment related endpoints for our REST API below as a reference.</p>
+	  <p><img src="https://github.com/Viima/jquery-comments/blob/master/comment-api-example.png?raw=true" alt="Comments REST API documentation" title="Comments REST API documentation"></p>
 	
-            <h3>
-            <a id="dependencies" class="anchor" href="#dependencies" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dependencies</h3>
+      <h3>
+      <a id="dependencies" class="anchor" href="#dependencies" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dependencies</h3>
 
-            <ul>
-            <li><a href="https://github.com/jquery/jquery">jQuery</a> &gt;= 1.9.0</li>
-            <li><a href="https://github.com/FortAwesome/Font-Awesome">Font Awesome</a> (optional)</li>
-            <li><a href="https://github.com/yuku-t/jquery-textcomplete">jquery-textcomplete</a> (optional)</li>
-            </ul>
+      <ul>
+      <li><a href="https://github.com/jquery/jquery">jQuery</a> &gt;= 1.9.0</li>
+      <li><a href="https://github.com/FortAwesome/Font-Awesome">Font Awesome</a> (optional)</li>
+      <li><a href="https://github.com/yuku-t/jquery-textcomplete">jquery-textcomplete</a> (optional)</li>
+      </ul>
 
-            <h3>
-            <a id="maintainers" class="anchor" href="#maintainers" aria-hidden="true"><span class="octicon octicon-link"></span></a>Maintainers</h3>
+      <h3>
+      <a id="maintainers" class="anchor" href="#maintainers" aria-hidden="true"><span class="octicon octicon-link"></span></a>Maintainers</h3>
 
-            <ul>
-            <li>
-            <a href="https://www.linkedin.com/in/joonatykkylainen">Joona Tykkyläinen</a>, Viima Solutions Oy</li>
-            </ul>
+      <ul>
+      <li>
+      <a href="https://www.linkedin.com/in/joonatykkylainen">Joona Tykkyläinen</a>, Viima Solutions Oy</li>
+      </ul>
 
-            <h3>
-            <a id="browser-support" class="anchor" href="#browser-support" aria-hidden="true"><span class="octicon octicon-link"></span></a>Browser support</h3>
+      <h3>
+      <a id="browser-support" class="anchor" href="#browser-support" aria-hidden="true"><span class="octicon octicon-link"></span></a>Browser support</h3>
 
-            <p>IE9+ and all modern browsers</p>
+      <p>IE9+ and all modern browsers</p>
 
-            <h3>
-            <a id="copyright-and-license" class="anchor" href="#copyright-and-license" aria-hidden="true"><span class="octicon octicon-link"></span></a>Copyright and license</h3>
+      <h3>
+      <a id="copyright-and-license" class="anchor" href="#copyright-and-license" aria-hidden="true"><span class="octicon octicon-link"></span></a>Copyright and license</h3>
 
-            <p>Code and documentation copyright 2017 <a href="https://www.viima.com/">Viima Solutions Oy</a>. Code released under <a href="https://github.com/Viima/jquery-comments/blob/master/LICENSE">the MIT license</a>.</p>
+      <p>Code and documentation copyright 2017 <a href="https://www.viima.com/">Viima Solutions Oy</a>. Code released under <a href="https://github.com/Viima/jquery-comments/blob/master/LICENSE">the MIT license</a>.</p>
 
-                  <footer class="site-footer">
-                    <span class="site-footer-owner"><a href="https://github.com/Viima/jquery-comments">jquery-comments</a> is maintained by <a href="https://github.com/Viima">Viima</a>.</span>
-                  </footer>
+          <footer class="site-footer">
+          <span class="site-footer-owner"><a href="https://github.com/Viima/jquery-comments">jquery-comments</a> is maintained by <a href="https://github.com/Viima">Viima</a>.</span>
+          </footer>
 
 
-        </div>
+    </div>
 
-    </section>
+  </section>
   </body>
 </html>
 
