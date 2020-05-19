@@ -201,7 +201,7 @@ attachmentIconURL: '',  // Only if attachments are enabled
 <p>The library expects the comment (and attachment) data to be provided with the structure demonstrated below. Please note that you can use <code>fieldMappings</code> to map the field names to match with your API.</p>
 
 <pre><code>
-var commentModel = {
+{
    "id": 4,
    "parent": 3,
    "created": "2015-01-04",
@@ -1492,41 +1492,94 @@ $('#comments-container').comments({
 </tr>
 
 </table>
-      <h3>
-      <a id="dependencies" class="anchor" href="#dependencies" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dependencies</h3>
-
-      <ul>
-      <li><a href="https://github.com/jquery/jquery">jQuery</a> &gt;= 1.9.0</li>
-      <li><a href="https://github.com/FortAwesome/Font-Awesome">Font Awesome</a> (optional)</li>
-      <li><a href="https://github.com/yuku-t/jquery-textcomplete">jquery-textcomplete</a> (optional)</li>
-      </ul>
-
-      <h3>
-      <a id="maintainers" class="anchor" href="#maintainers" aria-hidden="true"><span class="octicon octicon-link"></span></a>Maintainers</h3>
-
-      <ul>
-      <li>
-      <a href="https://www.linkedin.com/in/joonatykkylainen">Joona Tykkyläinen</a>, Viima Solutions Oy</li>
-      </ul>
-
-      <h3>
-      <a id="browser-support" class="anchor" href="#browser-support" aria-hidden="true"><span class="octicon octicon-link"></span></a>Browser support</h3>
-
-      <p>IE9+ and all modern browsers</p>
-
-      <h3>
-      <a id="copyright-and-license" class="anchor" href="#copyright-and-license" aria-hidden="true"><span class="octicon octicon-link"></span></a>Copyright and license</h3>
-
-      <p>Code and documentation copyright 2020 <a href="https://www.viima.com/">Viima Solutions Oy</a>. Code released under <a href="https://github.com/Viima/jquery-comments/blob/master/LICENSE">the MIT license</a>.</p>
-
-          <footer class="site-footer">
-          <span class="site-footer-owner"><a href="https://github.com/Viima/jquery-comments">jquery-comments</a> is maintained by <a href="https://github.com/Viima">Viima</a>.</span>
-          </footer>
 
 
-    </div>
+<h3>
+<a id="attachments" class="anchor" href="#attachments" aria-hidden="true"><span class="octicon octicon-link"></span></a>Working with attachments</h3>
+<p>Saving attachments is a bit different than saving other fields of the comment as attachments cannot be presented in plain text unlike other fields; the attachments are sent to the API in binary format and the API returns the URL of the saved file instead of the orignal binary due to performance reasons.
+<br>
+<br>
+The data should be provided to the API using <a href="https://developer.mozilla.org/en-US/docs/Web/API/FormData" target="_blank">FormData</a> interface. Also please make sure that your API supports content type <code>multipart/form-data</code> to accept the binary files provided with the FormData. Unfortunately it's not possbile to provide hierarchical data structure with the FormData interface and thus the attachments must be send to the API using a temporary field. The API must then get the files from that temporary field, save them to a file system and provide the URLs of those files in the <code>attachments</code> field.
+<br>
+<br>
+In the example below, the attachments are sent to the API in field named <code>attachments_to_be_created</code>. The API is expected to process the files from that field and provide the URL of the saved attacments in the <code>attachments</code> field of the response. Please see <a href="#example-data">Example data</a> for expected output.
+</p>
 
-  </section>
-  </body>
+
+<label class="example">EXAMPLE</label>
+<pre class="prettyprint linemus">
+$('#comments-container').comments({
+  postComment: function(commentJSON, success, error) {
+
+    // Create form data and append all other fields but attachments
+    var formData = new FormData();
+    $(Object.keys(commentJSON)).each(function(index, key) {
+      if(key != 'attachments') {
+        var value = commentJSON[key];
+        if(value) formData.append(key, value);
+      }
+    });
+
+    // Append attachments to be created to the form data
+    var attachmentsToBeCreated = commentJSON.attachments.filter(function(attachment){
+      return !attachment.id
+    });
+    $(attachmentsToBeCreated).each(function(index, attachment) {
+      formData.append('attachments_to_be_created', attachment.file);
+    });
+
+    // Save the comment together with attachments
+    $.ajax({
+      type: 'post',
+      url: '/api/comments/',
+      data: formData,
+      contentType: 'multipart/form-data',
+      success: function(comment) {
+        success(comment);
+      },
+      error: error
+    });
+  }
+});
+</pre>
+
+
+
+<h3>
+<a id="dependencies" class="anchor" href="#dependencies" aria-hidden="true"><span class="octicon octicon-link"></span></a>Dependencies</h3>
+
+<ul>
+<li><a href="https://github.com/jquery/jquery">jQuery</a> &gt;= 1.9.0</li>
+<li><a href="https://github.com/FortAwesome/Font-Awesome">Font Awesome</a> (optional)</li>
+<li><a href="https://github.com/yuku-t/jquery-textcomplete">jquery-textcomplete</a> (optional)</li>
+</ul>
+
+<h3>
+<a id="maintainers" class="anchor" href="#maintainers" aria-hidden="true"><span class="octicon octicon-link"></span></a>Maintainers</h3>
+
+<ul>
+<li>
+<a href="https://www.linkedin.com/in/joonatykkylainen">Joona Tykkyläinen</a>, Viima Solutions Oy</li>
+</ul>
+
+<h3>
+<a id="browser-support" class="anchor" href="#browser-support" aria-hidden="true"><span class="octicon octicon-link"></span></a>Browser support</h3>
+
+<p>IE9+ and all modern browsers</p>
+
+<h3>
+<a id="copyright-and-license" class="anchor" href="#copyright-and-license" aria-hidden="true"><span class="octicon octicon-link"></span></a>Copyright and license</h3>
+
+<p>Code and documentation copyright 2020 <a href="https://www.viima.com/">Viima Solutions Oy</a>. Code released under <a href="https://github.com/Viima/jquery-comments/blob/master/LICENSE">the MIT license</a>.</p>
+
+    <footer class="site-footer">
+    <span class="site-footer-owner"><a href="https://github.com/Viima/jquery-comments">jquery-comments</a> is maintained by <a href="https://github.com/Viima">Viima</a>.</span>
+    </footer>
+
+
+</div>
+
+</section>
+</body>
 </html>
 
