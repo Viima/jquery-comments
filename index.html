@@ -1531,7 +1531,7 @@ $('#comments-container').comments({
       formData.append('attachments_to_be_created', attachment.file);
     });
 
-    // Save the comment together with attachments
+    // Save the comment together with the attachments
     $.ajax({
       type: 'post',
       url: '/api/comments/',
