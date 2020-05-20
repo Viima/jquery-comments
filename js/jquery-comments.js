@@ -526,6 +526,7 @@
 
             if(files.length) {
 
+                // Elements
                 if(!commentingField) commentingField = this.$el.find('.commenting-field.main');
                 var uploadButton = commentingField.find('.control-row .upload');
                 var isReply = !commentingField.hasClass('main');
@@ -537,6 +538,21 @@
                         mime_type: file.type,
                         file: file
                     }
+                });
+
+                // Filter out already added attachments
+                var existingAttachments = this.getAttachmentsFromCommentingField(commentingField);
+                attachments = attachments.filter(function(index, attachment) {
+                    var duplicate = false;
+
+                    // Check if the attacment name and size matches with already added attachment
+                    $(existingAttachments).each(function(index, existingAttachment) {
+                        if(attachment.file.name == existingAttachment.file.name && attachment.file.size == existingAttachment.file.size) {
+                            duplicate = true;
+                        }
+                    });
+
+                    return !duplicate;
                 });
 
                 // Ensure that the main commenting field is shown if attachments were added to that
