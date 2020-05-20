@@ -1261,7 +1261,7 @@ $('#comments-container').comments({
 A callback <code>function</code> that is used to validate attachments prior uploading them to server. The first parameter of the callback is <code>attachments</code> array including all the attachments to be uploaded. The callback function takes an array of validated attachments as a parameter.
 <br>
 <br>
-Please see <a href="#attachments">Working with attacments</a> for more information.
+Please see <a href="#attachments">Working with attachments</a> for more information.
 </p>
 <label>DEFAULT</label>  
 <pre class="prettyprint linemus">
@@ -1504,7 +1504,7 @@ $('#comments-container').comments({
 The data should be provided to the API using <a href="https://developer.mozilla.org/en-US/docs/Web/API/FormData" target="_blank">FormData</a> interface. Also please make sure that your API supports content type <code>multipart/form-data</code> to accept the binary files provided with the FormData. Unfortunately it's not possbile to provide hierarchical data structure with the FormData interface and thus the attachments must be sent to the API using a temporary field. The API must then get the files from that temporary field, save them to a file system and provide the URLs of those files in the <code>attachments</code> field.
 <br>
 <br>
-In the example below, the attachments are sent to the API in a field named <code>attachments_to_be_created</code>. The API is expected to process the files from that field and provide the URL of the saved attacments in the <code>attachments</code> field of the response. Please see <a href="#example-data">Example data</a> for expected output.
+In the example below, the attachments are sent to the API in a field named <code>attachments_to_be_created</code>. The API is expected to process the files from that field and provide the URL of the saved attachments in the <code>attachments</code> field of the response. Please see <a href="#example-data">Example data</a> for expected output.
 </p>
 
 
