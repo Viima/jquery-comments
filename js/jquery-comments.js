@@ -2426,7 +2426,7 @@
                     return tag[0].outerHTML;
                 }
 
-                var regex = /(^|\s)#([a-zäöüß\d-_]+)/gim;
+                var regex = /(^|\s)#([a-z\u00C0-\u00FF\d-_]+)/gim;
                 html = html.replace(regex, function($0, $1, $2){
                     return $1 + __createTag($2);
                 });
