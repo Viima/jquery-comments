@@ -62,11 +62,11 @@
             'blur [contenteditable]' : 'checkEditableContentForChange',
 
             // Navigation
-            'click .navigation li[data-sort-key]' : 'navigationElementClicked',
+            'click .navigation button[data-sort-key]' : 'navigationElementClicked',
             'click .navigation li.title' : 'toggleNavigationDropdown',
 
             // Main comenting field
-            'click .commenting-field.main .textarea': 'showMainCommentingField',
+            'focus .commenting-field.main .textarea': 'showMainCommentingField',
             'click .commenting-field.main .close' : 'hideMainCommentingField',
 
             // All commenting fields
@@ -88,7 +88,7 @@
             'click li.comment .ping' : 'pingClicked',
 
             // Other
-            'click li.comment ul.child-comments .toggle-all': 'toggleReplies',
+            'click li.comment .toggle-all': 'toggleReplies',
             'click li.comment button.reply': 'replyButtonClicked',
             'click li.comment button.edit': 'editButtonClicked',
 
@@ -138,7 +138,7 @@
                 attachmentsText: 'Attachments',
                 sendText: 'Send',
                 replyText: 'Reply',
-                editText: 'Edit',
+                editText: 'Edit <span class="sr-only">this comment</span>',
                 editedText: 'Edited',
                 youText: 'You',
                 saveText: 'Save',
@@ -205,7 +205,15 @@
                 hashtagClicked: function(hashtag) {},
                 pingClicked: function(userId) {},
                 refresh: function() {},
-                timeFormatter: function(time) {return new Date(time).toLocaleDateString()}
+                timeFormatter: function(time) {return new Date(time).toLocaleDateString()},
+
+                // Accessibility
+                replyToText: 'Replied to ',
+                upvoteText: 'Upvote this comment',
+                downvoteText: 'Downvote this comment',
+                likedText: ' people upvoted this comment',
+                deleteAttachmentText: 'Delete this attachment',
+                closeButtonText: 'Clear this comment'
             }
         },
 
@@ -593,7 +601,7 @@
 
             var childCommentsEl = parentEl.find('.child-comments');
             var childComments = childCommentsEl.find('.comment').not('.hidden');
-            var toggleAllButton = childCommentsEl.find('li.toggle-all');
+            var toggleAllButton = parentEl.find('.toggle-all');
             childComments.removeClass('togglable-reply');
 
             // Select replies to be hidden
@@ -617,8 +625,10 @@
                 // Append button to toggle all replies if necessary
                 if(!toggleAllButton.length) {
 
-                    toggleAllButton = $('<li/>', {
-                        'class': 'toggle-all highlight-font-bold'
+                    toggleAllButton = $('<button/>', {
+                        'class': 'toggle-all highlight-font-bold',
+                        'aria-expanded': false,
+                        'aria-controls': childCommentsEl.attr('id'),
                     });
                     var toggleAllButtonText = $('<span/>', {
                         'class': 'text'
@@ -629,7 +639,7 @@
 
                     // Append toggle button to DOM
                     toggleAllButton.append(toggleAllButtonText).append(caret);
-                    childCommentsEl.prepend(toggleAllButton);
+                    toggleAllButton.insertBefore(childCommentsEl);
                 }
 
                 // Update the text of toggle all -button
@@ -706,10 +716,10 @@
         },
 
         showActiveSort: function() {
-            var activeElements = this.$el.find('.navigation li[data-sort-key="' + this.currentSortKey + '"]');
+            var activeElements = this.$el.find('.navigation button[data-sort-key="' + this.currentSortKey + '"]');
 
             // Indicate active sort
-            this.$el.find('.navigation li').removeClass('active');
+            this.$el.find('.navigation button').removeClass('active');
             activeElements.addClass('active');
 
             // Update title for dropdown
@@ -1123,7 +1133,7 @@
 
         toggleReplies: function(ev) {
             var el = $(ev.currentTarget);
-            el.siblings('.togglable-reply').toggleClass('visible');
+            el.siblings('.child-comments').find('.togglable-reply').toggleClass('visible');
             this.setToggleAllButtonText(el, true);
         },
 
@@ -1268,7 +1278,8 @@
             // Comments container
             var commentsContainer = $('<div/>', {
                 'class': 'data-container',
-                'data-container': 'comments'
+                'data-container': 'comments',
+                'aria-live': 'polite',
             });
             this.$el.append(commentsContainer);
 
@@ -1407,6 +1418,9 @@
             var textarea = $('<div/>', {
                 'class': 'textarea',
                 'data-placeholder': this.options.textFormatter(this.options.textareaPlaceholderText),
+                'role': 'textarea',
+                'aria-multiline': true,
+                'aria-label': this.options.textareaPlaceholderText,
                 contenteditable: true
             });
 
@@ -1420,7 +1434,7 @@
             // Save button
             var saveButtonClass = existingCommentId ? 'update' : 'send';
             var saveButtonText = existingCommentId ? this.options.textFormatter(this.options.saveText) : this.options.textFormatter(this.options.sendText);
-            var saveButton = $('<span/>', {
+            var saveButton = $('<button/>', {
                 'class': saveButtonClass + ' save highlight-background',
                 'text': saveButtonText
             });
@@ -1432,7 +1446,7 @@
 
                 // Delete button
                 var deleteButtonText = this.options.textFormatter(this.options.deleteText);
-                var deleteButton = $('<span/>', {
+                var deleteButton = $('<button/>', {
                     'class': 'delete enabled',
                     text: deleteButtonText
                 }).css('background-color', this.options.deleteButtonColor);
@@ -1451,8 +1465,13 @@
                 var uploadIcon = $('<i/>', {
                     'class': 'fa fa-paperclip'
                 });
+                var labelFileInput = $('<label/>', {
+                    'for': 'file-upload-main',
+                    'html': '<span class="sr-only">Upload an attachment to your comment</span>',
+                });
                 var fileInput = $('<input/>', {
                     'type': 'file',
+                    'id': 'file-upload-main',
                     'multiple': 'multiple',
                     'data-role': 'none' // Prevent jquery-mobile for adding classes
                 });
@@ -1461,7 +1480,7 @@
                     uploadIcon.css('background-image', 'url("'+this.options.uploadIconURL+'")');
                     uploadIcon.addClass('image');
                 }
-                uploadButton.append(uploadIcon).append(fileInput);
+                uploadButton.append(uploadIcon).append(labelFileInput).append(fileInput);
 
                 // Main upload button
                 var mainUploadButton = uploadButton.clone();
@@ -1488,7 +1507,7 @@
 
 
             // Populate the element
-            textareaWrapper.append(closeButton).append(textarea).append(controlRow);
+            textareaWrapper.append(textarea).append(closeButton).append(controlRow);
             commentingField.append(profilePicture).append(textareaWrapper);
 
 
@@ -1640,8 +1659,9 @@
         },
 
         createNavigationElement: function() {
-            var navigationEl = $('<ul/>', {
-                'class': 'navigation'
+            var navigationEl = $('<div/>', {
+                'class': 'navigation',
+                'role': 'navigation',
             });
             var navigationWrapper = $('<div/>', {
                 'class': 'navigation-wrapper'
@@ -1649,28 +1669,28 @@
             navigationEl.append(navigationWrapper);
 
             // Newest
-            var newest = $('<li/>', {
+            var newest = $('<button/>', {
                 text: this.options.textFormatter(this.options.newestText),
                 'data-sort-key': 'newest',
                 'data-container-name': 'comments'
             });
 
             // Oldest
-            var oldest = $('<li/>', {
+            var oldest = $('<button/>', {
                 text: this.options.textFormatter(this.options.oldestText),
                 'data-sort-key': 'oldest',
                 'data-container-name': 'comments'
             });
 
             // Popular
-            var popular = $('<li/>', {
+            var popular = $('<button/>', {
                 text: this.options.textFormatter(this.options.popularText),
                 'data-sort-key': 'popularity',
                 'data-container-name': 'comments'
             });
 
             // Attachments
-            var attachments = $('<li/>', {
+            var attachments = $('<button/>', {
                 text: this.options.textFormatter(this.options.attachmentsText),
                 'data-sort-key': 'attachments',
                 'data-container-name': 'attachments'
@@ -1740,8 +1760,9 @@
         },
 
         createCloseButton: function(className) {
-            var closeButton = $('<span/>', {
-                'class': className || 'close'
+            var closeButton = $('<button/>', {
+                'class': className || 'close',
+                'aria-label': this.options.closeButtonText,
             });
 
             var icon = $('<i/>', {
@@ -1770,7 +1791,8 @@
 
             // Child comments
             var childComments = $('<ul/>', {
-                'class': 'child-comments'
+                'class': 'child-comments',
+                'id': 'child-comments-' + commentModel.id
             });
 
             // Comment wrapper
@@ -1803,7 +1825,7 @@
             });
 
             // Name element
-            var nameEl = $('<span/>', {
+            var nameEl = $('<h2/>', {
                 'class': 'name',
                 'data-user-id': commentModel.creator,
                 'text': commentModel.createdByCurrentUser ? this.options.textFormatter(this.options.youText) : commentModel.fullname
@@ -1820,7 +1842,7 @@
                 if(parent.parent) {
                     var replyTo = $('<span/>', {
                         'class': 'reply-to',
-                        'text': parent.fullname,
+                        'html': '<span class="sr-only">' + this.options.replyToText + '</span>' + parent.fullname,
                         'data-user-id': parent.creator
                     });
 
@@ -1960,7 +1982,7 @@
 
             // Upvote icon
             var upvoteIcon = $('<i/>', {
-                'class': 'fa fa-thumbs-up'
+                'class': 'fa fa-thumbs-up',
             });
             if(this.options.upvoteIconURL.length) {
                 upvoteIcon.css('background-image', 'url("'+this.options.upvoteIconURL+'")');
@@ -1977,7 +1999,7 @@
             if(commentModel.createdByCurrentUser || this.options.currentUserIsAdmin) {
                 var editButton = $('<button/>', {
                     'class': 'action edit',
-                    text: this.options.textFormatter(this.options.editText)
+                    html: this.options.textFormatter(this.options.editText)
                 });
                 actions.append(editButton);
             }
@@ -2007,10 +2029,12 @@
             }
 
             // Upvotes
+            var upvoteButtonText = commentModel.userHasUpvoted ? this.options.downvoteText : this.options.upvoteText;
             var upvoteEl = $('<button/>', {
-                'class': 'action upvote' + (commentModel.userHasUpvoted ? ' highlight-font' : '')
+                'class': 'action upvote' + (commentModel.userHasUpvoted ? ' highlight-font' : ''),
+                'aria-label': upvoteButtonText,
             }).append($('<span/>', {
-                text: commentModel.upvoteCount,
+                html: commentModel.upvoteCount + '<span class="sr-only">' + this.options.likedText + '</span>',
                 'class': 'upvote-count'
             })).append(upvoteIcon);
 
@@ -2033,10 +2057,16 @@
         createAttachmentTagElement: function(attachment, deletable) {
             
             // Tag element
-            var attachmentTag = $('<a/>', {
-                'class': 'tag attachment',
-                'target': '_blank'
-            });
+            var attachmentTag;
+            if(!deletable) {
+                attachmentTag = $('<a/>', {
+                    'class': 'tag attachment',
+                });
+            } else {
+                attachmentTag = $('<span/>', {
+                    'class': 'tag attachment',
+                });
+            }
 
             // Set href attribute if not deletable
             if(!deletable) {
@@ -2083,6 +2113,7 @@
 
                 // Append close button
                 var closeButton = this.createCloseButton('delete');
+                closeButton.attr('aria-label', this.options.deleteAttachmentText)
                 attachmentTag.append(closeButton);
             }
 
@@ -2232,7 +2263,7 @@
 
             var showExpandingText = function() {
                 var text = self.options.textFormatter(self.options.viewAllRepliesText);
-                var replyCount = toggleAllButton.siblings('.comment').not('.hidden').length;
+                var replyCount = toggleAllButton.siblings('.child-comments').find('.comment').not('.hidden').length;
                 text = text.replace('__replyCount__', replyCount);
                 textContainer.text(text);
             };
@@ -2243,15 +2274,16 @@
 
                 // Toggle text
                 if(textContainer.text() == hideRepliesText) {
+                    toggleAllButton.attr('aria-expanded', false);
                     showExpandingText();
                 } else {
+                    toggleAllButton.attr('aria-expanded', true);
                     textContainer.text(hideRepliesText);
                 }
                 // Toggle direction of the caret
                 caret.toggleClass('up');
-
             } else {
-
+                toggleAllButton.attr('aria-expanded', false);
                 // Update text if necessary
                 if(textContainer.text() != hideRepliesText) {
                     showExpandingText();
