@@ -97,6 +97,7 @@ http://viima.github.io/jquery-comments/*/
     content:attr(data-placeholder);
     color: #CCC;
     position: inherit;
+    pointer-events: none;
 }
 
 .jquery-comments i.fa {
