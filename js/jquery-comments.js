@@ -224,7 +224,7 @@
             if($.browser.mobile) this.$el.addClass('mobile');
 
             // Init options
-            this.options = $.extend(true, {}, this.getDefaultOptions(), options);;
+            this.options = $.extend(true, {}, this.getDefaultOptions(), options);
 
             // Read-only mode
             if(this.options.readOnly) this.$el.addClass('read-only');
@@ -1559,7 +1559,7 @@
                         return ' ' + tag[0].outerHTML + ' ';
                     },
                 }], {
-                    appendTo: '.jquery-comments',
+                    appendTo: this.$el,
                     dropdownClassName: 'dropdown autocomplete',
                     maxCount: 5,
                     rightEdgeOffset: 0,
