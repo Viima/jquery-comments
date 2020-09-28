@@ -19,7 +19,7 @@ http://viima.github.io/jquery-comments/*/
 }
 
 .jquery-comments a[href]:not(.tag) {
-	color: #2793e6;
+	color: #0a6ab2;
 	text-decoration: none;
 }
 
@@ -98,7 +98,7 @@ http://viima.github.io/jquery-comments/*/
 
 .jquery-comments .tag:not(.deletable):hover {
 	background-color: #d8edf8;
-	border-color: #2793e6;
+	border-color: #0a6ab2;
 }
 
 .jquery-comments [contentEditable=true]:empty:not(:focus):before{
@@ -302,13 +302,17 @@ http://viima.github.io/jquery-comments/*/
 .jquery-comments .textarea-wrapper .control-row > .upload {
 	position: relative;
 	overflow: hidden;
-	background-color: #999;
+	background-color: #575757;
+}
+
+.jquery-comments .textarea-wrapper .control-row > .upload.focus {
+	outline: 2px dotted #0a6ab2;
 }
 
 .jquery-comments .navigation {
 	clear: both;
 
-	color: #999;
+	color: #575757;
 	border-bottom: 2px solid #CCC;
 	line-height: 2em;
 	font-size: 1em;
@@ -454,7 +458,7 @@ http://viima.github.io/jquery-comments/*/
 }
 
 .jquery-comments ul.dropdown li .email {
-	color: #999;
+	color: #575757;
 	font-size: 0.95em;
 	margin-top: 0.1em;
 }
@@ -544,7 +548,7 @@ http://viima.github.io/jquery-comments/*/
 }
 
 .jquery-comments ul.main li.comment .comment-header .reply-to {
-	color: #999;
+	color: #575757;
 	font-size: .8em;
 	font-weight: normal;
 	vertical-align: top;
@@ -555,7 +559,7 @@ http://viima.github.io/jquery-comments/*/
 }
 
 .jquery-comments ul.main li.comment .comment-header .new {
-	background: #2793e6;
+	background: #0a6ab2;
 	font-size: 0.8em;
 	padding: 0.2em 0.6em;
 	color: #fff;
@@ -585,7 +589,7 @@ http://viima.github.io/jquery-comments/*/
 	margin: 0;
 	font-size: .9em;
 	font-style: italic;
-	color: #999;
+	color: #575757;
 }
 
 .jquery-comments ul.main li.comment .wrapper .content time.edited:before {
@@ -620,7 +624,7 @@ http://viima.github.io/jquery-comments/*/
 }
 
 .jquery-comments ul.main li.comment .actions > * {
-	color: #999;
+	color: #575757;
 	font-weight: bold;
 }
 
@@ -787,7 +791,7 @@ http://viima.github.io/jquery-comments/*/
 }
 
 .jquery-comments .droppable-overlay .droppable-container .droppable.drag-over {
-	color: #999;
+	color: #575757;
 }
 
 .jquery-comments .droppable-overlay .droppable-container .droppable i {
@@ -808,7 +812,7 @@ textarea:focus, textarea:active
 select:focus, select:active,
 button:focus, button:active,
 a:focus, a:active {
-	outline: 2px dotted #2793e6;
+	outline: 2px dotted #0a6ab2;
 }
 
 .sr-only {

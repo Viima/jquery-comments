@@ -107,6 +107,10 @@
             'click .dropdown.autocomplete': 'stopPropagation',
             'mousedown .dropdown.autocomplete': 'stopPropagation',
             'touchstart .dropdown.autocomplete': 'stopPropagation',
+
+            // Accessibility
+            'focus #file-upload-main': 'handleFocusAttachment',
+            'blur #file-upload-main': 'handleBlurAttachment'
         },
 
 
@@ -167,8 +171,8 @@
                 defaultNavigationSortKey: 'newest',
 
                 // Colors
-                highlightColor: '#2793e6',
-                deleteButtonColor: '#C9302C',
+                highlightColor: '#0a6ab2',
+                deleteButtonColor: '#575757',
 
                 scrollContainer: this.$el,
                 roundProfilePictures: false,
@@ -211,9 +215,17 @@
                 replyToText: 'Replied to ',
                 upvoteText: 'Upvote this comment',
                 downvoteText: 'Downvote this comment',
+                commentUpvoted: 'The comment has been upvoted.',
+                commentDownvoted: 'The comment has been downvoted.',
                 likedText: ' people upvoted this comment',
                 deleteAttachmentText: 'Delete this attachment',
-                closeButtonText: 'Clear this comment'
+                closeButtonText: 'Clear this comment',
+                message: '.js-message',
+                commentAddedLoading: 'Your comment is being added.',
+                commentAdded: 'Your comment has been added.',
+                commentUpdated: 'Your comment has been updated.',
+                commentDeletedLoading: 'Your comment is being deleted.',
+                commentDeleted: 'Your comment has been deleted.',
             }
         },
 
@@ -719,8 +731,8 @@
             var activeElements = this.$el.find('.navigation button[data-sort-key="' + this.currentSortKey + '"]');
 
             // Indicate active sort
-            this.$el.find('.navigation button').removeClass('active');
-            activeElements.addClass('active');
+            this.$el.find('.navigation button').removeClass('active').attr('aria-selected', 'false');
+            activeElements.addClass('active').attr('aria-selected', 'true');
 
             // Update title for dropdown
             var titleEl = this.$el.find('.navigation .title');
@@ -851,7 +863,7 @@
             mainControlRow.hide();
             closeButton.hide();
             mainTextarea.parent().find('.upload.inline-button').show();
-            mainTextarea.blur();
+            mainTextarea.text('').focus();
         },
 
         increaseTextareaHeight: function(ev) {
@@ -951,6 +963,9 @@
             var sendButton = $(ev.currentTarget);
             var commentingField = sendButton.parents('.commenting-field').first();
 
+            // Accessibility, add retroaction message
+            $(self.options.message).text(self.options.commentAddedLoading);
+
             // Set button state to loading
             this.setButtonState(sendButton, false, true);
 
@@ -966,6 +981,9 @@
 
                 // Reset button state
                 self.setButtonState(sendButton, false, false);
+
+                // Accessibility, add retroaction message
+                $(self.options.message).text(self.options.commentAdded);
             };
 
             var error = function() {
@@ -996,6 +1014,7 @@
             var saveButton = $(ev.currentTarget);
             var commentingField = saveButton.parents('.commenting-field').first();
             var textarea = commentingField.find('.textarea');
+            var id = textarea.attr('data-comment');
 
             // Set button state to loading
             this.setButtonState(saveButton, false, true);
@@ -1031,6 +1050,10 @@
 
                 // Reset button state
                 self.setButtonState(saveButton, false, false);
+
+                // Accessibility, add retroaction message and put focus on the comment
+                $(self.options.message).text(self.options.commentUpdated);
+                $('li[data-id="' + id + '"]').focus().attr('tabindex', '-1');
             };
 
             var error = function() {
@@ -1053,6 +1076,9 @@
             // Set button state to loading
             this.setButtonState(deleteButton, false, true);
 
+            // Accessibility, add retroaction message and put focus on the comment
+            $(self.options.message).text(self.options.commentDeletedLoading);
+
             // Reverse mapping
             commentJSON = this.applyExternalMappings(commentJSON);
 
@@ -1062,6 +1088,10 @@
 
                 // Reset button state
                 self.setButtonState(deleteButton, false, false);
+
+                // Accessibility, add retroaction message and put focus on the comment
+                $(self.options.message).text(self.options.commentDeleted);
+                //$('li[data-id="' + id + '"]').focus().attr('tabindex', '-1');
             };
 
             var error = function() {
@@ -1114,10 +1144,16 @@
             var commentJSON = $.extend({}, commentModel);
             commentJSON = this.applyExternalMappings(commentJSON);
 
+            // Accessibility, get the right message
+            var message = commentModel.userHasUpvoted ? this.options.commentUpvoted : this.options.commentDownvoted;
+
             var success = function(commentJSON) {
                 var commentModel = self.createCommentModel(commentJSON);
                 self.updateCommentModel(commentModel);
                 self.reRenderUpvotes(commentModel.id);
+
+                // Accessibility, output the message to the screen reader
+                $(this.options.message).text(message);
             };
 
             var error = function() {
@@ -1126,6 +1162,9 @@
                 commentModel.userHasUpvoted = !commentModel.userHasUpvoted;
                 commentModel.upvoteCount = previousUpvoteCount;
                 self.reRenderUpvotes(commentModel.id);
+
+                // Accessibility, output the message to the screen reader
+                $(this.options.message).text(message);
             };
 
             this.options.upvoteComment(commentJSON, success, error);
@@ -1249,12 +1288,29 @@
             ev.stopPropagation();
         },
 
+        // Accessibility
+        handleFocusAttachment: function(ev) {
+            $(ev.target).parents('.upload').addClass('focus');
+        },
+
+        handleBlurAttachment: function(ev) {
+            $(ev.target).parents('.upload').removeClass('focus');
+        },
+
+
 
         // HTML elements
         // =============
 
         createHTML: function() {
             var self = this;
+
+            // Accesibility, add a div for messaging
+            var messageField = $('<div/>', {
+                'class': 'sr-only js-message',
+                'aria-live': 'polite'
+            });
+            this.$el.append(messageField);
 
             // Commenting field
             var mainCommentingField = this.createMainCommentingFieldElement();
@@ -1279,7 +1335,7 @@
             var commentsContainer = $('<div/>', {
                 'class': 'data-container',
                 'data-container': 'comments',
-                'aria-live': 'polite',
+                //'aria-live': 'polite',
             });
             this.$el.append(commentsContainer);
 
@@ -1664,7 +1720,8 @@
                 'role': 'navigation',
             });
             var navigationWrapper = $('<div/>', {
-                'class': 'navigation-wrapper'
+                'class': 'navigation-wrapper',
+                'role': 'tablist',
             });
             navigationEl.append(navigationWrapper);
 
@@ -1672,28 +1729,36 @@
             var newest = $('<button/>', {
                 text: this.options.textFormatter(this.options.newestText),
                 'data-sort-key': 'newest',
-                'data-container-name': 'comments'
+                'data-container-name': 'comments',
+                'role': 'tab',
+                'aria-selected': 'false',
             });
 
             // Oldest
             var oldest = $('<button/>', {
                 text: this.options.textFormatter(this.options.oldestText),
                 'data-sort-key': 'oldest',
-                'data-container-name': 'comments'
+                'data-container-name': 'comments',
+                'role': 'tab',
+                'aria-selected': 'false',
             });
 
             // Popular
             var popular = $('<button/>', {
                 text: this.options.textFormatter(this.options.popularText),
                 'data-sort-key': 'popularity',
-                'data-container-name': 'comments'
+                'data-container-name': 'comments',
+                'role': 'tab',
+                'aria-selected': 'false',
             });
 
             // Attachments
             var attachments = $('<button/>', {
                 text: this.options.textFormatter(this.options.attachmentsText),
                 'data-sort-key': 'attachments',
-                'data-container-name': 'attachments'
+                'data-container-name': 'attachments',
+                'role': 'tab',
+                'aria-selected': 'false',
             });
 
             // Attachments icon
@@ -1830,7 +1895,7 @@
                 'data-user-id': commentModel.creator,
                 'text': commentModel.createdByCurrentUser ? this.options.textFormatter(this.options.youText) : commentModel.fullname
             });
-            commentHeaderEl.append(nameEl);
+            commentHeaderEl.append(nameEl).append(time);
 
 
             // Highlight admin names
@@ -2014,7 +2079,7 @@
             wrapper.append(content);
             wrapper.append(attachments);
             wrapper.append(actions);
-            commentWrapper.append(profilePicture).append(time).append(commentHeaderEl).append(wrapper);
+            commentWrapper.append(profilePicture).append(commentHeaderEl).append(wrapper);
             return commentWrapper;
         },
 
@@ -2032,9 +2097,8 @@
             var upvoteButtonText = commentModel.userHasUpvoted ? this.options.downvoteText : this.options.upvoteText;
             var upvoteEl = $('<button/>', {
                 'class': 'action upvote' + (commentModel.userHasUpvoted ? ' highlight-font' : ''),
-                'aria-label': upvoteButtonText,
             }).append($('<span/>', {
-                html: commentModel.upvoteCount + '<span class="sr-only">' + this.options.likedText + '</span>',
+                html: commentModel.upvoteCount + '<span class="sr-only">' + this.options.likedText + '. ' + upvoteButtonText + '</span>',
                 'class': 'upvote-count'
             })).append(upvoteIcon);
 
