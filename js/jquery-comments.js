@@ -67,6 +67,7 @@
 
             // Main comenting field
             'focus .commenting-field.main .textarea': 'showMainCommentingField',
+            'click .commenting-field.main .textarea': 'showMainCommentingFieldClick',
             'click .commenting-field.main .close' : 'hideMainCommentingField',
 
             // All commenting fields
@@ -839,6 +840,14 @@
             mainTextarea.siblings('.control-row').show();
             mainTextarea.parent().find('.close').show();
             mainTextarea.parent().find('.upload.inline-button').hide();
+            //mainTextarea.focus();
+        },
+
+        showMainCommentingFieldClick: function(ev) {
+            var mainTextarea = $(ev.currentTarget);
+            mainTextarea.siblings('.control-row').show();
+            mainTextarea.parent().find('.close').show();
+            mainTextarea.parent().find('.upload.inline-button').hide();
             mainTextarea.focus();
         },
 
@@ -983,6 +992,7 @@
                 self.setButtonState(sendButton, false, false);
 
                 // Accessibility, add retroaction message
+                $(commentingField).find('.send').focus();
                 $(self.options.message).text(self.options.commentAdded);
             };
 
@@ -1053,7 +1063,7 @@
 
                 // Accessibility, add retroaction message and put focus on the comment
                 $(self.options.message).text(self.options.commentUpdated);
-                $('li[data-id="' + id + '"]').focus().attr('tabindex', '-1');
+                $('li[data-id="' + id + '"]').attr('tabindex', '1').focus();
             };
 
             var error = function() {
@@ -1072,6 +1082,10 @@
             var commentJSON =  $.extend({}, this.commentsById[commentEl.attr('data-id')]);
             var commentId = commentJSON.id;
             var parentId = commentJSON.parent;
+            var afterFocusId;
+
+            console.log('commentId', commentId)
+            console.log('parentId', parentId)
 
             // Set button state to loading
             this.setButtonState(deleteButton, false, true);
@@ -1083,6 +1097,15 @@
             commentJSON = this.applyExternalMappings(commentJSON);
 
             var success = function() {
+                if (!parentId) {
+                    if ($('li[data-id="' + commentId + '"]').prev().length > 0) {
+                        afterFocusId = $('li[data-id="' + commentId + '"]').prev().data('id');
+                    } else {
+                        afterFocusId = $('li[data-id="' + commentId + '"]').next().data('id');
+                    }
+                } else {
+                    afterFocusId = parentId;
+                }
                 self.removeComment(commentId);
                 if(parentId) self.reRenderCommentActionBar(parentId);
 
@@ -1091,7 +1114,7 @@
 
                 // Accessibility, add retroaction message and put focus on the comment
                 $(self.options.message).text(self.options.commentDeleted);
-                //$('li[data-id="' + id + '"]').focus().attr('tabindex', '-1');
+                $('li[data-id="' + afterFocusId + '"]').focus();
             };
 
             var error = function() {
@@ -1124,6 +1147,7 @@
         upvoteComment: function(ev) {
             var self = this;
             var commentEl = $(ev.currentTarget).parents('li.comment').first();
+            var id = $(commentEl).data('id');
             var commentModel = commentEl.data().model;
 
             // Check whether user upvoted the comment or revoked the upvote
@@ -1153,7 +1177,9 @@
                 self.reRenderUpvotes(commentModel.id);
 
                 // Accessibility, output the message to the screen reader
-                $(this.options.message).text(message);
+                $('li.comment[data-id="' + id +'"]').find('.action.upvote').first().focus();
+                
+                $(self.options.message).text(message);
             };
 
             var error = function() {
@@ -1164,7 +1190,7 @@
                 self.reRenderUpvotes(commentModel.id);
 
                 // Accessibility, output the message to the screen reader
-                $(this.options.message).text(message);
+                $(self.options.message).text(message);
             };
 
             this.options.upvoteComment(commentJSON, success, error);
