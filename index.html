@@ -49,6 +49,7 @@
 					enableAttachments: true,
 					enableHashtags: true,
 					enablePinging: true,
+					scrollContainer: $(window),
 					searchUsers: function(term, success, error) {
 					    setTimeout(function() {
 					        success(usersArray.filter(function(user) {
@@ -83,9 +84,9 @@
 							success(data);
 						}, 500);
 					},
-					uploadAttachments: function(dataArray, success, error) {
+					validateAttachments: function(attachments, callback) {
 						setTimeout(function() {
-							success(dataArray);
+							callback(attachments);
 						}, 500);
 					},
 				});
