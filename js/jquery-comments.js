@@ -874,7 +874,6 @@
 
         textareaContentChanged: function(ev) {
             var textarea = $(ev.currentTarget);
-            var wysiwyg_editor = textarea.data('wysiwyg_editor');
 
             // Update parent id if reply-to tag was removed
             if(!textarea.find('.reply-to.tag').length) {
@@ -910,6 +909,7 @@
         toggleSaveButton: function(commentingField) {
             var textarea = commentingField.find('.textarea');
             var saveButton = textarea.siblings('.control-row').find('.save');
+            var wysiwyg_editor = textarea.data('wysiwyg_editor');
             var content;
             if (wysiwyg_editor && this.options.wysiwyg_editor.opts.enable) {
                 content = this.options.wysiwyg_editor.get_contents(wysiwyg_editor);
@@ -1931,8 +1931,11 @@
             var content = $('<div/>', {
                 'class': 'content'
             });
-            content.html(this.getFormattedCommentContent(commentModel));
-
+            if (this.options.wysiwyg_editor.opts.is_html) {
+                content.html(commentModel.content);
+            } else {
+                content.html(this.getFormattedCommentContent(commentModel));
+            }
             // Edited timestamp
             if(commentModel.modified && commentModel.modified != commentModel.created) {
                 var editedTime = this.options.timeFormatter(commentModel.modified);
