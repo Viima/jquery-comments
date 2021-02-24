@@ -968,6 +968,7 @@
             var self = this;
             var sendButton = $(ev.currentTarget);
             var commentingField = sendButton.parents('.commenting-field').first();
+            var textarea = commentingField.find('.textarea');
             var wysiwyg_editor = textarea.data('wysiwyg_editor');
 
             // Set button state to loading
