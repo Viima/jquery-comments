@@ -2054,7 +2054,8 @@
             if(commentModel.createdByCurrentUser || this.options.currentUserIsAdmin) {
                 var editButton = $('<button/>', {
                     'class': 'action edit',
-                    text: this.options.textFormatter(this.options.editText)
+                    'type': 'button',
+                    text: this.options.textFormatter(this.options.editText),
                 });
                 actions.append(editButton);
             }
@@ -2085,6 +2086,7 @@
 
             // Upvotes
             var upvoteEl = $('<button/>', {
+                'type': 'button',
                 'class': 'action upvote' + (commentModel.userHasUpvoted ? ' highlight-font' : '')
             }).append($('<span/>', {
                 text: commentModel.upvoteCount,
