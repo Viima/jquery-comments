@@ -2459,11 +2459,11 @@
             var replacedText, replacePattern1, replacePattern2, replacePattern3;
 
             // URLs starting with http://, https://, ftp:// or file://
-            replacePattern1 = /(\b(https?|ftp|file):\/\/[-A-ZÄÖÅ0-9+&@#\/%?=~_|!:,.;]*[-A-ZÄÖÅ0-9+&@#\/%=~_|])/gim;
+            replacePattern1 = /(\b(https?|ftp|file):\/\/[-A-ZÄÖÅ0-9+&@#\/%?=~_|!:,.;{}]*[-A-ZÄÖÅ0-9+&@#\/%=~_|{}])/gim;
             replacedText = inputText.replace(replacePattern1, '<a href="$1" target="_blank">$1</a>');
 
             // URLs starting with "www." (without // before it, or it would re-link the ones done above).
-            replacePattern2 = /(^|[^\/f])(www\.[-A-ZÄÖÅ0-9+&@#\/%?=~_|!:,.;]*[-A-ZÄÖÅ0-9+&@#\/%=~_|])/gim;
+            replacePattern2 = /(^|[^\/f])(www\.[-A-ZÄÖÅ0-9+&@#\/%?=~_|!:,.;{}]*[-A-ZÄÖÅ0-9+&@#\/%=~_|{}])/gim;
             replacedText = replacedText.replace(replacePattern2, '$1<a href="https://$2" target="_blank">$2</a>');
 
             // Change email addresses to mailto: links.
