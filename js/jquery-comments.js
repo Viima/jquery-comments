@@ -161,6 +161,7 @@
                 enablePinging: false,
                 enableDeletingCommentWithReplies: false,
                 enableNavigation: true,
+                enableLinking: true,
                 postCommentOnEnter: false,
                 forceResponsive: false,
                 readOnly: false,
@@ -2319,7 +2320,7 @@
 
         getFormattedCommentContent: function(commentModel, replaceNewLines) {
             var html = this.escape(commentModel.content);
-            html = this.linkify(html);
+            if(this.options.enableLinking) html = this.linkify(html);
             html = this.highlightTags(commentModel, html);
             if(replaceNewLines) html = html.replace(/(?:\n)/g, '<br>');
             return html;
