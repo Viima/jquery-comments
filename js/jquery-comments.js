@@ -177,6 +177,25 @@
                 textareaMaxRows: 5,
                 maxRepliesVisible: 2,
 
+                // wysiwyg-editor interface
+                wysiwyg_editor: {
+                    opts: {
+                        // Whether an external editor is being used.
+                        enable: false,
+                        // Indicates whether comments will be displayed with plain text or rendered as html.
+                        is_html: true
+                    },
+                    // Initializes a new instance of the html editor.
+                    init: function (textarea, html) {},
+                    // jquery object within which the editor will be rendered.
+                    get_container: function(textarea) {},
+                    // Object that returns the html content of the edit (html text).
+                    get_contents: function(editor) {},
+                    // Call of events.
+                    on_post_comment: function(editor, evt, status) {},
+                    on_put_comment: function(editor, evt, status) {},
+                    on_close_button: function (editor, evt) {}
+                },
                 fieldMappings: {
                     id: 'id',
                     parent: 'parent',
@@ -224,7 +243,7 @@
             if($.browser.mobile) this.$el.addClass('mobile');
 
             // Init options
-            this.options = $.extend(true, {}, this.getDefaultOptions(), options);;
+            this.options = $.extend(true, {}, this.getDefaultOptions(), options);
 
             // Read-only mode
             if(this.options.readOnly) this.$el.addClass('read-only');
@@ -746,7 +765,7 @@
 
                 // Select correct commenting field
                 var commentingField;
-                var parentCommentingField = $(ev.target).parents('.commenting-field').first(); 
+                var parentCommentingField = $(ev.target).parents('.commenting-field').first();
                 if(parentCommentingField.length) {
                     commentingField = parentCommentingField;
                 }
@@ -825,7 +844,11 @@
             var commentingField = this.$el.find('.commenting-field.main');
             var mainTextarea = commentingField.find('.textarea');
             var mainControlRow = commentingField.find('.control-row');
+            var wysiwyg_editor = mainTextarea.data('wysiwyg_editor');
 
+            if (wysiwyg_editor && this.options.wysiwyg_editor.opts.enable) {
+                this.options.wysiwyg_editor.on_close_button(wysiwyg_editor, ev);
+            }
             // Clear text area
             this.clearTextarea(mainTextarea);
 
@@ -886,8 +909,13 @@
         toggleSaveButton: function(commentingField) {
             var textarea = commentingField.find('.textarea');
             var saveButton = textarea.siblings('.control-row').find('.save');
-
-            var content = this.getTextareaContent(textarea, true);
+            var wysiwyg_editor = textarea.data('wysiwyg_editor');
+            var content;
+            if (wysiwyg_editor && this.options.wysiwyg_editor.opts.enable) {
+                content = this.options.wysiwyg_editor.get_contents(wysiwyg_editor);
+            } else {
+                content = this.getTextareaContent(textarea, true);
+            }
             var attachments = this.getAttachmentsFromCommentingField(commentingField);
             var enabled;
 
@@ -940,6 +968,8 @@
             var self = this;
             var sendButton = $(ev.currentTarget);
             var commentingField = sendButton.parents('.commenting-field').first();
+            var textarea = commentingField.find('.textarea');
+            var wysiwyg_editor = textarea.data('wysiwyg_editor');
 
             // Set button state to loading
             this.setButtonState(sendButton, false, true);
@@ -950,7 +980,15 @@
             // Reverse mapping
             commentJSON = this.applyExternalMappings(commentJSON);
 
+            // Notify event to external editor
+            var editor_event_post_comment = function (status) {
+                if (wysiwyg_editor && self.options.wysiwyg_editor.opts.enable) {
+                    self.options.wysiwyg_editor.on_post_comment(wysiwyg_editor, ev, status);
+                }
+            };
+
             var success = function(commentJSON) {
+                editor_event_post_comment('success');
                 self.createComment(commentJSON);
                 commentingField.find('.close').trigger('click');
 
@@ -959,12 +997,13 @@
             };
 
             var error = function() {
-
+                editor_event_post_comment('error');
                 // Reset button state
                 self.setButtonState(sendButton, true, false);
             };
 
             this.options.postComment(commentJSON, success, error);
+            editor_event_post_comment();
         },
 
         createComment: function(commentJSON) {
@@ -986,6 +1025,7 @@
             var saveButton = $(ev.currentTarget);
             var commentingField = saveButton.parents('.commenting-field').first();
             var textarea = commentingField.find('.textarea');
+            var wysiwyg_editor = textarea.data('wysiwyg_editor');
 
             // Set button state to loading
             this.setButtonState(saveButton, false, true);
@@ -1003,7 +1043,15 @@
             // Reverse mapping
             commentJSON = this.applyExternalMappings(commentJSON);
 
+            // Notify event to external editor
+            var editor_event_put_comment = function (status) {
+                if (wysiwyg_editor && self.options.wysiwyg_editor.opts.enable) {
+                    self.options.wysiwyg_editor.on_put_comment(wysiwyg_editor, ev, status);
+                }
+            };
             var success = function(commentJSON) {
+                editor_event_put_comment('success');
+
                 // The outermost parent can not be changed by editing the comment so the childs array
                 // of parent does not require an update
 
@@ -1030,6 +1078,8 @@
             };
 
             this.options.putComment(commentJSON, success, error);
+            // Notify event to external editor
+            editor_event_put_comment();
         },
 
         deleteComment: function(ev) {
@@ -1145,6 +1195,12 @@
 
                 // Move cursor to end
                 var textarea = replyField.find('.textarea');
+
+                // starts new editor instance (before cursor change).
+                // textarea saves the reference to the editor that will be used later.
+                if (this.options.wysiwyg_editor.opts.enable) {
+                    textarea.data('wysiwyg_editor', this.options.wysiwyg_editor.init(textarea));
+                }
                 this.moveCursorToEnd(textarea);
 
                 // Ensure element stays visible
@@ -1169,6 +1225,14 @@
             // Escaping HTML
             textarea.append(this.getFormattedCommentContent(commentModel, true));
 
+            // starts new editor instance.
+            // textarea saves the reference to the editor that will be used later.
+            // In this case the editor starts with the content of the model (raw text).
+            if (this.options.wysiwyg_editor.opts.enable) {
+                textarea.data('wysiwyg_editor', this.options.wysiwyg_editor.init(
+                    textarea, commentModel.content
+                ));
+            }
             // Move cursor to end
             this.moveCursorToEnd(textarea);
 
@@ -1249,11 +1313,17 @@
             // Commenting field
             var mainCommentingField = this.createMainCommentingFieldElement();
             this.$el.append(mainCommentingField);
-
             // Hide control row and close button
             var mainControlRow = mainCommentingField.find('.control-row');
             mainControlRow.hide();
             mainCommentingField.find('.close').hide();
+
+            // Starts a new instance of the editor.
+            // Connects the textarea with the corresponding editor.
+            if (this.options.wysiwyg_editor.opts.enable) {
+                var textarea = mainCommentingField.find('.textarea');
+                textarea.data('wysiwyg_editor', this.options.wysiwyg_editor.init(textarea));
+            }
 
             // Navigation bar
             if (this.options.enableNavigation) {
@@ -1486,11 +1556,15 @@
                 controlRow.append(attachmentsContainer);
             }
 
-
             // Populate the element
             textareaWrapper.append(closeButton).append(textarea).append(controlRow);
+            // controle over external html editor
+            if (this.options.wysiwyg_editor.opts.enable) {
+                // Who assumes here is the external wysiwyg editor but the default api should keep working.
+                textarea.hide();
+                textareaWrapper.append(this.options.wysiwyg_editor.get_container(textarea)).append(controlRow);
+            }
             commentingField.append(profilePicture).append(textareaWrapper);
-
 
             if(parentId) {
 
@@ -1858,8 +1932,11 @@
             var content = $('<div/>', {
                 'class': 'content'
             });
-            content.html(this.getFormattedCommentContent(commentModel));
-
+            if (this.options.wysiwyg_editor.opts.is_html) {
+                content.html(commentModel.content);
+            } else {
+                content.html(this.getFormattedCommentContent(commentModel));
+            }
             // Edited timestamp
             if(commentModel.modified && commentModel.modified != commentModel.created) {
                 var editedTime = this.options.timeFormatter(commentModel.modified);
@@ -1977,7 +2054,8 @@
             if(commentModel.createdByCurrentUser || this.options.currentUserIsAdmin) {
                 var editButton = $('<button/>', {
                     'class': 'action edit',
-                    text: this.options.textFormatter(this.options.editText)
+                    'type': 'button',
+                    text: this.options.textFormatter(this.options.editText),
                 });
                 actions.append(editButton);
             }
@@ -2008,6 +2086,7 @@
 
             // Upvotes
             var upvoteEl = $('<button/>', {
+                'type': 'button',
                 'class': 'action upvote' + (commentModel.userHasUpvoted ? ' highlight-font' : '')
             }).append($('<span/>', {
                 text: commentModel.upvoteCount,
@@ -2031,7 +2110,7 @@
         },
 
         createAttachmentTagElement: function(attachment, deletable) {
-            
+
             // Tag element
             var attachmentTag = $('<a/>', {
                 'class': 'tag attachment',
@@ -2293,6 +2372,11 @@
         },
 
         getTextareaContent: function(textarea, humanReadable) {
+            var wysiwyg_editor = textarea.data('wysiwyg_editor');
+            if (wysiwyg_editor && this.options.wysiwyg_editor.opts.enable) {
+                return this.options.wysiwyg_editor.get_contents(wysiwyg_editor);
+            }
+            var parentId = textarea.data('parent');
             var textareaClone = textarea.clone();
 
             // Remove reply-to tag
